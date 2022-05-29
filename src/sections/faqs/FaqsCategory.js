@@ -18,16 +18,16 @@ const CATEGORIES = [
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_payment.svg',
     href: '#',
   },
-  {
-    label: 'Delivery',
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_delivery.svg',
-    href: '#',
-  },
-  {
-    label: 'Problem with the Product',
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_package.svg',
-    href: '#',
-  },
+  // {
+  //   label: 'Delivery',
+  //   icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_delivery.svg',
+  //   href: '#',
+  // },
+  // {
+  //   label: 'Problem with the Product',
+  //   icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_package.svg',
+  //   href: '#',
+  // },
   {
     label: 'Return & Refund',
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/faqs/ic_refund.svg',
@@ -83,6 +83,7 @@ function CategoryCard({ category }) {
       variant="outlined"
       sx={{
         px: 2,
+        mx: 3,
         height: 260,
         borderRadius: 2,
         display: 'flex',
@@ -95,7 +96,7 @@ function CategoryCard({ category }) {
         },
       }}
     >
-      <Image visibleByDefault disabledEffect src={icon} sx={{ mb: 2, width: 80, height: 80 }} />
+      <Image visibleByDefault disabledEffect src={icon} sx={{ mb: 2, width: 180, height: 180 }} />
       <Typography variant="subtitle2">{label}</Typography>
     </Paper>
   );

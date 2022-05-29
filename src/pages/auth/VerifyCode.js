@@ -45,11 +45,11 @@ export default function VerifyCode() {
               Please check your email!
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              We have emailed a 6-digit confirmation code to acb@domain, please enter the code in below box to verify
+              We have emailed a 5-digit confirmation code to your email, please enter the code in below box to verify
               your email.
             </Typography>
 
-            <Box sx={{ mt: 5, mb: 3 }}>
+            <Box sx={{ mt: 3, mb: 3 }}>
               <VerifyCodeForm />
             </Box>
 

@@ -31,8 +31,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
     remember: true,
   };
 
@@ -51,6 +51,7 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
+      
     } catch (error) {
       console.error(error);
       reset();

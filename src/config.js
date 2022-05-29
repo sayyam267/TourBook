@@ -29,17 +29,16 @@ export const AUTH0_API = {
 
 export const MAPBOX_API = process.env.REACT_APP_MAPBOX;
 
+ // as '/dashboard/app'
 
-// ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/app'
-
+  
 // LAYOUT
 // ----------------------------------------------------------------------
 
 export const HEADER = {
   MOBILE_HEIGHT: 64,
   MAIN_DESKTOP_HEIGHT: 88,
-  DASHBOARD_DESKTOP_HEIGHT: 92,
+  DASHBOARD_DESKTOP_HEIGHT: 60,
   DASHBOARD_DESKTOP_OFFSET_HEIGHT: 92 - 32,
 };
 

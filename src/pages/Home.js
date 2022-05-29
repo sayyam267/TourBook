@@ -14,7 +14,6 @@ import {
   HomeCleanInterfaces,
   HomeHugePackElements,
 } from '../sections/home';
-
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(() => ({
@@ -32,26 +31,19 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function HomePage() {
   return (
   <>
-      <Page title="The starting point ">
+      <Page title="Home">
         {/* <RootStyle> */}
         <HomeHero />
-        {/* <ContentStyle> */}
-        {/* <HomeMinimal /> */}
+        <ContentStyle>
 
-        {/* <HomeHugePackElements /> */}
+        <HomePricingPlans />
+        <HomeMinimal />
 
-        {/* <HomeDarkMode /> */}
+        
+        <HomeLookingFor />
 
-        {/* <HomeColorPresets /> */}
-
-        {/* <HomeCleanInterfaces /> */}
-
-        {/* <HomePricingPlans /> */}
-
-        {/* <HomeLookingFor /> */}
-
-        {/* <HomeAdvertisement /> */}
-        {/* </ContentStyle> */}
+        <HomeAdvertisement />
+        </ContentStyle>
         {/* </RootStyle> */}
       </Page>
   </>

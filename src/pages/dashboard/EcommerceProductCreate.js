@@ -31,19 +31,9 @@ export default function EcommerceProductCreate() {
   }, [dispatch]);
 
   return (
-    <Page title="Ecommerce: Create a new product">
+    <Page title="TourBook: Create a new Tour">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new product' : 'Edit product'}
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            { name: !isEdit ? 'New product' : name },
-          ]}
-        />
+        <h1>Create a new Tour</h1>
 
         <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />
       </Container>

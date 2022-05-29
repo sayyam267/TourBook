@@ -97,17 +97,13 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-            <Stack spacing={1}>
-              <Typography variant="subtitle1">Gender</Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
 
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle1">Category</Typography>
               <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
-            </Stack>
+            </Stack> */}
 
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
               <Typography variant="subtitle1">Colour</Typography>
 
               <Controller
@@ -121,7 +117,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
                   />
                 )}
               />
-            </Stack>
+            </Stack> */}
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Price</Typography>
@@ -172,7 +168,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
             </Stack>
           </Stack>
         </Scrollbar>
-
+{/* 
         <Box sx={{ p: 3 }}>
           <Button
             fullWidth
@@ -185,7 +181,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
           >
             Clear All
           </Button>
-        </Box>
+        </Box> */}
       </Drawer>
     </>
   );

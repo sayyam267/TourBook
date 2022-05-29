@@ -1,8 +1,11 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
+import { PATH_AUTH } from '../routes/paths';
+
 
 // ----------------------------------------------------------------------
 
@@ -109,31 +112,44 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+    // process.env.REACT_APP_LOGIN_API
+    const response = await axios.post("http://tourbook-backend.herokuapp.com/user/login", {
       email,
       password,
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user,
-      },
+    })
+      localStorage.setItem('role',response.data.data.role);
+      console.log(response.data.data.role);
+      console.log(localStorage.getItem('role'));
+      localStorage.setItem('balance',response.data.data.balance);
+      localStorage.setItem('name',response.data.data.name);
+      const { accessToken, user } = response.data;
+      console.log(response.data, "login success..", response.data.data.token);
+      setSession(response.data.data.token);
+      window.localStorage.setItem('accessToken', response.data.data.token);
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+        },
     });
   };
 
-  const register = async (email, password, firstName, lastName,role) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName,
-      role,
+  const register = async(Email, Password, FirstName, LastName, City, Country, Role, Gender, Cnic) => {
+    const response = await axios.post("http://tourbook-backend.herokuapp.com/user/signup", {
+      email: Email,
+      password:Password,
+      phoneNumber:FirstName,
+      fname: FirstName,
+      lname: LastName,
+      city: City,
+      country:Country,
+      role: Role,
+      gender: Gender, 
+      cnic: Cnic,
     });
     const { accessToken, user } = response.data;
-
+    <Navigate to={PATH_AUTH.login} replace />
+    console.log("user signed up",response.data);
     window.localStorage.setItem('accessToken', accessToken);
     dispatch({
       type: 'REGISTER',

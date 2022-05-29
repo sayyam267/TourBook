@@ -54,12 +54,12 @@ export default function DashboardLayout() {
     return (
       <>
         <DashboardHeader onOpenSidebar={() => setOpen(true)} verticalLayout={verticalLayout} />
-
+{/* 
         {isDesktop ? (
           <NavbarHorizontal />
         ) : (
           <NavbarVertical isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-        )}
+        )} */}
 
         <Box
           component="main"
@@ -67,7 +67,7 @@ export default function DashboardLayout() {
             px: { lg: 2 },
             pt: {
               xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
-              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 80}px`,
+              lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 30}px`,
             },
             pb: {
               xs: `${HEADER.MOBILE_HEIGHT + 24}px`,

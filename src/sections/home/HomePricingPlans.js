@@ -8,6 +8,8 @@ import { _homePlans } from '../../_mock';
 import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
 import { MotionInView, varFade } from '../../components/animate';
+import SimpleCard from '../@dashboard/e-commerce/shop/SimpleCard';
+import FaqsCategory from '../faqs/FaqsCategory';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +22,25 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
+ const Data = [
+  {
+    title: 'Trust and Safety',
+    description: 'We build our community on trust. Our hosts go through a rigorous vetting process before joining our community.',
+  },
+  {
 
+    title: 'Curated Experiences',
+    description: 'Our hosts have meticulously curated unique experiences that commit to delighting our guests',
+  },
+  {
+    title: 'Sustainability',
+    description: 'Our vision revolves around sustainable and eco-friendly tourism and our experts spend months designing a community model that promotes sustainable travel in Pakistan',
+  },
+  {
+    title: 'Community Welfare',
+    description: 'We make sure that whatever you spend with us creates a positive impact towards those in need; something which is at the heart of our ideology at Manaky.',
+  },
+];
 export default function HomePricingPlans() {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
@@ -31,12 +51,12 @@ export default function HomePricingPlans() {
         <Box sx={{ mb: 10, textAlign: 'center' }}>
           <MotionInView variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              pricing plans
+              Our Services
             </Typography>
           </MotionInView>
           <MotionInView variants={varFade().inDown}>
             <Typography variant="h2" sx={{ mb: 3 }}>
-              The right plan for your business
+              The right place for your Tourism
             </Typography>
           </MotionInView>
           <MotionInView variants={varFade().inDown}>
@@ -50,17 +70,23 @@ export default function HomePricingPlans() {
           </MotionInView>
         </Box>
 
-        <Grid container spacing={5}>
-          {_homePlans.map((plan) => (
-            <Grid key={plan.license} item xs={12} md={4}>
-              <MotionInView variants={plan.license === 'Standard Plus' ? varFade().inDown : varFade().inUp}>
-                <PlanCard plan={plan} />
+        {/* <Grid container spacing={5}>
+          {Data.map((plan) => (
+            <Grid key={plan.title} item xs={12} md={4}>
+              <MotionInView variants={plan.title === 'Community Welfare' ? varFade().inDown : varFade().inUp}>
+                <SimpleCard product= {plan} />
               </MotionInView>
             </Grid>
           ))}
+        </Grid> */}
+        <Grid container spacing={5}>
+            <Grid item xs={12} md={8}>
+              <FaqsCategory />
+            
+            </Grid>
         </Grid>
-
-        <MotionInView variants={varFade().in}>
+        
+        {/* <MotionInView variants={varFade().in}>
           <Box sx={{ p: 5, mt: 10, textAlign: 'center' }}>
             <MotionInView variants={varFade().inDown}>
               <Typography variant="h3">Still have questions?</Typography>
@@ -82,7 +108,7 @@ export default function HomePricingPlans() {
               </Button>
             </MotionInView>
           </Box>
-        </MotionInView>
+        </MotionInView> */}
       </Container>
     </RootStyle>
   );

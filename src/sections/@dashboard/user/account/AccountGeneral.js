@@ -36,9 +36,7 @@ export default function AccountGeneral() {
     address: user?.address || '',
     state: user?.state || '',
     city: user?.city || '',
-    zipCode: user?.zipCode || '',
     about: user?.about || '',
-    isPublic: user?.isPublic || '',
   };
 
   const methods = useForm({
@@ -104,7 +102,7 @@ export default function AccountGeneral() {
               }
             />
 
-            <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} />
+            
           </Card>
         </Grid>
 
@@ -136,7 +134,7 @@ export default function AccountGeneral() {
               <RHFTextField name="state" label="State/Region" />
 
               <RHFTextField name="city" label="City" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
+              
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
@@ -152,3 +150,6 @@ export default function AccountGeneral() {
     </FormProvider>
   );
 }
+
+
+

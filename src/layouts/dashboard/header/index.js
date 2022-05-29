@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
+import {useState} from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 // hooks
@@ -19,6 +20,7 @@ import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
+import Label from '../../../components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +64,15 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
 
   const isDesktop = useResponsive('up', 'lg');
 
+  const [credits,setCredits] = useState(!localStorage.getItem('balance') ?0:localStorage.getItem('balance'));
+
+  const isCredit = async () =>{
+    if(credits > 99){
+      return true;
+    }
+      return false;
+  };
+
   return (
     <RootStyle isCollapse={isCollapse} isOffset={isOffset} verticalLayout={verticalLayout}>
       <Toolbar
@@ -78,13 +89,14 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           </IconButtonAnimate>
         )}
 
-        <Searchbar />
+        {/* <Searchbar /> */}
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <LanguagePopover />
-          <NotificationsPopover />
-          <ContactsPopover />
+          <Label color={isCredit() ? "success":"error"} >
+            Credits : {credits}.0 Rs
+          </Label> 
+          {/* <NotificationsPopover /> */}
           <AccountPopover />
         </Stack>
       </Toolbar>

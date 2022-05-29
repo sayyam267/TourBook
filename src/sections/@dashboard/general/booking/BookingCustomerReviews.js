@@ -38,16 +38,16 @@ export default function BookingCustomerReviews() {
   return (
     <Card>
       <CardHeader
-        title="Customer Reviews"
-        subheader={`${_bookingReview.length} Reviews`}
-        action={
-          <CarouselArrows
-            customIcon={'ic:round-keyboard-arrow-right'}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-            sx={{ '& .arrow': { width: 28, height: 28, p: 0 } }}
-          />
-        }
+        title="Tour Booking Request"
+        // subheader={`${_bookingReview.length} Reviews`}
+        // action={
+        //   <CarouselArrows
+        //     customIcon={'ic:round-keyboard-arrow-right'}
+        //     onNext={handleNext}
+        //     onPrevious={handlePrevious}
+        //     sx={{ '& .arrow': { width: 28, height: 28, p: 0 } }}
+        //   />
+        // }
         sx={{
           '& .MuiCardHeader-action': {
             alignSelf: 'center',
@@ -87,12 +87,12 @@ function ReviewItem({ item }) {
         <div>
           <Typography variant="subtitle2">{name}</Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5, display: 'block' }}>
-            Posted {fDateTime(postedAt)}
+            Request time {fDateTime(postedAt)}
           </Typography>
         </div>
       </Stack>
 
-      <Rating value={rating} size="small" readOnly precision={0.5} />
+      {/* <Rating value={rating} size="small" readOnly precision={0.5} /> */}
       <Typography variant="body2">{description}</Typography>
 
       <Stack direction="row" flexWrap="wrap">

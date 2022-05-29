@@ -1,20 +1,25 @@
 import * as Yup from 'yup';
+
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+
+import { useNavigate} from 'react-router-dom';
+import { useEffect,useState } from 'react';
+
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { OutlinedInput, Stack } from '@mui/material';
+import { OutlinedInput, Stack , Alert,Box} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-
+import axios from '../../../utils/axios';
 // ----------------------------------------------------------------------
 
 export default function VerifyCodeForm() {
   const navigate = useNavigate();
+
+  const [error,setError] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -24,7 +29,6 @@ export default function VerifyCodeForm() {
     code3: Yup.string().required('Code is required'),
     code4: Yup.string().required('Code is required'),
     code5: Yup.string().required('Code is required'),
-    code6: Yup.string().required('Code is required'),
   });
 
   const defaultValues = {
@@ -33,7 +37,6 @@ export default function VerifyCodeForm() {
     code3: '',
     code4: '',
     code5: '',
-    code6: '',
   };
 
   const {
@@ -57,14 +60,25 @@ export default function VerifyCodeForm() {
 
   const onSubmit = async (data) => {
     try {
+      setError(false);
+      const verifyCode = Object.values(data).join('');
       await new Promise((resolve) => setTimeout(resolve, 500));
       console.log('code:', Object.values(data).join(''));
-
-      enqueueSnackbar('Verify success!');
-
-      navigate(PATH_DASHBOARD.root, { replace: true });
+      await axios.put("http://tourbook-backend.herokuapp.com/user/verify/otp",{email:localStorage.getItem("verifyEmail"), code:verifyCode }).then(res =>{
+        if (res.data.data) {
+          enqueueSnackbar('Verify success!');
+          navigate('/auth/new-password', { replace: true });
+        }
+          else {
+          setError(true);
+          resetInput();
+        }
+      })
+      
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Verify error!');
+      setError(true);
     }
   };
 
@@ -80,6 +94,13 @@ export default function VerifyCodeForm() {
     });
   };
 
+  const resetInput = () =>{
+    [].forEach.call(document.querySelectorAll('#field-code'), (node, index) => {
+      node.value = '';
+      const fieldIndex = `code${index + 1}`;
+      setValue(fieldIndex, '');
+    });
+  }
   const handleChangeWithNextField = (event, handleChange) => {
     const { maxLength, value, name } = event.target;
     const fieldIndex = name.replace('code', '');
@@ -101,6 +122,9 @@ export default function VerifyCodeForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {error ? (<Box sx={{ mt: 3, mb: 3 }}>
+        <Alert severity="error">{"Wrong Verification Code"}</Alert> </Box>) : (<></>)}
+      
       <Stack direction="row" spacing={2} justifyContent="center">
         {Object.keys(values).map((name, index) => (
           <Controller

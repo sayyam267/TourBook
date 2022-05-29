@@ -9,22 +9,45 @@ import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
-import { PATH_AFTER_LOGIN } from '../config';
+
+
+import {PATH_DASHBOARD} from './paths'
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
 // ----------------------------------------------------------------------
-
 const Loadable = (Component) => (props) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pathname } = useLocation();
 
   return (
-    <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
+    <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/Dashboard')} />}>
       <Component {...props} />
     </Suspense>
   );
 };
+let PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app;
+
+const pathAfterLogin  = () => {
+
+  if (localStorage.getItem('userType') === 'tourist') {
+     PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app;
+     return PATH_AFTER_LOGIN;
+  }
+  if (localStorage.getItem('userType') === 'TourGuide') {
+    PATH_AFTER_LOGIN = PATH_DASHBOARD.general.ecommerce;
+    return PATH_AFTER_LOGIN
+  }
+  if (localStorage.getItem('userType') === 'Admin') {
+    PATH_AFTER_LOGIN = PATH_DASHBOARD.general.analytics;
+    return PATH_AFTER_LOGIN
+  }
+  if(localStorage.getItem('userType') === 'TourAgency'){
+    PATH_AFTER_LOGIN = PATH_DASHBOARD.root.profile;
+  }
+}
+
+
 
 export default function Router() {
   return useRoutes([
@@ -50,6 +73,7 @@ export default function Router() {
         { path: 'login-unprotected', element: <Login /> },
         { path: 'register-unprotected', element: <Register /> },
         { path: 'reset-password', element: <ResetPassword /> },
+        { path: 'new-password', element: <NewPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
     },
@@ -161,6 +185,7 @@ export default function Router() {
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const Register = Loadable(lazy(() => import('../pages/auth/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
+const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));

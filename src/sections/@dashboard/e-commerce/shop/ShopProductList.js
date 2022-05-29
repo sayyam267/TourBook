@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Box } from '@mui/material';
+import {useState,useEffect} from 'react';
+import axios from '../../../../utils/axios';
 // components
 import { SkeletonProductItem } from '../../../../components/skeleton';
 //
 import ShopProductCard from './ShopProductCard';
+
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +16,20 @@ ShopProductList.propTypes = {
   loading: PropTypes.bool,
 };
 
-export default function ShopProductList({ products, loading }) {
+
+
+
+export default function ShopProductList() {
+  const [allTours, setAllTours] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
+      console.log(res);
+      setAllTours(res.data.data);
+    })
+  },[]);
+
+  
   return (
     <Box
       sx={{
@@ -26,10 +42,9 @@ export default function ShopProductList({ products, loading }) {
           lg: 'repeat(4, 1fr)',
         },
       }}
+      
     >
-      {(loading ? [...Array(12)] : products).map((product, index) =>
-        product ? <ShopProductCard key={product.id} product={product} /> : <SkeletonProductItem key={index} />
-      )}
+      {allTours ? <>{allTours?.map(tour => { return <ShopProductCard tour={tour} /> })}</> : <SkeletonProductItem  />}
     </Box>
   );
 }

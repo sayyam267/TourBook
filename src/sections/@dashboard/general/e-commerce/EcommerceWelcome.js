@@ -32,15 +32,11 @@ export default function EcommerceWelcome() {
         }}
       >
         <Typography gutterBottom variant="h4">
-          Congratulations,
-          <br /> Fabiana Capmany!
+          TourBook ,
+          <br /> Admin Panel.!
         </Typography>
 
-        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          Best seller of the month You have done 57.6% more sales today.
-        </Typography>
-
-        <Button variant="contained">Go Now</Button>
+        
       </CardContent>
 
       <MotivationIllustration

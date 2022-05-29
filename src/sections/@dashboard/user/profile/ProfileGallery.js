@@ -1,107 +1,159 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+
+
+import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
+import { useCallback } from 'react';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Box, Card, IconButton, Typography, CardContent } from '@mui/material';
+import { Box, Grid, Card, Stack, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+// hooks
+import useAuth from '../../../../hooks/useAuth';
 // utils
-import { fDate } from '../../../../utils/formatTime';
-import cssStyles from '../../../../utils/cssStyles';
-// components
-import Image from '../../../../components/Image';
-import Iconify from '../../../../components/Iconify';
-import LightboxModal from '../../../../components/LightboxModal';
+import { fData } from '../../../../utils/formatNumber';
+// _mock
+import { countries } from '../../../../_mock';
+// componentsw
+import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
-const CaptionStyle = styled(CardContent)(({ theme }) => ({
-  ...cssStyles().bgBlur({ blur: 2, color: theme.palette.grey[900] }),
-  bottom: 0,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  justifyContent: 'space-between',
-  color: theme.palette.common.white,
-}));
+export default function AccountGeneral() {
+  const { enqueueSnackbar } = useSnackbar();
 
-// ----------------------------------------------------------------------
+  const { user } = useAuth();
 
-ProfileGallery.propTypes = {
-  gallery: PropTypes.array.isRequired,
-};
+  const UpdateUserSchema = Yup.object().shape({
+    displayName: Yup.string().required('Name is required'),
+  });
 
-export default function ProfileGallery({ gallery }) {
-  const [openLightbox, setOpenLightbox] = useState(false);
-
-  const [selectedImage, setSelectedImage] = useState(0);
-
-  const imagesLightbox = gallery.map((img) => img.imageUrl);
-
-  const handleOpenLightbox = (url) => {
-    const selectedImage = imagesLightbox.findIndex((index) => index === url);
-    setOpenLightbox(true);
-    setSelectedImage(selectedImage);
+  const defaultValues = {
+    displayName: user?.displayName || '',
+    email: user?.email || '',
+    photoURL: user?.photoURL || '',
+    phoneNumber: user?.phoneNumber || '',
+    country: user?.country || '',
+    address: user?.address || '',
+    state: user?.state || '',
+    city: user?.city || '',
+    zipCode: user?.zipCode || '',
+    about: user?.about || '',
+    isPublic: user?.isPublic || '',
   };
+
+  const methods = useForm({
+    resolver: yupResolver(UpdateUserSchema),
+    defaultValues,
+  });
+
+  const {
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      
+      enqueueSnackbar('Update success!');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        setValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        );
+      }
+    },
+    [setValue]
+  );
+
   return (
-    <Box sx={{ mt: 5 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Gallery
-      </Typography>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
+            <RHFUploadAvatar
+              name="photoURL"
+              accept="image/*"
+              maxSize={3145728}
+              onDrop={handleDrop}
+              helperText={
+                <Typography
+                  variant="caption"
+                  sx={{
+                    mt: 2,
+                    mx: 'auto',
+                    display: 'block',
+                    textAlign: 'center',
+                    color: 'text.secondary',
+                  }}
+                >
+                  Allowed *.jpeg, *.jpg, *.png,
+                </Typography>
+              }
+            />
 
-      <Card sx={{ p: 3 }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 3,
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
-            },
-          }}
-        >
-          {gallery.map((image) => (
-            <GalleryItem key={image.id} image={image} onOpenLightbox={handleOpenLightbox} />
-          ))}
-        </Box>
+            {/* <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} /> */}
+          </Card>
+        </Grid>
 
-        <LightboxModal
-          images={imagesLightbox}
-          mainSrc={imagesLightbox[selectedImage]}
-          photoIndex={selectedImage}
-          setPhotoIndex={setSelectedImage}
-          isOpen={openLightbox}
-          onCloseRequest={() => setOpenLightbox(false)}
-        />
-      </Card>
-    </Box>
+        <Grid item xs={12} md={8}>
+          <Card sx={{ p: 3 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                rowGap: 3,
+                columnGap: 2,
+                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+              }}
+            >
+              <RHFTextField name="displayName" label="Name" />
+              <RHFTextField name="email" label="Email Address" />
+
+              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="address" label="Address" />
+
+              <RHFSelect name="country" label="Country" placeholder="Country">
+                <option value="" />
+                {countries.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+
+              <RHFTextField name="state" label="State/Region" />
+
+              <RHFTextField name="city" label="City" />
+              <RHFTextField name="zipCode" label="Zip/Code" />
+            </Box>
+
+            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+              <RHFTextField name="about" multiline rows={4} label="About" />
+
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                Save Changes
+              </LoadingButton>
+            </Stack>
+          </Card>
+        </Grid>
+      </Grid>
+    </FormProvider>
   );
 }
 
-// ----------------------------------------------------------------------
 
-GalleryItem.propTypes = {
-  image: PropTypes.object,
-  onOpenLightbox: PropTypes.func,
-};
 
-function GalleryItem({ image, onOpenLightbox }) {
-  const { imageUrl, title, postAt } = image;
-  return (
-    <Card sx={{ cursor: 'pointer', position: 'relative' }}>
-      <Image alt="gallery image" ratio="1/1" src={imageUrl} onClick={() => onOpenLightbox(imageUrl)} />
-
-      <CaptionStyle>
-        <div>
-          <Typography variant="subtitle1">{title}</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.72 }}>
-            {fDate(postAt)}
-          </Typography>
-        </div>
-        <IconButton color="inherit">
-          <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
-        </IconButton>
-      </CaptionStyle>
-    </Card>
-  );
-}

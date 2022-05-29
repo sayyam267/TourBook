@@ -1,12 +1,15 @@
 // @mui
 import { styled } from '@mui/material/styles';
+import {useState} from 'react';
 import { Box, Grid, Container, Typography } from '@mui/material';
+
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
 // sections
 import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../sections/payment';
+
 
 // ----------------------------------------------------------------------
 
@@ -18,41 +21,49 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Payment() {
+export default function Payment({user}) {
   const isDesktop = useResponsive('up', 'md');
+  const [url,setUrl] = useState(null);
 
+  const handleUrl = (url) => {
+    setUrl(url);
+    console.log("hello",url);
+  }
   return (
     <Page title="Payment">
       <RootStyle>
         <Container>
           <Box sx={{ mb: 5 }}>
             <Typography variant="h3" align="center" paragraph>
-              Let's finish powering you up!
+              Let's Top Up your Wallet!
             </Typography>
             <Typography align="center" sx={{ color: 'text.secondary' }}>
-              Professional plan is right for you.
+              Buy TourBook Credits from here.
             </Typography>
           </Box>
 
           <Grid container spacing={isDesktop ? 3 : 5}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={6}>
               <Box
                 sx={{
                   display: 'grid',
-                  gap: 5,
-                  p: { md: 5 },
+                  p: { md: 3 },
                   borderRadius: 2,
-                  border: (theme) => ({ md: `dashed 1px ${theme.palette.divider}` }),
-                  gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' },
+                  
                 }}
               >
-                <PaymentBillingAddress />
-                <PaymentMethods />
+                <PaymentBillingAddress onGetSuccess={handleUrl} />
               </Box>
             </Grid>
-            <Grid item xs={12} md={4}>
-              <PaymentSummary />
-            </Grid>
+            {url?<Grid item xs={12} md={6}>
+              <PaymentSummary url={url}/>
+            </Grid> : <><Grid item xs={12} md={6}>
+                <Box display="flex"
+                  alignItems="center"
+                  justifyContent="center"><Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                  Nothing To Show
+                </Typography></Box>
+            </Grid> </>}
           </Grid>
         </Container>
       </RootStyle>

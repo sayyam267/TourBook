@@ -1,105 +1,75 @@
 import PropTypes from 'prop-types';
+import {useEffect,useState} from 'react';
 // @mui
-import { Box, Grid, Card, Link, Avatar, IconButton, Typography, InputAdornment } from '@mui/material';
+import { Box, Grid, Card, Link, Avatar, IconButton, Typography } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import InputStyle from '../../../../components/InputStyle';
 import SocialsButton from '../../../../components/SocialsButton';
 import SearchNotFound from '../../../../components/SearchNotFound';
-
+import axios from '../../../../utils/axios'
+import  VendorRequestCard from '../../general/e-commerce/VendorRequestCard';
+import { SkeletonProductItem } from '../../../../components/skeleton';
 // ----------------------------------------------------------------------
 
-ProfileFriends.propTypes = {
-  friends: PropTypes.array,
-  findFriends: PropTypes.string,
-  onFindFriends: PropTypes.func,
-};
 
-export default function ProfileFriends({ friends, findFriends, onFindFriends }) {
-  const friendFiltered = applyFilter(friends, findFriends);
 
-  const isNotFound = friendFiltered.length === 0;
+
+export default function ProfileFriends() {
+  
+
+  const [order,setOrder] =useState([]);
+  const [refund,setRefundRequest] =useState([]);
+
+
+  useEffect(() => {
+    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+      headers: {
+        'x-auth-token': localStorage.getItem('accessToken'),
+      }}).then(res =>{
+      console.log(res);
+        setOrder(res.data.data.reservationRequests);
+        // setRefundRequest(res.data.data.refundRequests);
+    }).catch(err => console.log(err))
+  },[]);
+
+  const fetchRequest = () =>{
+    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+      headers: {
+        'x-auth-token': localStorage.getItem('accessToken'),
+      }
+    }).then(res => {
+      console.log(res);
+      setOrder(res.data.data.reservationRequests);
+      // setRefundRequest(res.data.data.refundRequests);
+    }).catch(err => console.log(err))
+  }
 
   return (
     <Box sx={{ mt: 5 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Friends
+      <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }} >
+        Pending Request
       </Typography>
-
-      <InputStyle
-        stretchStart={240}
-        value={findFriends}
-        onChange={(event) => onFindFriends(event.target.value)}
-        placeholder="Find friends..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon={'eva:search-fill'} sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ mb: 5 }}
-      />
-
       <Grid container spacing={3}>
-        {friendFiltered.map((friend) => (
-          <Grid key={friend.id} item xs={12} md={4}>
-            <FriendCard friend={friend} />
-          </Grid>
-        ))}
+        <Grid item xs={12} sm={8} md={6}>
+          {order ? <>{order?.map(order => { return <VendorRequestCard name={order.name} email={order.email} amount={order.amount} seats={order.seats} _id={order._id} date={order.date} fetchRequest={fetchRequest}  /> })}</> : <SkeletonProductItem />}
+        </Grid>
+        </Grid>
+
+
+      <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }} >
+        Refund Request
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={8} md={6}>
+          {refund ? <>{refund?.map(refud => { return <VendorRequestCard name={order.touristID.fname} email="Tour Reservation for 3 seats" title={"Approve Request"} button1="Don't Verify" button2="Verify" /> })}</> : <SkeletonProductItem />}
+        </Grid>
       </Grid>
 
-      {isNotFound && (
-        <Box sx={{ mt: 5 }}>
-          <SearchNotFound searchQuery={findFriends} />
-        </Box>
-      )}
+      
+     
     </Box>
   );
 }
 
 // ----------------------------------------------------------------------
-
-FriendCard.propTypes = {
-  friend: PropTypes.object,
-};
-
-function FriendCard({ friend }) {
-  const { name, role, avatarUrl } = friend;
-
-  return (
-    <Card
-      sx={{
-        py: 5,
-        display: 'flex',
-        position: 'relative',
-        alignItems: 'center',
-        flexDirection: 'column',
-      }}
-    >
-      <Avatar alt={name} src={avatarUrl} sx={{ width: 64, height: 64, mb: 3 }} />
-      <Link variant="subtitle1" color="text.primary">
-        {name}
-      </Link>
-
-      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-        {role}
-      </Typography>
-
-      <SocialsButton initialColor />
-
-      <IconButton sx={{ top: 8, right: 8, position: 'absolute' }}>
-        <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
-      </IconButton>
-    </Card>
-  );
-}
-// ----------------------------------------------------------------------
-
-function applyFilter(array, query) {
-  if (query) {
-    return array.filter((friend) => friend.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-
-  return array;
-}

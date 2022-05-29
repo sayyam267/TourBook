@@ -84,7 +84,7 @@ export default function Register() {
         {mdUp && (
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Manage the job more effectively with Minimal
+              Hello, Welcome!
             </Typography>
             <Image
               alt="register"
@@ -100,7 +100,7 @@ export default function Register() {
                 <Typography variant="h4" gutterBottom>
                   Get started absolutely free.
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Free forever. No credit card needed.</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Free forever.</Typography>
               </Box>
               <Tooltip title={capitalCase(method)}>
                 <>
@@ -116,7 +116,7 @@ export default function Register() {
             <RegisterForm />
 
             <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-              By registering, I agree to Minimal&nbsp;
+              By registering, I agree to TourBook&nbsp;
               <Link underline="always" color="text.primary" href="#">
                 Terms of Service
               </Link>

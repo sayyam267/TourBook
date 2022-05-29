@@ -30,19 +30,19 @@ import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 
 const PRODUCT_DESCRIPTION = [
   {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
-    icon: 'ic:round-verified',
+    title: 'Accmodation',
+    description: 'Hotel Stay available.',
+    // icon: 'ic:round-verified',
   },
   {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
-    icon: 'eva:clock-fill',
+    title: 'Guide',
+    description: 'Tour Guide Include in this package.',
+    // icon: 'eva:clock-fill',
   },
   {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
-    icon: 'ic:round-verified-user',
+    title: 'Transport Available',
+    description: 'Transport Service Available',
+    // icon: 'ic:round-verified-user',
   },
 ];
 
@@ -66,11 +66,18 @@ export default function EcommerceProductDetails() {
   const dispatch = useDispatch();
   const [value, setValue] = useState('1');
   const { name = '' } = useParams();
-  const { product, error, checkout } = useSelector((state) => state.product);
+  // const { product, error, checkout } = useSelector((state) => state.product);
 
-  useEffect(() => {
-    dispatch(getProduct(name));
-  }, [dispatch, name]);
+
+  const product = {
+      id:403949230492340,
+      name:'Murree 3 Days Refreshment Trip',
+      DateStart:"25 May",
+      DateEnd:"26 May",
+      AvailableSeats:12,
+      price:7000,
+      images:['image1','image2'],
+    };
 
   const handleAddCart = (product) => {
     dispatch(addCart(product));
@@ -81,23 +88,11 @@ export default function EcommerceProductDetails() {
   };
 
   return (
-    <Page title="Ecommerce: Product Details">
+    <Page title="Tourist: Tour Details">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Product Details"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root,
-            },
-            {
-              name: 'Shop',
-              href: PATH_DASHBOARD.eCommerce.shop,
-            },
-            { name: sentenceCase(name) },
-          ]}
-        />
+
+      <h1>Tour Details</h1>
+       
 
         <CartWidget />
 
@@ -111,9 +106,6 @@ export default function EcommerceProductDetails() {
                 <Grid item xs={12} md={6} lg={5}>
                   <ProductDetailsSummary
                     product={product}
-                    cart={checkout.cart}
-                    onAddCart={handleAddCart}
-                    onGotoStep={handleGotoStep}
                   />
                 </Grid>
               </Grid>
@@ -124,7 +116,7 @@ export default function EcommerceProductDetails() {
                 <Grid item xs={12} md={4} key={item.title}>
                   <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
                     <IconWrapperStyle>
-                      <Iconify icon={item.icon} width={36} height={36} />
+                      {/* <Iconify icon={item.icon} width={36} height={36} /> */}
                     </IconWrapperStyle>
                     <Typography variant="subtitle1" gutterBottom>
                       {item.title}
@@ -164,9 +156,9 @@ export default function EcommerceProductDetails() {
           </>
         )}
 
-        {!product && <SkeletonProduct />}
+        {/* {!product && <SkeletonProduct />} */}
 
-        {error && <Typography variant="h6">404 Product not found</Typography>}
+        {/* {error && <Typography variant="h6">404 Product not found</Typography>} */}
       </Container>
     </Page>
   );

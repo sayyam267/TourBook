@@ -23,12 +23,16 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 ProductDetailsCarousel.propTypes = {
-  product: PropTypes.shape({
     images: PropTypes.arrayOf(PropTypes.string),
-  }),
-};
+  }
 
-export default function ProductDetailsCarousel({ product }) {
+export default function ProductDetailsCarousel({ images }) {
+
+  const otherImages = ["https://images.unsplash.com/photo-1454496522488-7a8e488e8606?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600", " https://images.unsplash.com/photo-1454496522488-7a8e488e8606?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600", "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600"];
+  if(!images){
+    images = otherImages;
+  }
+  console.log("images",images);
   const [openLightbox, setOpenLightbox] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState(0);
@@ -43,13 +47,16 @@ export default function ProductDetailsCarousel({ product }) {
 
   const slider2 = useRef(null);
 
-  const imagesLightbox = product.images.map((_image) => _image);
+  const imagesLightbox = images?.map((_image) => _image);
 
   const handleOpenLightbox = (url) => {
     const selectedImage = imagesLightbox.findIndex((index) => index === url);
     setOpenLightbox(true);
     setSelectedImage(selectedImage);
   };
+
+
+  
 
   const settings1 = {
     dots: false,
@@ -69,7 +76,7 @@ export default function ProductDetailsCarousel({ product }) {
     focusOnSelect: true,
     variableWidth: true,
     centerPadding: '0px',
-    slidesToShow: product.images.length > 3 ? 3 : product.images.length,
+    slidesToShow: images?.length > 3 ? 3 : images?.length,
   };
 
   useEffect(() => {
@@ -93,8 +100,19 @@ export default function ProductDetailsCarousel({ product }) {
     <RootStyle>
       <Box sx={{ p: 1 }}>
         <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
-          <Slider {...settings1} asNavFor={nav2} ref={slider1}>
-            {product.images.map((img) => (
+          {images ?<Slider {...settings1} asNavFor={nav2} ref={slider1}>
+            {images.map((img) => (
+              <Image
+                key={img}
+                alt="large image"
+                src={`http://tourbook-backend.herokuapp.com/${img}`}
+                ratio="1/1"
+                onClick={() => handleOpenLightbox(img)}
+                sx={{ cursor: 'zoom-in' }}
+              />
+            ))}
+          </Slider>:<Slider {...settings1} asNavFor={nav2} ref={slider1}>
+            {otherImages.map((img) => (
               <Image
                 key={img}
                 alt="large image"
@@ -104,10 +122,10 @@ export default function ProductDetailsCarousel({ product }) {
                 sx={{ cursor: 'zoom-in' }}
               />
             ))}
-          </Slider>
+          </Slider>}
           <CarouselArrowIndex
             index={currentIndex}
-            total={product.images.length}
+            total={images?.length}
             onNext={handleNext}
             onPrevious={handlePrevious}
           />
@@ -119,12 +137,12 @@ export default function ProductDetailsCarousel({ product }) {
           my: 3,
           mx: 'auto',
           '& .slick-current .isActive': { opacity: 1 },
-          ...(product.images.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
-          ...(product.images.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
-          ...(product.images.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(product.images.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
-          ...(product.images.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
-          ...(product.images.length > 2 && {
+          ...(images?.length === 1 && { maxWidth: THUMB_SIZE * 1 + 16 }),
+          ...(images?.length === 2 && { maxWidth: THUMB_SIZE * 2 + 32 }),
+          ...(images?.length === 3 && { maxWidth: THUMB_SIZE * 3 + 48 }),
+          ...(images?.length === 4 && { maxWidth: THUMB_SIZE * 3 + 48 }),
+          ...(images?.length >= 5 && { maxWidth: THUMB_SIZE * 6 }),
+          ...(images?.length > 2 && {
             position: 'relative',
             '&:before, &:after': {
               top: 0,
@@ -142,8 +160,27 @@ export default function ProductDetailsCarousel({ product }) {
           }),
         }}
       >
-        <Slider {...settings2} asNavFor={nav1} ref={slider2}>
-          {product.images.map((img, index) => (
+        {images ?<Slider {...settings2} asNavFor={nav1} ref={slider2}>
+          {images.map((img, index) => (
+            <Box key={img} sx={{ px: 0.75 }}>
+              <Image
+                disabledEffect
+                alt="thumb image"
+                src={`http://tourbook-backend.herokuapp.com/${img}`}
+                sx={{
+                  width: THUMB_SIZE,
+                  height: THUMB_SIZE,
+                  borderRadius: 1.5,
+                  cursor: 'pointer',
+                  ...(currentIndex === index && {
+                    border: (theme) => `solid 3px ${theme.palette.primary.main}`,
+                  }),
+                }}
+              />
+            </Box>
+          ))}
+        </Slider> : <Slider {...settings2} asNavFor={nav1} ref={slider2}>
+          {otherImages.map((img, index) => (
             <Box key={img} sx={{ px: 0.75 }}>
               <Image
                 disabledEffect
@@ -161,7 +198,7 @@ export default function ProductDetailsCarousel({ product }) {
               />
             </Box>
           ))}
-        </Slider>
+        </Slider>}
       </Box>
 
       <LightboxModal

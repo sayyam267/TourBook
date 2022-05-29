@@ -5,6 +5,7 @@ import { Box, Container, Typography, Grid } from '@mui/material';
 //
 import { TextAnimate, MotionContainer, varFade } from '../../components/animate';
 
+
 // ----------------------------------------------------------------------
 
 const CONTACTS = [
@@ -34,7 +35,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundImage:
-    'url(https://minimal-assets-api.vercel.app/assets/overlay.svg), url(https://minimal-assets-api.vercel.app/assets/images/contact/hero.jpg)',
+    'url(https://minimal-assets-api.vercel.app/assets/overlay.svg), url(https://res.cloudinary.com/snakecloud/image/upload/v1653315806/contact_xtzaf1.png)',
   padding: theme.spacing(10, 0),
   [theme.breakpoints.up('md')]: {
     height: 560,
@@ -60,7 +61,7 @@ export default function ContactHero() {
         <ContentStyle>
           <TextAnimate text="Where" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
           <br />
-          <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
+          <Box sx={{ display: 'inline-flex', color: 'common.dark' }}>
             <TextAnimate text="to" sx={{ mr: 2 }} />
             <TextAnimate text="find" sx={{ mr: 2 }} />
             <TextAnimate text="us?" />

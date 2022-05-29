@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { useRef } from 'react';
 import Slider from 'react-slick';
 // @mui
-import { useTheme } from '@mui/material/styles';
+
+import { useTheme, styled } from '@mui/material/styles';
 import { Box, Stack, Card, Button, Container, Typography } from '@mui/material';
 // _mock_
 import { _carouselsMembers } from '../../_mock';
@@ -13,15 +14,32 @@ import { CarouselArrows } from '../../components/carousel';
 import SocialsButton from '../../components/SocialsButton';
 import { MotionInView, varFade } from '../../components/animate';
 
-// ----------------------------------------------------------------------
 
 export default function AboutTeam() {
   const carouselRef = useRef(null);
   const theme = useTheme();
-
+  const _TeamMembers = [{
+    id: '030',
+    name: 'SAYYAM ALI',
+    role: 'Student',
+    avatar: ``,
+  },
+  {
+      id: '188',
+      name: 'ZAIN HAROOn',
+      role: 'Student',
+      avatar: ``,
+    },
+    {
+      id: '199',
+      name: 'SYED KOMAIL',
+      role: 'Student',
+      avatar: ``,
+    }
+  ];
   const settings = {
     arrows: false,
-    slidesToShow: 4,
+    slidesToShow: 3,
     centerMode: true,
     centerPadding: '0px',
     rtl: Boolean(theme.direction === 'rtl'),
@@ -71,23 +89,23 @@ export default function AboutTeam() {
             color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'common.white'),
           }}
         >
-          Minimal will provide you support if you have any problems, our support team will reply within a day and we
+          TourBook will provide you support if you have any problems, our support team will reply within a day and we
           also have detailed documentation.
         </Typography>
       </MotionInView>
 
       <Box sx={{ position: 'relative' }}>
-        <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}>
+        {/* <CarouselArrows filled onNext={handleNext} onPrevious={handlePrevious}> */}
           <Slider ref={carouselRef} {...settings}>
-            {_carouselsMembers.map((member) => (
+            {_TeamMembers.map((member) => (
               <MotionInView key={member.id} variants={varFade().in} sx={{ px: 1.5, py: 10 }}>
                 <MemberCard member={member} />
               </MotionInView>
             ))}
           </Slider>
-        </CarouselArrows>
+        {/* </CarouselArrows> */}
       </Box>
-      <Button
+      {/* <Button
         variant="outlined"
         color="inherit"
         size="large"
@@ -95,7 +113,7 @@ export default function AboutTeam() {
         sx={{ mx: 'auto' }}
       >
         View all team members
-      </Button>
+      </Button> */}
     </Container>
   );
 }

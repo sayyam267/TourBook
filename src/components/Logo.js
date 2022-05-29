@@ -19,7 +19,11 @@ export default function Logo({ disabledLink = false, sx }) {
 
   const logo = (
     <Box sx={{ width: 40, height: 40, ...sx }}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
+      <img
+        src="https://res.cloudinary.com/snakecloud/image/upload/v1653481901/tb_logon_dtjjb7.png"
+        alt="new"
+      />
+      {/* <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 512 512">
         <defs>
           <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">
             <stop offset="0%" stopColor={PRIMARY_DARK} />
@@ -48,7 +52,81 @@ export default function Logo({ disabledLink = false, sx }) {
             d="M450 384c26.509 0 48-21.491 48-48s-21.491-48-48-48-48 21.491-48 48 21.491 48 48 48"
           />
         </g>
-      </svg>
+      </svg> */}
+      {/* <svg
+        width={500}
+        height={500}
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="a">
+            <stop
+              style={{
+                stopColor: "#66bb6a",
+                stopOpacity: 1,
+              }}
+              offset={0}
+            />
+            <stop
+              style={{
+                stopColor: "#104700",
+                stopOpacity: 1,
+              }}
+              offset={1}
+            />
+          </linearGradient>
+          <linearGradient
+            xlinkHref="#a"
+            id="b"
+            x1={119.012}
+            y1={160.554}
+            x2={404.847}
+            y2={300.021}
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="matrix(1.38497 0 0 1.38497 -118.66 -54.951)"
+          />
+        </defs>
+        <text
+          xmlSpace="preserve"
+          style={{
+            fontSize: "265.915px",
+            letterSpacing: 0,
+            opacity: 1,
+            mixBlendMode: "soft-light",
+            fill: "url(#b)",
+            strokeWidth: 1.38497,
+          }}
+          x={68.49}
+          y={359.696}
+          transform="scale(1.05888 .9444)"
+        >
+          <tspan
+            x={68.49}
+            y={359.696}
+            style={{
+              fontStyle: "normal",
+              fontVariant: "normal",
+              fontWeight: 400,
+              fontStretch: "normal",
+              fontSize: "265.915px",
+              fontFamily: "'Cooper Black'",
+              InkscapeFontSpecification: "'Cooper Black, '",
+              writingMode: "lr-tb",
+              fill: "url(#b)",
+              strokeWidth: 1.38497,
+            }}
+            dx={-0.08}
+          >
+            {"TB"}
+          </tspan>
+        </text>
+      </svg> */}
+
+     
+
+
+  
     </Box>
   );
 

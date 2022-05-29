@@ -15,18 +15,31 @@ import { ColorPreview } from '../../../../components/color-utils';
 // ----------------------------------------------------------------------
 
 ShopProductCard.propTypes = {
-  product: PropTypes.object,
+  tour: PropTypes.object,
 };
 
-export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+// const tour = {
+//   image :"https://images.unsplash.com/photo-1597637245724-beb1e10cb79a?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332",
+//   name : "Murree Three days tour",
+//   price :"7000"
+// }
 
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(name)}`;
+export default function ShopProductCard({ tour }) {
+  // const { name, cover, price, colors, status, priceSale } = product;
 
+  console.log("his is tour id",tour._id)
+
+  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/checkout`;
+  
+
+
+    // { pathname: `${PATH_DASHBOARD.eCommerce.root}/checkout`, query: { id: tour._id } }
+
+  console.log(tour);
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
-        {status && (
+        {/* {status && (
           <Label
             variant="filled"
             color={(status === 'sale' && 'error') || 'info'}
@@ -40,31 +53,32 @@ export default function ShopProductCard({ product }) {
           >
             {status}
           </Label>
-        )}
-        <Image alt={name} src={cover} ratio="1/1" />
+        )} */}
+        <Image alt={"img"} src={`http://tourbook-backend.herokuapp.com/${tour.tourpics[0]}`} ratio="1/1" />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Link to={linkTo} color="inherit" component={RouterLink}>
+        <Link to={linkTo} color="inherit" onClick={() => localStorage.setItem('tourId',tour._id)} component={RouterLink}>
           <Typography variant="subtitle2" noWrap>
-            {name}
+            {tour.name}
           </Typography>
         </Link>
-
+    
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
-
-          <Stack direction="row" spacing={0.5}>
-            {priceSale && (
-              <Typography component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-                {fCurrency(priceSale)}
-              </Typography>
-            )}
-
-            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
-          </Stack>
+          <Typography variant="subtitle2" noWrap>
+           Source: {tour.source.name}
+          </Typography>
         </Stack>
+        <Stack direction="row" spacing={0.2}>
+          <Typography variant="subtitle2" noWrap>
+            Dstination{tour.destination.name}
+          </Typography>
+        </Stack>
+        <Stack direction="row" spacing={0.2}>
+            <Typography variant="subtitle1">Price {tour.price}Rs</Typography>
+          </Stack>
       </Stack>
+    
     </Card>
   );
 }

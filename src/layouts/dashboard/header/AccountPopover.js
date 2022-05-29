@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_PAGE} from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
@@ -16,7 +16,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
+const TOURIST_OPTIONS = [
   {
     label: 'Home',
     linkTo: '/',
@@ -24,6 +24,38 @@ const MENU_OPTIONS = [
   {
     label: 'Profile',
     linkTo: PATH_DASHBOARD.user.profile,
+  },
+  {
+    label: 'Settings',
+    linkTo: PATH_DASHBOARD.user.account,
+  },
+  {
+    label:'Buy Credits',
+    linkTo:PATH_PAGE.payment,
+  }
+];
+const VENDOR_OPTIONS = [
+  {
+    label: 'Dashboard',
+    linkTo: PATH_DASHBOARD.general.app,
+  },
+  {
+    label: 'Profile',
+    linkTo: PATH_DASHBOARD.user.profile,
+  },
+  {
+    label: 'Buy Credits',
+    linkTo: PATH_PAGE.payment,
+  }
+];
+const ADMIN_OPTIONS = [
+  {
+    label: 'DashBoard',
+    linkTo: PATH_DASHBOARD.general.app,
+  },
+  {
+    label: 'Admin Panel',
+    linkTo: PATH_DASHBOARD.general.analytics,
   },
   {
     label: 'Settings',
@@ -51,6 +83,20 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  const checkRole = () => {
+    if(localStorage.getItem('role') ==='tourguide'){
+      return true;
+    }
+    return false;
+  }
+
+  const isadmin = ()=>{
+    if(localStorage.getItem('role') === 'admin'){
+      return true;
+    }
+    return false;
+  }
 
   const handleLogout = async () => {
     try {
@@ -87,8 +133,7 @@ export default function AccountPopover() {
       >
         <MyAvatar />
       </IconButtonAnimate>
-
-      <MenuPopover
+      {isadmin() ? <><MenuPopover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
@@ -102,19 +147,19 @@ export default function AccountPopover() {
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
+        <Box sx={{ my: 1, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {localStorage.getItem('name')}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          {/* <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.email}
-          </Typography>
+          </Typography> */}
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
+          {ADMIN_OPTIONS.map((option) => (
             <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
               {option.label}
             </MenuItem>
@@ -125,8 +170,52 @@ export default function AccountPopover() {
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
-        </MenuItem>
-      </MenuPopover>
+        </MenuItem></MenuPopover></> : <><MenuPopover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleClose}
+          sx={{
+            p: 0,
+            mt: 1.5,
+            ml: 0.75,
+            '& .MuiMenuItem-root': {
+              typography: 'body2',
+              borderRadius: 0.75,
+            },
+          }}
+        >
+          <Box sx={{ my: 1, px: 2.5 }}>
+            <Typography variant="subtitle2" noWrap>
+              {localStorage.getItem('name')}
+            </Typography>
+            {/* <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {user?.email}
+          </Typography> */}
+          </Box>
+
+          <Divider sx={{ borderStyle: 'dashed' }} />
+
+          {checkRole()?<Stack sx={{ p: 1 }}>
+            {VENDOR_OPTIONS.map((option) => (
+              <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Stack> :<Stack sx={{ p: 1 }}>
+            {TOURIST_OPTIONS.map((option) => (
+              <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Stack>}
+
+          <Divider sx={{ borderStyle: 'dashed' }} />
+
+          <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+            Logout
+          </MenuItem>
+        </MenuPopover> </>}
+      
     </>
   );
 }

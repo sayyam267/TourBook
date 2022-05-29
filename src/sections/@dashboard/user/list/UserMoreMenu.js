@@ -54,8 +54,8 @@ export default function UserMoreMenu({ onDelete, userName }) {
         }}
       >
         <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+          <Iconify icon={'eva:lock-outline'} sx={{ ...ICON }} />
+          Block user
         </MenuItem>
 
         <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.user.root}/${paramCase(userName)}/edit`}>

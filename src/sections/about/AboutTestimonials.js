@@ -93,7 +93,7 @@ export default function AboutTestimonials() {
               <MotionInView variants={varFade().inUp}>
                 <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
                   Who love <br />
-                  my work
+                  TourBook
                 </Typography>
               </MotionInView>
 

@@ -14,14 +14,11 @@ import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } fr
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+
+import TouristProfile from './TouristProfile';
+import TravelAgencyProfile from './TravelAgentProfile';
 // sections
-import {
-  Profile,
-  ProfileCover,
-  ProfileFriends,
-  ProfileGallery,
-  ProfileFollowers,
-} from '../../sections/@dashboard/user/profile';
+
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +44,8 @@ export default function UserProfile() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
 
+  const [mname,setname] = useState("")
+
   const [currentTab, setCurrentTab] = useState('profile');
   const [findFriends, setFindFriends] = useState('');
 
@@ -58,69 +57,19 @@ export default function UserProfile() {
     setFindFriends(value);
   };
 
-  const PROFILE_TABS = [
-    {
-      value: 'profile',
-      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
-      component: <Profile myProfile={_userAbout} posts={_userFeeds} />,
-    },
-    {
-      value: 'followers',
-      icon: <Iconify icon={'eva:heart-fill'} width={20} height={20} />,
-      component: <ProfileFollowers followers={_userFollowers} />,
-    },
-    {
-      value: 'friends',
-      icon: <Iconify icon={'eva:people-fill'} width={20} height={20} />,
-      component: <ProfileFriends friends={_userFriends} findFriends={findFriends} onFindFriends={handleFindFriends} />,
-    },
-    {
-      value: 'gallery',
-      icon: <Iconify icon={'ic:round-perm-media'} width={20} height={20} />,
-      component: <ProfileGallery gallery={_userGallery} />,
-    },
-  ];
+  const checkRole = () => {
+    if(localStorage.getItem('role') === 'tourguide') {
+      return true;
+    }
+      return false;
+  }
+
+
 
   return (
     <Page title="User: Profile">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Profile"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: user?.displayName || '' },
-          ]}
-        />
-        <Card
-          sx={{
-            mb: 3,
-            height: 280,
-            position: 'relative',
-          }}
-        >
-          <ProfileCover myProfile={_userAbout} />
-
-          <TabsWrapperStyle>
-            <Tabs
-              value={currentTab}
-              scrollButtons="auto"
-              variant="scrollable"
-              allowScrollButtonsMobile
-              onChange={(e, value) => handleChangeTab(value)}
-            >
-              {PROFILE_TABS.map((tab) => (
-                <Tab disableRipple key={tab.value} value={tab.value} icon={tab.icon} label={capitalCase(tab.value)} />
-              ))}
-            </Tabs>
-          </TabsWrapperStyle>
-        </Card>
-
-        {PROFILE_TABS.map((tab) => {
-          const isMatched = tab.value === currentTab;
-          return isMatched && <Box key={tab.value}>{tab.component}</Box>;
-        })}
-      </Container>
+    <h1>Hello</h1>
+      {!checkRole() ? <TouristProfile /> : <TravelAgencyProfile />}
     </Page>
   );
 }

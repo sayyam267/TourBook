@@ -12,7 +12,7 @@ import { MotionContainer, TextAnimate, varFade } from '../../components/animate'
 const RootStyle = styled('div')(({ theme }) => ({
   backgroundSize: 'cover',
   backgroundImage:
-    'url(https://minimal-assets-api.vercel.app/assets/overlay.svg), url(https://minimal-assets-api.vercel.app/assets/images/faqs/hero.jpg)',
+    'url(https://minimal-assets-api.vercel.app/assets/overlay.svg), url(https://res.cloudinary.com/snakecloud/image/upload/v1653368352/about_fi2g5u.png)',
   padding: theme.spacing(10, 0),
   [theme.breakpoints.up('md')]: {
     height: 560,
@@ -39,7 +39,7 @@ export default function FaqsHero() {
           <div>
             <TextAnimate text="How" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
             <br />
-            <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
+            <Box sx={{ display: 'inline-flex', color: 'common.dark' }}>
               <TextAnimate text="can" sx={{ mr: 2 }} />
               <TextAnimate text="we" sx={{ mr: 2 }} />
               <TextAnimate text="help" sx={{ mr: 2 }} />

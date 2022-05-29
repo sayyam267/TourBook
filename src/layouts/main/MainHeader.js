@@ -17,6 +17,7 @@ import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 import { PATH_AUTH, PATH_DOCS, PATH_PAGE } from '../../routes/paths';
+import AccountPopover from '../dashboard/header/AccountPopover';
 // ----------------------------------------------------------------------
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
@@ -78,15 +79,14 @@ export default function MainHeader() {
         >
           <Logo />
 
-          <Label color="info" sx={{ ml: 1 }}>
-            v3.0.0
-          </Label>
+          {/* <Label color="info" sx={{ ml: 1 }}>
+            v3.0.
+          </Label> */}
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
 
-
-          
+          {localStorage.getItem('accessToken') ?<><AccountPopover /></>:(<>
           <Button
             variant="contained"
             target={PATH_AUTH.loginUnprotected}
@@ -111,7 +111,7 @@ export default function MainHeader() {
             onClick={() => { navigate(PATH_AUTH.register)}}
           >
             Register
-          </Button>
+            </Button></>)}
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}
         </Container>

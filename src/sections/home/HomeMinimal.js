@@ -10,19 +10,18 @@ import { MotionInView, varFade } from '../../components/animate';
 const CARDS = [
   {
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
-    title: 'UI & UX Design',
-    description:
-      'The set is built on the principles of the atomic design system. It helps you to create projects fastest and easily customized packages for your projects.',
+    title: 'Browse',
+    description:'Select a category that best suits your interest. Use filters to customize and refine your search',
   },
   {
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
-    title: 'Development',
-    description: 'Easy to customize and extend each component, saving you time and money.',
+    title: 'Book',
+    description: 'Choose from available time slots and click Book next to the one that suits you. Then proceed to payment',
   },
   {
     icon: '/logo/logo_single.svg',
-    title: 'Branding',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.',
+    title: 'Go',
+    description: 'Meet your experience host at the time and venue of your experience and get started Rediscovering Pakistan!',
   },
 ];
 
@@ -96,13 +95,13 @@ export default function HomeMinimal() {
             mb: { xs: 10, md: 25 },
           }}
         >
-          <MotionInView variants={varFade().inUp}>
+          {/* <MotionInView variants={varFade().inUp}>
             <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
               Minimal
             </Typography>
-          </MotionInView>
+          </MotionInView> */}
           <MotionInView variants={varFade().inDown}>
-            <Typography variant="h2">What minimal helps you?</Typography>
+            <Typography variant="h2">How It Works</Typography>
           </MotionInView>
         </Box>
 
