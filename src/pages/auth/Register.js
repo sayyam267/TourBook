@@ -70,7 +70,12 @@ export default function Register() {
     <Page title="Register">
       <RootStyle>
         <HeaderStyle>
-          <Logo />
+          <div>
+            <Logo/>
+          <Typography component='span' variant="h4" sx={{ mt: { md: -2 },color:'primary.main' }}>
+            TOURBOOK
+          </Typography>
+          </div>
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               Already have an account?{' '}
@@ -88,7 +93,8 @@ export default function Register() {
             </Typography>
             <Image
               alt="register"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_register.png"
+              src="https://res.cloudinary.com/snakecloud/image/upload/v1653836880/signup_jrwqqc.png"
+              sx={{px:3}}
             />
           </SectionStyle>
         )}

@@ -15,7 +15,7 @@ import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
 //
-import Searchbar from './Searchbar';
+import TBLabel from './TBLabel';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
@@ -81,7 +81,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           px: { lg: 5 },
         }}
       >
-        {isDesktop && verticalLayout && <Logo sx={{ mr: 2.5 }} />}
+        {isDesktop && verticalLayout && <Logo sx={{ mr: 2.5,pt:1.5 }} />}
 
         {!isDesktop && (
           <IconButtonAnimate onClick={onOpenSidebar} sx={{ mr: 1, color: 'text.primary' }}>
@@ -89,7 +89,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           </IconButtonAnimate>
         )}
 
-        {/* <Searchbar /> */}
+        <TBLabel />
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>

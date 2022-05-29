@@ -1,214 +1,72 @@
-import FullCalendar from '@fullcalendar/react'; // => request placed at the top
-import listPlugin from '@fullcalendar/list';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import timelinePlugin from '@fullcalendar/timeline';
-import interactionPlugin from '@fullcalendar/interaction';
-//
-import { useState, useRef, useEffect } from 'react';
 // @mui
-import { Card, Button, Container, DialogTitle } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getEvents, openModal, closeModal, updateEvent, selectEvent, selectRange } from '../../redux/slices/calendar';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { styled } from '@mui/material/styles';
+import { useState } from 'react';
+import { Box, Grid, Container, Typography } from '@mui/material';
+
 // hooks
-import useSettings from '../../hooks/useSettings';
 import useResponsive from '../../hooks/useResponsive';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
-import { DialogAnimate } from '../../components/animate';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import { CalendarForm, CalendarStyle, CalendarToolbar } from '../../sections/@dashboard/calendar';
+import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../../sections/payment';
+
 
 // ----------------------------------------------------------------------
 
-const selectedEventSelector = (state) => {
-  const { events, selectedEventId } = state.calendar;
-  if (selectedEventId) {
-    return events.find((_event) => _event.id === selectedEventId);
+const RootStyle = styled('div')(({ theme }) => ({
+  minHeight: '100%',
+  paddingTop: theme.spacing(10),
+  paddingBottom: theme.spacing(10),
+}));
+
+// ----------------------------------------------------------------------
+
+export default function Payment({ user }) {
+  const isDesktop = useResponsive('up', 'md');
+  const [url, setUrl] = useState(null);
+
+  const handleUrl = (url) => {
+    setUrl(url);
+    console.log("hello", url);
   }
-  return null;
-};
-
-export default function Calendar() {
-  const { themeStretch } = useSettings();
-
-  const dispatch = useDispatch();
-
-  const isDesktop = useResponsive('up', 'sm');
-
-  const calendarRef = useRef(null);
-
-  const [date, setDate] = useState(new Date());
-
-  const [view, setView] = useState(isDesktop ? 'dayGridMonth' : 'listWeek');
-
-  const selectedEvent = useSelector(selectedEventSelector);
-
-  const { events, isOpenModal, selectedRange } = useSelector((state) => state.calendar);
-
-  useEffect(() => {
-    dispatch(getEvents());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      const newView = isDesktop ? 'dayGridMonth' : 'listWeek';
-      calendarApi.changeView(newView);
-      setView(newView);
-    }
-  }, [isDesktop]);
-
-  const handleClickToday = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.today();
-      setDate(calendarApi.getDate());
-    }
-  };
-
-  const handleChangeView = (newView) => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.changeView(newView);
-      setView(newView);
-    }
-  };
-
-  const handleClickDatePrev = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.prev();
-      setDate(calendarApi.getDate());
-    }
-  };
-
-  const handleClickDateNext = () => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.next();
-      setDate(calendarApi.getDate());
-    }
-  };
-
-  const handleSelectRange = (arg) => {
-    const calendarEl = calendarRef.current;
-    if (calendarEl) {
-      const calendarApi = calendarEl.getApi();
-      calendarApi.unselect();
-    }
-    dispatch(selectRange(arg.start, arg.end));
-  };
-
-  const handleSelectEvent = (arg) => {
-    dispatch(selectEvent(arg.event.id));
-  };
-
-  const handleResizeEvent = async ({ event }) => {
-    try {
-      dispatch(
-        updateEvent(event.id, {
-          allDay: event.allDay,
-          start: event.start,
-          end: event.end,
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDropEvent = async ({ event }) => {
-    try {
-      dispatch(
-        updateEvent(event.id, {
-          allDay: event.allDay,
-          start: event.start,
-          end: event.end,
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleAddEvent = () => {
-    dispatch(openModal());
-  };
-
-  const handleCloseModal = () => {
-    dispatch(closeModal());
-  };
-
   return (
-    <Page title="Calendar">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <HeaderBreadcrumbs
-          heading="Calendar"
-          links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Calendar' }]}
-          moreLink="https://fullcalendar.io/docs/react"
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
-              onClick={handleAddEvent}
-            >
-              New Event
-            </Button>
-          }
-        />
+    <Page title="Payment">
+      <RootStyle>
+        <Container>
+          <Box sx={{ mb: 5 }}>
+            <Typography variant="h3" align="center" paragraph>
+              Let's Top Up your Wallet!
+            </Typography>
+            <Typography align="center" sx={{ color: 'text.secondary' }}>
+              Buy TourBook Credits from here.
+            </Typography>
+          </Box>
 
-        <Card>
-          <CalendarStyle>
-            <CalendarToolbar
-              date={date}
-              view={view}
-              onNextDate={handleClickDateNext}
-              onPrevDate={handleClickDatePrev}
-              onToday={handleClickToday}
-              onChangeView={handleChangeView}
-            />
-            <FullCalendar
-              weekends
-              editable
-              droppable
-              selectable
-              events={events}
-              ref={calendarRef}
-              rerenderDelay={10}
-              initialDate={date}
-              initialView={view}
-              dayMaxEventRows={3}
-              eventDisplay="block"
-              headerToolbar={false}
-              allDayMaintainDuration
-              eventResizableFromStart
-              select={handleSelectRange}
-              eventDrop={handleDropEvent}
-              eventClick={handleSelectEvent}
-              eventResize={handleResizeEvent}
-              height={isDesktop ? 720 : 'auto'}
-              plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
-            />
-          </CalendarStyle>
-        </Card>
+          <Grid container spacing={isDesktop ? 3 : 5}>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  p: { md: 3 },
+                  borderRadius: 2,
 
-        <DialogAnimate open={isOpenModal} onClose={handleCloseModal}>
-          <DialogTitle>{selectedEvent ? 'Edit Event' : 'Add Event'}</DialogTitle>
-
-          <CalendarForm event={selectedEvent || {}} range={selectedRange} onCancel={handleCloseModal} />
-        </DialogAnimate>
-      </Container>
+                }}
+              >
+                <PaymentBillingAddress onGetSuccess={handleUrl} />
+              </Box>
+            </Grid>
+            {url ? <Grid item xs={12} md={6}>
+              <PaymentSummary url={url} />
+            </Grid> : <><Grid item xs={12} md={6}>
+              <Box display="flex"
+                alignItems="center"
+                justifyContent="center"><Typography variant="caption" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                  Nothing To Show
+                </Typography></Box>
+            </Grid> </>}
+          </Grid>
+        </Container>
+      </RootStyle>
     </Page>
   );
 }

@@ -19,15 +19,15 @@ ShopProductList.propTypes = {
 
 
 
-export default function ShopProductList() {
-  const [allTours, setAllTours] = useState(null);
+export default function ShopProductList({tours}) {
+  // const [allTours, setAllTours] = useState(null);
 
-  useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
-      console.log(res);
-      setAllTours(res.data.data);
-    })
-  },[]);
+  // useEffect(() => {
+  //   axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
+  //     console.log(res);
+  //     setAllTours(res.data.data);
+  //   })
+  // }, []);
 
   
   return (
@@ -44,7 +44,7 @@ export default function ShopProductList() {
       }}
       
     >
-      {allTours ? <>{allTours?.map(tour => { return <ShopProductCard tour={tour} /> })}</> : <SkeletonProductItem  />}
+      {tours ? <>{tours?.map(tour => { return <ShopProductCard tour={tour} /> })}</> : <SkeletonProductItem  />}
     </Box>
   );
 }

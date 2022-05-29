@@ -41,7 +41,6 @@ export default function EcommerceShop() {
 
   const { products, sortBy, filters } = useSelector((state) => state.product);
 
-  const filteredProducts = applyFilter(products, sortBy, filters);
 
   const defaultValues = {
     gender: filters.gender,
@@ -67,10 +66,14 @@ export default function EcommerceShop() {
     values.category === 'All';
 
   
+  const [allTours, setAllTours] = useState(null);
 
   useEffect(() => {
-    dispatch(filterProducts(values));
-  }, [dispatch, values]);
+    axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
+      console.log(res);
+      setAllTours(res.data.data);
+    })
+  }, []);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -99,7 +102,11 @@ export default function EcommerceShop() {
     setValue('rating', '');
   };
 
-  const [allTours,setAllTours] = ([]);
+  const handleSort = (value) =>{
+    const sortedTours = sortTour(allTours,value);
+    setAllTours(sortedTours);
+  }
+
 
 
   
@@ -135,34 +142,12 @@ export default function EcommerceShop() {
               />
             </FormProvider>
 
-            {/* <ShopProductSort /> */}
+            <ShopProductSort onHandleSort={handleSort}/>
           </Stack>
         </Stack>
 
-        {/* <Stack sx={{ mb: 3 }}>
-          {!isDefault && (
-            <>
-              <Typography variant="body2" gutterBottom>
-                <strong>{filteredProducts.length}</strong>
-                &nbsp;Products found
-              </Typography>
 
-              <ShopTagFiltered
-                filters={filters}
-                isShowReset={!isDefault && !openFilter}
-                onRemoveGender={handleRemoveGender}
-                onRemoveCategory={handleRemoveCategory}
-                onRemoveColor={handleRemoveColor}
-                onRemovePrice={handleRemovePrice}
-                onRemoveRating={handleRemoveRating}
-                onResetAll={handleResetFilter}
-              />
-            </>
-          )}
-        </Stack> */}
-
-        <ShopProductList />
-        {/* <CartWidget /> */}
+        <ShopProductList tours={allTours} />
       </Container>
     </Page>
   );
@@ -170,52 +155,34 @@ export default function EcommerceShop() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products, sortBy, filters) {
+function sortTour(allTours, sortBy, filters) {
   // SORT BY
-  if (sortBy === 'featured') {
-    products = orderBy(products, ['sold'], ['desc']);
-  }
   if (sortBy === 'newest') {
-    products = orderBy(products, ['createdAt'], ['desc']);
-  }
-  if (sortBy === 'priceDesc') {
-    products = orderBy(products, ['price'], ['desc']);
+    allTours.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    console.log(allTours);
   }
   if (sortBy === 'priceAsc') {
-    products = orderBy(products, ['price'], ['asc']);
+    allTours?.sort((a, b) => (a.price > b.price ? 1 : -1))
+    console.log(allTours);
+    console.log("price low to high")
   }
-  // FILTER PRODUCTS
-  if (filters.gender.length > 0) {
-    products = products.filter((product) => filters.gender.includes(product.gender));
+  if (sortBy === 'priceDesc') {
+    allTours?.sort((a, b) => (a.price > b.price ? -1 : 1))
+    console.log("price high to low")
+    console.log(allTours);
   }
-  if (filters.category !== 'All') {
-    products = products.filter((product) => product.category === filters.category);
-  }
-  if (filters.colors.length > 0) {
-    products = products.filter((product) => product.colors.some((color) => filters.colors.includes(color)));
-  }
-  if (filters.priceRange) {
-    products = products.filter((product) => {
-      if (filters.priceRange === 'below') {
-        return product.price < 25;
-      }
-      if (filters.priceRange === 'between') {
-        return product.price >= 25 && product.price <= 75;
-      }
-      return product.price > 75;
-    });
-  }
-  if (filters.rating) {
-    products = products.filter((product) => {
-      const convertRating = (value) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
-        return 1;
-      };
-      return product.totalRating > convertRating(filters.rating);
-    });
-  }
-  return products;
+  // FILTER Tours
+  // if (filters.priceRange) {
+  //   products = products.filter((product) => {
+  //     if (filters.priceRange === 'below') {
+  //       return product.price < 25;
+  //     }
+  //     if (filters.priceRange === 'between') {
+  //       return product.price >= 25 && product.price <= 75;
+  //     }
+  //     return product.price > 75;
+  //   });
+  // }
+  return allTours;
 }
 

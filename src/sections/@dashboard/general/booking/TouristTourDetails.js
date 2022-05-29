@@ -40,32 +40,6 @@ export default function TouristTourDetails(props) {
 
   const isLight = theme.palette.mode === 'light';
 
-  // const Users = [{
-  //   id: '403949230492340',
-  //   name: 'Sayyam',
-  //   phoneNumber:'00034234324',
-  //   status: 'Verified',
-  //   role:'tourguide'
-  // }, {
-  //     id: '403949230492340',
-  //     name: 'Komail',
-  //     phoneNumber: '00034234324',
-  //     status: 'Verified',
-  //     role:'tourguide'
-  //   }, {
-  //     id: '403949230492340',
-  //     name: 'Ali',
-  //     phoneNumber: '00034234324',
-  //     status: 'Verified',
-  //     role: 'TravelAgent'
-  //   }, {
-  //     id: '403949230492340',
-  //     name: 'Zain',
-  //     phoneNumber: '00034234324',
-  //     status: 'notVerify',
-  //     role: 'TravelAgent'
-  //   }];
-
   return (
     <>
       <Card>

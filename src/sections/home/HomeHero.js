@@ -77,11 +77,6 @@ export default function HomeHero() {
           variants={varFade().in}
         />
 
-        {/* <HeroImgStyle
-          alt="hero"
-          src="https://images.wallpaperscraft.com/image/single/pakistan_mountain_top_rock_clouds_7155_1600x900.jpg"
-          variants={varFade().inUp}
-        /> */}
         
         <Container>
           <ContentStyle>

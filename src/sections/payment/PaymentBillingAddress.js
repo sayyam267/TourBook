@@ -39,7 +39,6 @@ export default function PaymentBillingAddress({onGetSuccess}) {
     const cn = Number(cardno);
     console.log(myemail,myname,cn,cvc,Number(amount))
     
-
     try {
 
       await axios.post("http://tourbook-backend.herokuapp.com/transaction/buy", {

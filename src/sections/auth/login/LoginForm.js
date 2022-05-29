@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
+import GoogleLogin from 'react-google-login';
 import { Link as RouterLink } from 'react-router-dom';
+
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,6 +22,7 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 
 export default function LoginForm() {
   const { login } = useAuth();
+  const clientId ="http://828926823463-05j51oo8povh205mrcu8eo3m0qbk2eob.apps.googleusercontent.com/";
 
   const isMountedRef = useIsMountedRef();
 
@@ -29,6 +32,7 @@ export default function LoginForm() {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
   });
+
 
   const defaultValues = {
     email: '',
@@ -47,6 +51,19 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
+
+  const handleSuccess = (res) =>{
+    console.log("success");
+    console.log(res);
+
+    
+  }
+
+  
+  const handleFailure = (res) =>{
+    console.log("Fail");
+    console.log(res);
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -94,6 +111,16 @@ export default function LoginForm() {
       <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
         Login
       </LoadingButton>
+
+      <GoogleLogin 
+        clientId="828926823463-05j51oo8povh205mrcu8eo3m0qbk2eob.apps.googleusercontent.com"
+      buttonText="Login"
+      onSuccess={handleSuccess}
+      onFailure={handleFailure}
+      cookiePolicy={'single_host_origin'}
+
+
+      />
     </FormProvider>
   );
 }

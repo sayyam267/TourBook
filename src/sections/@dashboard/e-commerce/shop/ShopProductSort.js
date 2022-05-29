@@ -11,16 +11,12 @@ import MenuPopover from '../../../../components/MenuPopover';
 // ----------------------------------------------------------------------
 
 const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
   { value: 'newest', label: 'Newest' },
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
 ];
 
 function renderLabel(label) {
-  if (label === 'featured') {
-    return 'Featured';
-  }
   if (label === 'newest') {
     return 'Newest';
   }
@@ -32,11 +28,10 @@ function renderLabel(label) {
 
 // ----------------------------------------------------------------------
 
-export default function ShopProductSort() {
+export default function ShopProductSort({onHandleSort}) {
   const dispatch = useDispatch();
 
-  const { sortBy } = useSelector((state) => state.product);
-
+  const [sortLabel,setSortLabel] = useState('newest'); 
   const [open, setOpen] = useState(null);
 
   const handleOpen = (currentTarget) => {
@@ -49,7 +44,8 @@ export default function ShopProductSort() {
 
   const handleSortBy = (value) => {
     handleClose();
-    dispatch(sortByProducts(value));
+    setSortLabel(value);
+    onHandleSort(value)
   };
 
   return (
@@ -62,7 +58,7 @@ export default function ShopProductSort() {
       >
         Sort By:&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-          {renderLabel(sortBy)}
+          {renderLabel(sortLabel)}
         </Typography>
       </Button>
 
@@ -76,7 +72,7 @@ export default function ShopProductSort() {
         }}
       >
         {SORT_BY_OPTIONS.map((option) => (
-          <MenuItem key={option.value} selected={option.value === sortBy} onClick={() => handleSortBy(option.value)}>
+          <MenuItem key={option.value} selected={option.value === sortLabel} onClick={() => handleSortBy(option.value)}>
             {option.label}
           </MenuItem>
         ))}

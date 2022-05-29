@@ -20,6 +20,9 @@ import navConfig from './NavConfig';
 import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
+import AdminNavConfig from './AdminNavConfig';
+import VendorNavConfig from './VendorNavConfig';
+import TouristNavConfig from './TouristNavConfig';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +51,19 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
+
+  const checkRole = () => {
+    if (localStorage.getItem('role') === 'tourguide') {
+      return true;
+    }
+    return false;
+  }
+  const isadmin = () => {
+    if (localStorage.getItem('role') === 'admin') {
+      return true;
+    }
+    return false;
+  }
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -83,8 +99,8 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
         <NavbarAccount isCollapse={isCollapse} />
       </Stack>
-
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      {isadmin() ? <NavSectionVertical navConfig={AdminNavConfig} isCollapse={isCollapse} /> : <> {checkRole() ? <NavSectionVertical navConfig={VendorNavConfig} isCollapse={isCollapse} /> : <NavSectionVertical navConfig={TouristNavConfig} isCollapse={isCollapse} />}</>}
+      
 
       <Box sx={{ flexGrow: 1 }} />
 

@@ -1,7 +1,7 @@
 import { useLocation,useNavigate} from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container } from '@mui/material';
+import { Box, Button, AppBar, Toolbar, Container, Typography} from '@mui/material';
 // hooks
 
 import useOffSetTop from '../../hooks/useOffSetTop';
@@ -77,10 +77,11 @@ export default function MainHeader() {
             justifyContent: 'space-between',
           }}
         >
-          <Logo />
+          <Logo sx={{pt:2}} />
+          <Typography variant="h4" sx={{ml:1,pt:1.3}}> TOURBOOK</Typography>
 
           {/* <Label color="info" sx={{ ml: 1 }}>
-            v3.0.
+            T
           </Label> */}
           <Box sx={{ flexGrow: 1 }} />
 

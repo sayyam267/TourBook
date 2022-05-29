@@ -32,7 +32,6 @@ export const SORT_BY_OPTIONS = [
   { value: 'priceAsc', label: 'Price: Low-High' },
 ];
 
-export const FILTER_GENDER_OPTIONS = ['Men', 'Women', 'Kids'];
 
 export const FILTER_CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
 
@@ -44,16 +43,7 @@ export const FILTER_PRICE_OPTIONS = [
   { value: 'above', label: 'Above $75' },
 ];
 
-export const FILTER_COLOR_OPTIONS = [
-  '#00AB55',
-  '#000000',
-  '#FFFFFF',
-  '#FFC0CB',
-  '#FF4842',
-  '#1890FF',
-  '#94D82D',
-  '#FFC107',
-];
+
 
 // ----------------------------------------------------------------------
 
@@ -97,27 +87,6 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-
-            {/* <Stack spacing={1}>
-              <Typography variant="subtitle1">Category</Typography>
-              <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
-            </Stack> */}
-
-            {/* <Stack spacing={1}>
-              <Typography variant="subtitle1">Colour</Typography>
-
-              <Controller
-                name="colors"
-                control={control}
-                render={({ field }) => (
-                  <ColorManyPicker
-                    colors={FILTER_COLOR_OPTIONS}
-                    onChangeColor={(color) => field.onChange(onSelected(field.value, color))}
-                    sx={{ maxWidth: 36 * 4 }}
-                  />
-                )}
-              />
-            </Stack> */}
 
             <Stack spacing={1}>
               <Typography variant="subtitle1">Price</Typography>

@@ -7,6 +7,10 @@ import { HEADER } from '../../../config';
 // components
 import { NavSectionHorizontal } from '../../../components/nav-section';
 //
+
+import AdminNavConfig from './AdminNavConfig';
+import VendorNavConfig from './VendorNavConfig';
+import TouristNavConfig from './TouristNavConfig';
 import navConfig from './NavConfig';
 
 // ----------------------------------------------------------------------
@@ -25,13 +29,27 @@ const RootStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
 }));
 
-// ----------------------------------------------------------------------
+
 
 function NavbarHorizontal() {
+  const checkRole = () => {
+    if (localStorage.getItem('role') === 'tourguide') {
+      return true;
+    }
+    return false;
+  }
+  const isadmin = () => {
+    if (localStorage.getItem('role') === 'admin') {
+      return true;
+    }
+    return false;
+  }
+    
   return (
     <RootStyle>
       <Container maxWidth={false}>
-        <NavSectionHorizontal navConfig={navConfig} />
+        {isadmin() ? <NavSectionHorizontal navConfig={AdminNavConfig} /> : <> {checkRole() ? <NavSectionHorizontal navConfig={VendorNavConfig} /> : <NavSectionHorizontal navConfig={TouristNavConfig} />}</>}
+        
       </Container>
     </RootStyle>
   );

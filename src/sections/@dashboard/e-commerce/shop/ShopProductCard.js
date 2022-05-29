@@ -11,6 +11,9 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
 import { ColorPreview } from '../../../../components/color-utils';
+import { fDateTime } from '../../../../utils/formatTime';
+import Iconify from '../../../../components/Iconify';
+
 
 // ----------------------------------------------------------------------
 
@@ -33,51 +36,58 @@ export default function ShopProductCard({ tour }) {
   
 
 
-    // { pathname: `${PATH_DASHBOARD.eCommerce.root}/checkout`, query: { id: tour._id } }
-
   console.log(tour);
   return (
-    <Card>
-      <Box sx={{ position: 'relative' }}>
-        {/* {status && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              top: 16,
-              right: 16,
-              zIndex: 9,
-              position: 'absolute',
-              textTransform: 'uppercase',
-            }}
-          >
-            {status}
-          </Label>
-        )} */}
+    <Card sx={{ borderRadius: 2, bgcolor: 'background.neutral'}}>
+      <Box sx={{ position: 'relative', px: 1, pt: 1  }}>
         <Image alt={"img"} src={`http://tourbook-backend.herokuapp.com/${tour.tourpics[0]}`} ratio="1/1" />
       </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link to={linkTo} color="inherit" onClick={() => localStorage.setItem('tourId',tour._id)} component={RouterLink}>
-          <Typography variant="subtitle2" noWrap>
-            {tour.name}
-          </Typography>
-        </Link>
-    
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="subtitle2" noWrap>
-           Source: {tour.source.name}
-          </Typography>
+      <Stack spacing={2.5} sx={{ p: 3, pb: 2.5 }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <div>
+            <Link to={linkTo} color="inherit" onClick={() => localStorage.setItem('tourId', tour._id)} component={RouterLink}>
+              <Typography variant="subtitle2">{tour.name}</Typography>
+            </Link>
+            <Typography variant="caption" sx={{ color: 'text.disabled', mt: 0.5, display: 'block' }}>
+             Starting from {fDateTime(tour.addedOn)}
+            </Typography>
+          </div>
         </Stack>
-        <Stack direction="row" spacing={0.2}>
-          <Typography variant="subtitle2" noWrap>
-            Dstination{tour.destination.name}
-          </Typography>
-        </Stack>
-        <Stack direction="row" spacing={0.2}>
-            <Typography variant="subtitle1">Price {tour.price}Rs</Typography>
+
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ color: 'text.secondary' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon={'topcoat:location'} width={16} height={16} />
+            <Typography variant="caption">Source: {tour.source.name}</Typography>
           </Stack>
+        </Stack>
+
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ color: 'text.secondary' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon={'topcoat:location'} width={16} height={16} />
+            <Typography variant="caption">Dstination: {tour.destination.name}</Typography>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" alignItems="center" spacing={1} sx={{ color: 'text.secondary' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon={'ic:outline-airline-seat-recline-normal'} width={16} height={16} />
+            <Typography variant="caption">{tour.seats}</Typography>
+          </Stack>
+
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Label
+              variant="ghost"
+              color={'success'}
+            >
+              <Iconify icon={'icomoon-free:price-tags'} width={16} height={16} />
+              <Typography variant="caption"> {tour.price} RS</Typography>
+            </Label>
+          </Stack>
+        </Stack>
       </Stack>
+
+      
     
     </Card>
   );

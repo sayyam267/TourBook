@@ -39,6 +39,7 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
+
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
   maxWidth: 464,
@@ -89,7 +90,8 @@ export default function Login() {
             </Typography>
             <Image
               alt="login"
-              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_login.png"
+              src="https://res.cloudinary.com/snakecloud/image/upload/v1653836880/login_owqyv6.png"
+              sx={{px:3}}
               
             />
           </SectionStyle>
