@@ -18,35 +18,27 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 const TOURIST_OPTIONS = [
   {
-    label: 'Home',
-    linkTo: '/',
+    label: 'Dashboard',
+    linkTo: PATH_DASHBOARD.general.app,
   },
-  {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  {
-    label: 'Settings',
-    linkTo: PATH_DASHBOARD.user.account,
-  },
-  {
-    label:'Buy Credits',
-    linkTo:PATH_PAGE.payment,
-  }
+  // {
+  //   label:'Buy Credits',
+  //   linkTo:PATH_PAGE.payment,
+  // }
 ];
 const VENDOR_OPTIONS = [
   {
     label: 'Dashboard',
     linkTo: PATH_DASHBOARD.general.app,
   },
-  {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  {
-    label: 'Buy Credits',
-    linkTo: PATH_PAGE.payment,
-  }
+  // {
+  //   label: 'Profile',
+  //   linkTo: PATH_DASHBOARD.user.profile,
+  // },
+  // {
+  //   label: 'Buy Credits',
+  //   linkTo: PATH_PAGE.payment,
+  // }
 ];
 const ADMIN_OPTIONS = [
   {
@@ -57,10 +49,10 @@ const ADMIN_OPTIONS = [
     label: 'Admin Panel',
     linkTo: PATH_DASHBOARD.general.analytics,
   },
-  {
-    label: 'Settings',
-    linkTo: PATH_DASHBOARD.user.account,
-  },
+  // {
+  //   label: 'Settings',
+  //   linkTo: PATH_DASHBOARD.user.account,
+  // },
 ];
 
 // ----------------------------------------------------------------------

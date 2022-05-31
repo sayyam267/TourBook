@@ -27,8 +27,6 @@ export const AUTH0_API = {
   domain: process.env.REACT_APP_AUTH0_DOMAIN,
 };
 
-export const MAPBOX_API = process.env.REACT_APP_MAPBOX;
-
  // as '/dashboard/app'
 
   

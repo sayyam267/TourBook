@@ -24,17 +24,17 @@ const ICONS = {
 };
 
 const TouristNavConfig = [
-    // GENERAL
     // ----------------------------------------------------------------------
     {
         subheader: 'general',
         items: [
-            { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-            { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-            { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-            { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-            { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-            { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+            { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+            // { title: 'e-commerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+            // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+            { title: 'My Tours', path: PATH_DASHBOARD.user.list, icon: ICONS.banking },
+            { title: 'Custom Tour', path: PATH_DASHBOARD.blog.newPost, icon: ICONS.booking },
+            { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+            { title: 'Buy Credits', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
         ],
     },
 

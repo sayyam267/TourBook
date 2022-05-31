@@ -3,7 +3,8 @@ import { styled } from '@mui/material/styles';
 import { Grid, Container } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { ContactHero, ContactForm, ContactMap } from '../sections/contact';
+import { ContactHero, ContactForm, } from '../sections/contact';
+import Map from '../components/map/Map';
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +28,8 @@ export default function Contact() {
             <Grid item xs={12} md={6}>
               <ContactForm />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <ContactMap />
+            <Grid item xs={12} md={6} h='50vh'>
+            <Map />
             </Grid>
           </Grid>
         </Container>

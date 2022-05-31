@@ -32,8 +32,10 @@ NavbarAccount.propTypes = {
 export default function NavbarAccount({ isCollapse }) {
   const { user } = useAuth();
 
+  const name = localStorage.getItem('name');
+  const role = localStorage.getItem('role');
   return (
-    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.user.account}>
+    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.general.banking}>
       <RootStyle
         sx={{
           ...(isCollapse && {
@@ -57,10 +59,10 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {name}
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            {user?.role}
+            {role}
           </Typography>
         </Box>
       </RootStyle>

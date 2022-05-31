@@ -10,14 +10,17 @@ import Avatar from './Avatar';
 export default function MyAvatar({ ...other }) {
   const { user } = useAuth();
 
+  const photo = localStorage.getItem('pic');
+  const name = localStorage.getItem('name');
+
   return (
     <Avatar
-      src={user?.photoURL}
-      alt={user?.displayName}
-      color={user?.photoURL ? 'default' : createAvatar(user?.displayName).color}
+      src={photo}
+      alt={name}
+      color={photo ? 'default' : createAvatar(name).color}
       {...other}
     >
-      {createAvatar(user?.displayName).name}
+      {createAvatar(name).name}
     </Avatar>
   );
 }

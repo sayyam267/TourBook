@@ -70,22 +70,25 @@
 //   );
 // }
 
-import { capitalCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useCallback,useEffect } from 'react';
+import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
+
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
+import { LoadingButton } from '@mui/lab';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Tab, Box, Card, Tabs, Container } from '@mui/material';
+import { Box, Card, Container, Grid,  Stack, Typography } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
-// _mock_
-import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import {
   Profile,
@@ -94,6 +97,13 @@ import {
   ProfileGallery,
   ProfileFollowers,
 } from '../../sections/@dashboard/user/profile';
+
+import { fData } from '../../utils/formatNumber';
+import axios  from '../../utils/axios';
+// _mock
+import { countries } from '../../_mock';
+// componentsw
+import { FormProvider, RHFSwitch, RHFSelect, RHFTextField, RHFUploadAvatar } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -117,54 +127,79 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 
 export default function UserProfile() {
   const { themeStretch } = useSettings();
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const _userAbout = {name:'sayyam',}
 
-  const [currentTab, setCurrentTab] = useState('profile');
-  const [findFriends, setFindFriends] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleChangeTab = (newValue) => {
-    setCurrentTab(newValue);
+  const [user,setuser] = useState([]);
+
+  useEffect(() => {
+    axios.get("").then((response) => {
+      console.log(response);
+    })
+  },[]);
+
+
+
+  const UpdateUserSchema = Yup.object().shape({
+    displayName: Yup.string().required('Name is required'),
+  });
+
+  const defaultValues = {
+    displayName: user?.displayName || '',
+    email: user?.email || '',
+    photoURL: user?.photoURL || '',
+    phoneNumber: user?.phoneNumber || '',
+    country: user?.country || '',
+    address: user?.address || '',
+    state: user?.state || '',
+    city: user?.city || '',
+    zipCode: user?.zipCode || '',
+    about: user?.about || '',
+    isPublic: user?.isPublic || '',
   };
 
-  const handleFindFriends = (value) => {
-    setFindFriends(value);
+  const methods = useForm({
+    resolver: yupResolver(UpdateUserSchema),
+    defaultValues,
+  });
+
+  const {
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      enqueueSnackbar('Update success!');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const PROFILE_TABS = [
-    {
-      value: 'profile',
-      icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
-      component: <Profile myProfile={_userAbout} posts={_userFeeds} />,
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        setValue(
+          'photoURL',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        );
+      }
     },
-    {
-      value: 'Lisitings',
-      icon: <Iconify icon={'eva:heart-fill'} width={20} height={20} />,
-      component: <ProfileFollowers followers={_userFollowers} />,
-    },
-    {
-      value: 'Pending Approvals',
-      icon: <Iconify icon={'eva:people-fill'} width={20} height={20} />,
-      component: <ProfileFriends friends={_userFriends} findFriends={findFriends} onFindFriends={handleFindFriends} />,
-    },
-    {
-      value: 'Settings',
-      icon: <Iconify icon={'ic:round-perm-media'} width={20} height={20} />,
-      component: <ProfileGallery gallery={_userGallery} />,
-    },
-  ];
+    [setValue]
+  );
+
 
   return (
-    <Page title="Tour Agency DashBoard">
+    <Page title="Profile">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <h1>Tour Agency Dashboard</h1>
-        {/* <HeaderBreadcrumbs
-          heading="Profile"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: user?.displayName || '' },
-          ]}
-        /> */}
         <Card
           sx={{
             mb: 3,
@@ -174,25 +209,83 @@ export default function UserProfile() {
         >
           <ProfileCover myProfile={_userAbout} />
 
-          <TabsWrapperStyle>
-            <Tabs
-              value={currentTab}
-              scrollButtons="auto"
-              variant="scrollable"
-              allowScrollButtonsMobile
-              onChange={(e, value) => handleChangeTab(value)}
-            >
-              {PROFILE_TABS.map((tab) => (
-                <Tab disableRipple key={tab.value} value={tab.value} icon={tab.icon} label={capitalCase(tab.value)} />
-              ))}
-            </Tabs>
-          </TabsWrapperStyle>
+          
         </Card>
 
-        {PROFILE_TABS.map((tab) => {
-          const isMatched = tab.value === currentTab;
-          return isMatched && <Box key={tab.value}>{tab.component}</Box>;
-        })}
+        <Box>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
+                  <RHFUploadAvatar
+                    name="photoURL"
+                    accept="image/*"
+                    maxSize={3145728}
+                    onDrop={handleDrop}
+                    helperText={
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          mt: 2,
+                          mx: 'auto',
+                          display: 'block',
+                          textAlign: 'center',
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Allowed *.jpeg, *.jpg, *.png,
+                      </Typography>
+                    }
+                  />
+                </Card>
+              </Grid>
+
+              <Grid item xs={12} md={8}>
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      rowGap: 3,
+                      columnGap: 2,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <RHFTextField name="fname" label="First Name" />
+                    <RHFTextField name="lname" label="Last Name" />
+                    <RHFTextField name="email" label="Email Address" />
+
+                    <RHFTextField name="phoneNumber" label="Phone Number" />
+
+                    <RHFSelect name="country" label="Country" placeholder="Country">
+                      <option  value="Pakistan">Pakistan</option>
+                      {/* {countries.map((option) => (
+                        <option key={option.code} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))} */}
+                    </RHFSelect>
+
+
+                    <RHFTextField name="city" label="City" />
+                    <RHFTextField name="zipCode" label="Zip/Code" />
+                  </Box>
+
+                  <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+                    <RHFTextField name="about" multiline rows={4} label="About" />
+
+                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                      Save Changes
+                    </LoadingButton>
+                  </Stack>
+                </Card>
+              </Grid>
+            </Grid>
+          </FormProvider>
+
+
+
+</Box>
+    
       </Container>
     </Page>
   );

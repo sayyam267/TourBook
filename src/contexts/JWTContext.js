@@ -118,6 +118,7 @@ function AuthProvider({ children }) {
       password,
     })
       localStorage.setItem('role',response.data.data.role);
+      localStorage.setItem('pic',response.data.data.profilePicture);
       console.log(response.data.data.role);
       console.log(localStorage.getItem('role'));
       localStorage.setItem('balance',response.data.data.balance);
@@ -146,17 +147,19 @@ function AuthProvider({ children }) {
       role: Role,
       gender: Gender, 
       cnic: Cnic,
+    }).then(res => {
+      const { accessToken, user } = res.data;
+      <Navigate to={'/auth/login'} replace />
+      console.log("user signed up", res.data);
     });
-    const { accessToken, user } = response.data;
-    <Navigate to={PATH_AUTH.login} replace />
-    console.log("user signed up",response.data);
-    window.localStorage.setItem('accessToken', accessToken);
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user,
-      },
-    });
+    
+    // window.localStorage.setItem('accessToken', accessToken);
+    // dispatch({
+    //   type: 'REGISTER',
+    //   payload: {
+    //     user,
+    //   },
+    // });
   };
 
   const logout = async () => {

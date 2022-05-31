@@ -14,6 +14,13 @@ AuthGuard.propTypes = {
   children: PropTypes.node,
 };
 
+const isSession = () =>{
+  if(localStorage.getItem('accessToken')){
+    return true;
+  };
+  return false;
+}
+
 export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuth();
   const { pathname } = useLocation();
@@ -23,7 +30,7 @@ export default function AuthGuard({ children }) {
     return <LoadingScreen />;
   }
 
-  if (!isAuthenticated) {
+  if (!isSession) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }

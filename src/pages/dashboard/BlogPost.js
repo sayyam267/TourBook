@@ -1,131 +1,76 @@
-import { useEffect, useState, useCallback } from 'react';
-import { sentenceCase } from 'change-case';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 // @mui
-import { Box, Card, Divider, Container, Typography, Pagination } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
-import useIsMountedRef from '../../hooks/useIsMountedRef';
-// utils
-import axios from '../../utils/axios';
+import { Box, Grid, Card, Link, Avatar, IconButton, Typography } from '@mui/material';
 // components
-import Page from '../../components/Page';
-import Markdown from '../../components/Markdown';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { SkeletonPost } from '../../components/skeleton';
-// sections
-import {
-  BlogPostHero,
-  BlogPostTags,
-  BlogPostRecent,
-  BlogPostCommentList,
-  BlogPostCommentForm,
-} from '../../sections/@dashboard/blog';
-
+import Iconify from '../../components/Iconify';
+import InputStyle from '../../components/InputStyle';
+import SocialsButton from '../../components/SocialsButton';
+import SearchNotFound from '../../components/SearchNotFound';
+import axios from '../../utils/axios'
+import VendorRequestCard from '../../sections/@dashboard/general/e-commerce/VendorRequestCard';
+import { SkeletonProductItem } from '../../components/skeleton';
 // ----------------------------------------------------------------------
 
-export default function BlogPost() {
-  const { themeStretch } = useSettings();
 
-  const isMountedRef = useIsMountedRef();
 
-  const { title } = useParams();
 
-  const [recentPosts, setRecentPosts] = useState([]);
+export default function ProfileFriends() {
 
-  const [post, setPost] = useState(null);
 
-  const [error, setError] = useState(null);
+  const [order, setOrder] = useState([]);
+  const [refund, setRefundRequest] = useState([]);
 
-  const getPost = useCallback(async () => {
-    try {
-      const response = await axios.get('/api/blog/post', {
-        params: { title },
-      });
-
-      if (isMountedRef.current) {
-        setPost(response.data.post);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error.message);
-    }
-  }, [isMountedRef, title]);
-
-  const getRecentPosts = useCallback(async () => {
-    try {
-      const response = await axios.get('/api/blog/posts/recent', {
-        params: { title },
-      });
-
-      if (isMountedRef.current) {
-        setRecentPosts(response.data.recentPosts);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [isMountedRef, title]);
 
   useEffect(() => {
-    getPost();
-    getRecentPosts();
-  }, [getRecentPosts, getPost]);
+    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+      headers: {
+        'x-auth-token': localStorage.getItem('accessToken'),
+      }
+    }).then(res => {
+      console.log(res);
+      setOrder(res.data.data.reservationRequests);
+      // setRefundRequest(res.data.data.refundRequests);
+    }).catch(err => console.log(err))
+  }, []);
+
+  const fetchRequest = () => {
+    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+      headers: {
+        'x-auth-token': localStorage.getItem('accessToken'),
+      }
+    }).then(res => {
+      console.log(res);
+      setOrder(res.data.data.reservationRequests);
+      // setRefundRequest(res.data.data.refundRequests);
+    }).catch(err => console.log(err))
+  }
 
   return (
-    <Page title="Blog: Post Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Post Details"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Blog', href: PATH_DASHBOARD.blog.root },
-            { name: sentenceCase(title) },
-          ]}
-        />
+    <Box sx={{ mt: 5 }}>
+      <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }} >
+        Pending Request
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={8} md={6}>
+          {order ? <>{order?.map(order => { return <VendorRequestCard name={order.name} email={order.email} amount={order.amount} seats={order.seats} _id={order._id} date={order.date} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
+        </Grid>
+      </Grid>
 
-        {post && (
-          <Card>
-            <BlogPostHero post={post} />
 
-            <Box sx={{ p: { xs: 3, md: 5 } }}>
-              <Typography variant="h6" sx={{ mb: 5 }}>
-                {post.description}
-              </Typography>
+      <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }} >
+        Refund Request
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={8} md={6}>
+          {refund ? <>{refund?.map(refud => { return <VendorRequestCard name={order.touristID.fname} email="Tour Reservation for 3 seats" title={"Approve Request"} button1="Don't Verify" button2="Verify" /> })}</> : <SkeletonProductItem />}
+        </Grid>
+      </Grid>
 
-              <Markdown children={post.body} />
 
-              <Box sx={{ my: 5 }}>
-                <Divider />
-                <BlogPostTags post={post} />
-                <Divider />
-              </Box>
 
-              <Box sx={{ display: 'flex', mb: 2 }}>
-                <Typography variant="h4">Comments</Typography>
-                <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-                  ({post.comments.length})
-                </Typography>
-              </Box>
-
-              <BlogPostCommentList post={post} />
-
-              <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={8} color="primary" />
-              </Box>
-
-              <BlogPostCommentForm />
-            </Box>
-          </Card>
-        )}
-
-        {!post && !error && <SkeletonPost />}
-
-        {error && <Typography variant="h6">404 {error}!</Typography>}
-
-        <BlogPostRecent posts={recentPosts} />
-      </Container>
-    </Page>
+    </Box>
   );
 }
+
+// ----------------------------------------------------------------------

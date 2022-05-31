@@ -9,17 +9,17 @@ import { MotionInView, varFade } from '../../components/animate';
 
 const CARDS = [
   {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_design.svg',
+    icon: "https://res.cloudinary.com/snakecloud/image/upload/v1653940693/icons8-browse-page-100_vbtzld.png",
     title: 'Browse',
     description:'Select a category that best suits your interest. Use filters to customize and refine your search',
   },
   {
-    icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_code.svg',
+    icon: 'https://res.cloudinary.com/snakecloud/image/upload/v1653941521/icons8-booking-64_pwjlfu.png',
     title: 'Book',
     description: 'Choose from available time slots and click Book next to the one that suits you. Then proceed to payment',
   },
   {
-    icon: '/logo/logo_single.svg',
+    icon: 'https://res.cloudinary.com/snakecloud/image/upload/v1653941695/icons8-traveler-96_ulq0av.png',
     title: 'Go',
     description: 'Meet your experience host at the time and venue of your experience and get started Rediscovering Pakistan!',
   },
@@ -95,11 +95,6 @@ export default function HomeMinimal() {
             mb: { xs: 10, md: 25 },
           }}
         >
-          {/* <MotionInView variants={varFade().inUp}>
-            <Typography component="div" variant="overline" sx={{ mb: 2, color: 'text.disabled' }}>
-              Minimal
-            </Typography>
-          </MotionInView> */}
           <MotionInView variants={varFade().inDown}>
             <Typography variant="h2">How It Works</Typography>
           </MotionInView>
@@ -121,15 +116,8 @@ export default function HomeMinimal() {
                   sx={{
                     mb: 10,
                     mx: 'auto',
-                    width: 40,
-                    height: 40,
-                    filter: (theme) => shadowIcon(theme.palette.primary.main),
-                    ...(index === 0 && {
-                      filter: (theme) => shadowIcon(theme.palette.info.main),
-                    }),
-                    ...(index === 1 && {
-                      filter: (theme) => shadowIcon(theme.palette.error.main),
-                    }),
+                    width: 70,
+                    height: 70,
                   }}
                 />
                 <Typography variant="h5" paragraph>

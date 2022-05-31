@@ -106,7 +106,7 @@ export default function AccountGeneral() {
               }
             />
 
-            {/* <RHFSwitch name="isPublic" labelPlacement="start" label="Public Profile" sx={{ mt: 5 }} /> */}
+            
           </Card>
         </Grid>
 

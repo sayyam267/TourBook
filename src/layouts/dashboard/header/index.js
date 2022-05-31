@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
 // @mui
 import {useState} from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar,Button } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
 import useResponsive from '../../../hooks/useResponsive';
@@ -14,6 +16,7 @@ import { HEADER, NAVBAR } from '../../../config';
 import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_PAGE } from '../../../routes/paths';
 //
 import TBLabel from './TBLabel';
 import AccountPopover from './AccountPopover';
@@ -21,6 +24,8 @@ import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
 import Label from '../../../components/Label';
+import useAuth from '../../../hooks/useAuth';
+import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 // ----------------------------------------------------------------------
 
@@ -65,12 +70,30 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
   const isDesktop = useResponsive('up', 'lg');
 
   const [credits,setCredits] = useState(!localStorage.getItem('balance') ?0:localStorage.getItem('balance'));
+  const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
+
+  const isMountedRef = useIsMountedRef();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const isCredit = async () =>{
     if(credits > 99){
       return true;
     }
       return false;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(PATH_AUTH.login, { replace: true });
+
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
   };
 
   return (
@@ -97,7 +120,10 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
             Credits : {credits}.0 Rs
           </Label> 
           {/* <NotificationsPopover /> */}
-          <AccountPopover />
+          <Button color="error" size="small" variant="contained" onClick={handleLogout} endIcon={<Iconify icon={'websymbol:logout'} />}>
+            Logout
+          </Button>
+          {/* <AccountPopover /> */}
         </Stack>
       </Toolbar>
     </RootStyle>

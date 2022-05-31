@@ -28,6 +28,135 @@ LoadingScreen.propTypes = {
   isDashboard: PropTypes.bool,
 };
 
+const loading = () =>{
+  return(
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      style={{
+        margin: "auto",
+        background: "rgba(0, 0, 0, 0) none repeat scroll 0% 0%",
+        display: "block",
+        shapeRendering: "auto",
+      }}
+      width="210px"
+      height="210px"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="xMidYMid"
+    >
+      <circle cx={84} cy={50} r={10} fill="#388e3c">
+        <animate
+          attributeName="r"
+          repeatCount="indefinite"
+          dur="0.2717391304347826s"
+          calcMode="spline"
+          keyTimes="0;1"
+          values="13;0"
+          keySplines="0 0.5 0.5 1"
+          begin="0s"
+        />
+        <animate
+          attributeName="fill"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="discrete"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="#388e3c;#388e3c;#388e3c;#388e3c;#388e3c"
+          begin="0s"
+        />
+      </circle>
+      <circle cx={16} cy={50} r={10} fill="#388e3c">
+        <animate
+          attributeName="r"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="0;0;13;13;13"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="0s"
+        />
+        <animate
+          attributeName="cx"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="16;16;16;50;84"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="0s"
+        />
+      </circle>
+      <circle cx={50} cy={50} r={10} fill="#388e3c">
+        <animate
+          attributeName="r"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="0;0;13;13;13"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.2717391304347826s"
+        />
+        <animate
+          attributeName="cx"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="16;16;16;50;84"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.2717391304347826s"
+        />
+      </circle>
+      <circle cx={84} cy={50} r={10} fill="#388e3c">
+        <animate
+          attributeName="r"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="0;0;13;13;13"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.5434782608695652s"
+        />
+        <animate
+          attributeName="cx"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="16;16;16;50;84"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.5434782608695652s"
+        />
+      </circle>
+      <circle cx={16} cy={50} r={10} fill="#388e3c">
+        <animate
+          attributeName="r"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="0;0;13;13;13"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.8152173913043478s"
+        />
+        <animate
+          attributeName="cx"
+          repeatCount="indefinite"
+          dur="1.0869565217391304s"
+          calcMode="spline"
+          keyTimes="0;0.25;0.5;0.75;1"
+          values="16;16;16;50;84"
+          keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+          begin="-0.8152173913043478s"
+        />
+      </circle>
+    </svg>
+  )
+}
+
 export default function LoadingScreen({ isDashboard, ...other }) {
   return (
     <>

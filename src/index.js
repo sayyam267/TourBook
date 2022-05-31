@@ -10,9 +10,6 @@ import 'simplebar/src/simplebar.css';
 // lightbox
 import 'react-image-lightbox/style.css';
 
-// map
-import 'mapbox-gl/dist/mapbox-gl.css';
-
 // editor
 import 'react-quill/dist/quill.snow.css';
 

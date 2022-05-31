@@ -2,17 +2,17 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Box, Grid, Card, Button, Avatar, Typography,Container } from '@mui/material';
+import { Box, Grid, Card, Button, Avatar, Typography, Container } from '@mui/material';
 // components
-import Iconify from '../../../../components/Iconify';
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import Iconify from '../../components/Iconify';
+import { PATH_DASHBOARD } from '../../routes/paths';
 
 
-import VendorProductCard from '../../e-commerce/shop/VendorProductCard';
+import VendorProductCard from '../../sections/@dashboard/e-commerce/shop/VendorProductCard';
 
-import axios from '../../../../utils/axios';
-import { SkeletonProductItem } from '../../../../components/skeleton';
-import useSettings from '../../../../hooks/useSettings';
+import axios from '../../utils/axios';
+import { SkeletonProductItem } from '../../components/skeleton';
+import useSettings from '../../hooks/useSettings';
 // ----------------------------------------------------------------------
 
 VendorPendingRequest.propTypes = {
@@ -23,7 +23,6 @@ export default function VendorPendingRequest() {
   const { themeStretch } = useSettings();
   const [allTours, setAllTours] = useState([]);
 
-  // get all tours of vendor to show in my listings
   useEffect(() => {
     axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
       headers: {
@@ -38,34 +37,31 @@ export default function VendorPendingRequest() {
 
   return (
     <Container maxWidth={themeStretch ? false : 'lg'}>
-    <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 5 }}>
 
-      <Grid container spacing={3}>
-        <Grid sx={12} md={6}>
-          <Typography variant="h4" sx={{ mb: 3 }}>
-            My Listings
-          </Typography>
+        <Grid container spacing={3}>
+          <Grid sx={12} md={6}>
+            <Typography variant="h4" sx={{ mb: 3 }}>
+              My Listings
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid sx={12} md={6}>
-          <Button fullWidth size="large" component={RouterLink} to={PATH_DASHBOARD.eCommerce.newProduct}>Create a tour</Button>
-        </Grid>
-      </Grid>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 3,
-          gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          },
-        }}
-      >
-        {allTours ? <>{allTours?.map(tour => { return <VendorProductCard tour={tour} /> })}</> : <SkeletonProductItem />}
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 3,
+            gridTemplateColumns: {
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+              lg: 'repeat(4, 1fr)',
+            },
+          }}
+        >
+          {allTours ? <>{allTours?.map(tour => { return <VendorProductCard tour={tour} /> })}</> : <SkeletonProductItem />}
+        </Box>
       </Box>
-    </Box>
     </Container>
   );
 }

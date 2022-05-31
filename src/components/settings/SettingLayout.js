@@ -22,6 +22,7 @@ const BoxStyle = styled(CardActionArea)(({ theme }) => ({
 
 export default function SettingLayout() {
   const { themeLayout, onChangeLayout } = useSettings();
+  const navBarVertical = false; 
 
   return (
     <RadioGroup name="themeLayout" value={themeLayout} onChange={onChangeLayout}>
@@ -40,8 +41,9 @@ export default function SettingLayout() {
                   }),
                 }}
               >
-                {isVertical ? <VerticalBox isSelected={isSelected} /> : <HorizontalBox isSelected={isSelected} />}
-                <BoxMask value={layout} />
+                <VerticalBox isSelected={isSelected} /> 
+                {/* {navBarVertical? <VerticalBox isSelected={isSelected} /> : <HorizontalBox isSelected={isSelected} />} */}
+                <BoxMask value={'vertical'} />
               </BoxStyle>
             </Grid>
           );

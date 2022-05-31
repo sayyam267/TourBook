@@ -30,11 +30,13 @@ import {
 } from '../../sections/@dashboard/general/e-commerce';
 import axios from '../../utils/axios'
 
+
 // ----------------------------------------------------------------------
 
 export default function EcommerceShop() {
   const { themeStretch } = useSettings();
 
+  
   const dispatch = useDispatch();
 
   const [openFilter, setOpenFilter] = useState(false);
@@ -113,8 +115,8 @@ export default function EcommerceShop() {
 
   return (
     <Page title="Dashboard">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        {/* <h1>Tourist DashBoard</h1> */}
+      <Container maxWidth={themeStretch ? false : 'sx'}>
+        
         <Stack sx={{mt:2}}/>
 
         <Stack sx={{mb:2}}>
@@ -171,7 +173,6 @@ function sortTour(allTours, sortBy, filters) {
     console.log("price high to low")
     console.log(allTours);
   }
-  // FILTER Tours
   // if (filters.priceRange) {
   //   products = products.filter((product) => {
   //     if (filters.priceRange === 'below') {

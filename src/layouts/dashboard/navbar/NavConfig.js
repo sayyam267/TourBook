@@ -38,8 +38,7 @@ const navConfig = [
     ],
   },
 
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
+  
   {
     subheader: 'management',
     items: [

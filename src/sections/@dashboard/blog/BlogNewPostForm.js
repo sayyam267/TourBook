@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect} from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -12,9 +12,10 @@ import { Grid, Card, Chip, Stack, Button, TextField, Typography, Autocomplete } 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { RHFSwitch, RHFEditor, FormProvider, RHFTextField, RHFUploadSingleFile } from '../../../components/hook-form';
+import { RHFSwitch, RHFSelect, FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 //
 import BlogNewPostPreview from './BlogNewPostPreview';
+import axios from '../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -40,14 +41,21 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
-// ----------------------------------------------------------------------
 
+
+
+//  Custom Tour Form
 export default function BlogNewPostForm() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const [cities,setCities] = useState();
+
+
+ 
 
   const handleOpenPreview = () => {
     setOpen(true);
@@ -58,23 +66,23 @@ export default function BlogNewPostForm() {
   };
 
   const NewBlogSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
-    content: Yup.string().min(1000).required('Content is required'),
-    cover: Yup.mixed().required('Cover is required'),
+    maxBudget: Yup.number().required('Budget Required').min(0),
+    seats: Yup.number().required('Budget Required').min(1),
+    source: Yup.string().required('StartLocation is required'),
+    destination: Yup.string().required('Description is required'),
+    isHotel: Yup.boolean(),
+    isGuide: Yup.boolean(),
   });
 
   const defaultValues = {
-    title: '',
     description: '',
-    content: '',
-    cover: null,
-    tags: ['Logan'],
-    publish: true,
-    comments: true,
-    metaTitle: '',
-    metaDescription: '',
-    metaKeywords: ['Logan'],
+    maxBudget: 0,
+    seats: 0,
+    source: '',
+    destination: '',
+    isHotel: false,
+    isGuide: false,
   };
 
   const methods = useForm({
@@ -93,13 +101,23 @@ export default function BlogNewPostForm() {
 
   const values = watch();
 
+  useEffect(() => {
+    axios.get('http://tourbook-backend.herokuapp.com/city/all').then((res) => {
+      console.log(res);
+      console.log(res.data.data);
+      setCities(res.data.data);
+      setValue('source', res.data.data[0]._id);
+      setValue('destination', res.data.data[0]._id);
+    });
+  }, []);
+
   const onSubmit = async () => {
+    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      handleClosePreview();
-      enqueueSnackbar('Post success!');
-      navigate(PATH_DASHBOARD.blog.posts);
+      enqueueSnackbar('CustomTour Created!');
+      // navigate(PATH_DASHBOARD.blog.posts);
     } catch (error) {
       console.error(error);
     }
@@ -129,19 +147,43 @@ export default function BlogNewPostForm() {
           <Grid item xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <RHFTextField name="title" label="Post Title" />
+                <Stack spacing={1}>
+                <LabelStyle>Description</LabelStyle>
+                <RHFTextField name="description" label="Enter Detail Description" multiline rows={4} />
+            </Stack>
 
-                <RHFTextField name="description" label="Description" multiline rows={3} />
-
-                <div>
-                  <LabelStyle>Content</LabelStyle>
-                  <RHFEditor name="content" />
-                </div>
 
                 <div>
-                  <LabelStyle>Cover</LabelStyle>
-                  <RHFUploadSingleFile name="cover" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
+                <Stack spacing={1}>
+                  <LabelStyle>Location</LabelStyle>
+                  <Stack direction="row" spacing={3}>
+                      <RHFSelect name="source" label="Enter Starting Location" placeholder="City">
+                        {cities?.map(({ _id, name }) => (
+                          <option key={_id} value={_id}>
+                            {name}
+                          </option>
+                        ))}
+                      </RHFSelect>
+                      <RHFSelect name="destination" label="Enter Destination Location" placeholder="City">
+                        {cities?.map(({ _id, name }) => (
+                          <option key={_id} value={_id}>
+                            {name}
+                          </option>
+                        ))}
+                      </RHFSelect>
+                    </Stack>
+                  </Stack>
                 </div>
+                <div>
+                  <Stack spacing={1}>
+                    <LabelStyle>Extras</LabelStyle>
+                    <Stack direction="row" spacing={3}>
+                      <RHFCheckbox name="isHotel" label="Need Hotel" />
+                      <RHFCheckbox name="isGuide" label="Need TourGuide" />
+                    </Stack>
+                  </Stack>
+                </div>
+                
               </Stack>
             </Card>
           </Grid>
@@ -150,43 +192,19 @@ export default function BlogNewPostForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <div>
-                  <RHFSwitch
-                    name="publish"
-                    label="Publish"
-                    labelPlacement="start"
-                    sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }}
-                  />
-
-                  <RHFSwitch
-                    name="comments"
-                    label="Enable comments"
-                    labelPlacement="start"
-                    sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-                  />
+                  <Stack spacing={1}>
+                    <LabelStyle>Budget</LabelStyle>
+                  <RHFTextField name="maxBudget" label="Max Budget in RS"/>
+                  </Stack>
                 </div>
 
-                <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      multiple
-                      freeSolo
-                      onChange={(event, newValue) => field.onChange(newValue)}
-                      options={TAGS_OPTION.map((option) => option)}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
-                        ))
-                      }
-                      renderInput={(params) => <TextField label="Tags" {...params} />}
-                    />
-                  )}
-                />
+                <div>
+                  <Stack spacing={1}>
+                    <LabelStyle>Seats</LabelStyle>
+                    <RHFTextField name="seats" label="No of person" />
+                  </Stack>
+                </div>
 
-                <RHFTextField name="metaTitle" label="Meta title" />
-
-                <RHFTextField name="metaDescription" label="Meta description" fullWidth multiline rows={3} />
 
                 <Controller
                   name="metaKeywords"
@@ -210,10 +228,7 @@ export default function BlogNewPostForm() {
             </Card>
 
             <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
-              <Button fullWidth color="inherit" variant="outlined" size="large" onClick={handleOpenPreview}>
-                Preview
-              </Button>
-              <LoadingButton fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
+              <LoadingButton sx={{mx:2}} fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
                 Post
               </LoadingButton>
             </Stack>
