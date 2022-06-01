@@ -123,6 +123,7 @@ function AuthProvider({ children }) {
       console.log(localStorage.getItem('role'));
       localStorage.setItem('balance',response.data.data.balance);
       localStorage.setItem('name',response.data.data.name);
+      localStorage.setItem('email',response.data.data.email);
       const { accessToken, user } = response.data;
       console.log(response.data, "login success..", response.data.data.token);
       setSession(response.data.data.token);
@@ -164,6 +165,11 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    window.localStorage.removeItem('role');
+    window.localStorage.removeItem('balance');
+    window.localStorage.removeItem('pic');
+    window.localStorage.removeItem('name');
+    window.localStorage.removeItem('email');
     dispatch({ type: 'LOGOUT' });
   };
 

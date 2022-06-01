@@ -132,32 +132,27 @@ export default function UserProfile() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [user,setuser] = useState([]);
-
-  useEffect(() => {
-    axios.get("").then((response) => {
-      console.log(response);
-    })
-  },[]);
+ 
 
 
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
+    fname: Yup.string().required('FirstName is required'),
+    lname: Yup.string().required('lastName is required'),
+    email: Yup.string().email().required('Email is required'),
+    phoneNumber: Yup.string().required('Name is required'),
+    country: Yup.string().required('Name is required'),
+    city: Yup.string().required('Name is required'),
   });
 
   const defaultValues = {
-    displayName: user?.displayName || '',
-    email: user?.email || '',
-    photoURL: user?.photoURL || '',
-    phoneNumber: user?.phoneNumber || '',
-    country: user?.country || '',
-    address: user?.address || '',
-    state: user?.state || '',
-    city: user?.city || '',
-    zipCode: user?.zipCode || '',
-    about: user?.about || '',
-    isPublic: user?.isPublic || '',
+    fname:  '',
+    lname: '',
+    photoURL: '',
+    email:'',
+    phoneNumber:'',
+    country: 'Pakistan',
+    city: '',
   };
 
   const methods = useForm({
@@ -168,11 +163,28 @@ export default function UserProfile() {
   const {
     setValue,
     handleSubmit,
+    reset,
+    watch,
     formState: { isSubmitting },
   } = methods;
 
+
+  const values  = watch();
+
+  useEffect(() => {
+    console.log(process.env.REACT_APP_GETUSERBYEMAIL);
+    const Email= localStorage.getItem('email');
+    axios.get(process.env.REACT_APP_GETUSERBYEMAIL, { params: { email: Email } }).then((response) => {
+      console.log(response.data.data[0])
+      const user = response.data.data[0]
+      // setValue('fname', 'Bob')
+      reset({fname:user.fname,lname:user.lname,email:user.email,phoneNumber:user.phoneNumber,country:user.country,city:user.city});
+    })
+  }, []);
+
   const onSubmit = async () => {
     try {
+      console.log(values.fname,values.lname,values.country, values.city,values.phoneNumber,values.email);
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
     } catch (error) {
@@ -267,11 +279,10 @@ export default function UserProfile() {
 
 
                     <RHFTextField name="city" label="City" />
-                    <RHFTextField name="zipCode" label="Zip/Code" />
                   </Box>
 
                   <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                    <RHFTextField name="about" multiline rows={4} label="About" />
+                    {/* <RHFTextField name="about" multiline rows={4} label="About" /> */}
 
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                       Save Changes

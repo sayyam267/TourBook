@@ -1,7 +1,7 @@
 {
-  "name": "@minimal/minimal-kit-react",
-  "author": "minimals.cc",
-  "version": "3.0.0",
+  "name": "tourbook",
+  "author": "cs28 Fyp",
+  "version": "1.0.0",
   "description": "Javascript Version",
   "private": true,
   "scripts": {
@@ -66,6 +66,7 @@
     "emoji-mart": "^3.0.0",
     "firebase": "^9.6.1",
     "framer-motion": "^4.1.17",
+    "gapi-script": "^1.2.0",
     "google-map-react": "^2.1.10",
     "highlight.js": "^11.3.1",
     "history": "^5.2.0",
