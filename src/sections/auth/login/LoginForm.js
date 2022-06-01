@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
+import axios from '../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,8 @@ export default function LoginForm() {
   const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [gloading,setGloading] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -59,7 +62,6 @@ export default function LoginForm() {
     
   }
 
-  
   const handleFailure = (res) =>{
     console.log("Fail");
     console.log(res);
@@ -77,8 +79,17 @@ export default function LoginForm() {
       }
     }
   };
+  // const GoogleLogin = () => {
+  //   window.open("http://tourbook-backend.herokuapp.com/auth/google", "_self")
+  //   setGloading(true);
+  //   axios.get("http://tourbook-backend.herokuapp.com/auth/google").then(res =>{
+  //     console.log(res);
+  //     setGloading(true);
+  //   }).catch((err) => { console.log(err); setGloading(false); })
+  // }
 
   return (
+    <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
@@ -112,15 +123,19 @@ export default function LoginForm() {
         Login
       </LoadingButton>
 
+      
+
       <GoogleLogin 
-        clientId="828926823463-05j51oo8povh205mrcu8eo3m0qbk2eob.apps.googleusercontent.com"
+      clientId="828926823463-05j51oo8povh205mrcu8eo3m0qbk2eob.apps.googleusercontent.com"
       buttonText="Login"
       onSuccess={handleSuccess}
       onFailure={handleFailure}
       cookiePolicy={'single_host_origin'}
-
-
       />
     </FormProvider>
+    {/* <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={GoogleLogin} loading={gloading}>
+        Google Login
+      </LoadingButton> */}
+      </>
   );
 }

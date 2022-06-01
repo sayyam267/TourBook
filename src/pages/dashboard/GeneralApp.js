@@ -4,7 +4,7 @@ import orderBy from 'lodash/orderBy';
 // form
 import { useForm } from 'react-hook-form';
 // @mui
-import { Container, Typography, Stack, Grid } from '@mui/material';
+import { Container, Typography, Stack, Grid,Box } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProducts, filterProducts } from '../../redux/slices/product';
@@ -23,12 +23,14 @@ import {
   ShopProductList,
   ShopFilterSidebar,
   ShopProductSearch,
+  ShopProductCard
 } from '../../sections/@dashboard/e-commerce/shop';
 import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
 import {
   EcommerceNewProducts,
 } from '../../sections/@dashboard/general/e-commerce';
 import axios from '../../utils/axios'
+import { SkeletonProductItem } from '../../components/skeleton';
 
 
 // ----------------------------------------------------------------------
@@ -69,6 +71,7 @@ export default function EcommerceShop() {
 
   
   const [allTours, setAllTours] = useState(null);
+  
 
   useEffect(() => {
     axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
@@ -106,7 +109,10 @@ export default function EcommerceShop() {
 
   const handleSort = (value) =>{
     const sortedTours = sortTour(allTours,value);
-    setAllTours(sortedTours);
+    // console.log(sortedTours);
+    setAllTours([...sortedTours]);
+    console.log(allTours);
+
   }
 
 
@@ -148,8 +154,7 @@ export default function EcommerceShop() {
           </Stack>
         </Stack>
 
-
-        <ShopProductList tours={allTours} />
+        {allTours ? <ShopProductList tours={allTours} />: <></>}
       </Container>
     </Page>
   );
@@ -162,16 +167,21 @@ function sortTour(allTours, sortBy, filters) {
   if (sortBy === 'newest') {
     allTours.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     console.log(allTours);
+    return allTours;
   }
   if (sortBy === 'priceAsc') {
     allTours?.sort((a, b) => (a.price > b.price ? 1 : -1))
     console.log(allTours);
     console.log("price low to high")
+    return allTours;
+
   }
   if (sortBy === 'priceDesc') {
     allTours?.sort((a, b) => (a.price > b.price ? -1 : 1))
     console.log("price high to low")
     console.log(allTours);
+    return allTours;
+
   }
   // if (filters.priceRange) {
   //   products = products.filter((product) => {

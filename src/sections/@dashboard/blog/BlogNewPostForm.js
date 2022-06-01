@@ -71,6 +71,7 @@ export default function BlogNewPostForm() {
     seats: Yup.number().required('Budget Required').min(1),
     source: Yup.string().required('StartLocation is required'),
     destination: Yup.string().required('Description is required'),
+    place: Yup.array(),
     isHotel: Yup.boolean(),
     isGuide: Yup.boolean(),
   });
@@ -83,6 +84,7 @@ export default function BlogNewPostForm() {
     destination: '',
     isHotel: false,
     isGuide: false,
+    places:'',
   };
 
   const methods = useForm({
@@ -112,9 +114,21 @@ export default function BlogNewPostForm() {
   }, []);
 
   const onSubmit = async () => {
-    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination);
+    
+    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      axios.post("http://tourbook-backend.herokuapp.com/customtour/create",{
+        requirements:{
+          maxBudget: Number(values.maxBudget),
+          seats: Number(values.seats),
+          description: values.description,
+          source: values.source,
+          destination: values.destination,
+          isHotel: values.isHotel,
+          isGuide: values.isGuide
+        }
+        
+      }, {headers: {'x-auth-token': localStorage.getItem('accessToken')}}).then((response) => {console.log(response)})
       reset();
       enqueueSnackbar('CustomTour Created!');
       // navigate(PATH_DASHBOARD.blog.posts);
@@ -207,7 +221,7 @@ export default function BlogNewPostForm() {
 
 
                 <Controller
-                  name="metaKeywords"
+                  name="places"
                   control={control}
                   render={({ field }) => (
                     <Autocomplete
@@ -220,7 +234,7 @@ export default function BlogNewPostForm() {
                           <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
                         ))
                       }
-                      renderInput={(params) => <TextField label="Meta keywords" {...params} />}
+                      renderInput={(params) => <TextField label="Places" {...params} />}
                     />
                   )}
                 />
