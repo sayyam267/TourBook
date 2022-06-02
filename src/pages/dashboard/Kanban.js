@@ -1,130 +1,288 @@
-import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { sentenceCase } from 'change-case';
 // @mui
-import { Container, Stack } from '@mui/material';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-// redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getBoard, persistColumn, persistCard } from '../../redux/slices/kanban';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { useTheme } from '@mui/material/styles';
+import {
+  Box,
+  Card,
+  Table,
+  Avatar,
+  Button,
+  Divider,
+  MenuItem,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableHead,
+  CardHeader,
+  Typography,
+  IconButton,
+  TableContainer,
+  TextField,
+} from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+// utils
+import { fCurrency } from '../../utils/formatNumber';
+// _mock
+import { _bankingRecentTransitions } from '../../_mock';
 // components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { SkeletonKanbanColumn } from '../../components/skeleton';
-// sections
-import { KanbanColumn, KanbanColumnAdd } from '../../sections/@dashboard/kanban';
+import Label from '../../components/Label';
+import Iconify from '../../components/Iconify';
+import Scrollbar from '../../components/Scrollbar';
+import MenuPopover from '../../components/MenuPopover';
+import axios from '../../utils/axios';
+
+
 
 // ----------------------------------------------------------------------
 
-export default function Kanban() {
-  const dispatch = useDispatch();
-  const { board } = useSelector((state) => state.kanban);
+export default function BankingRecentTransitions() {
+  const theme = useTheme();
+
+  const [customTour,setCustomTour] = useState();
+  const isLight = theme.palette.mode === 'light';
+
+
+  const [open, setOpen] = useState(false);
+  const [offerAmount, setOfferAmount] = useState();
+  const [description, setDescription] = useState();
+
+  const handleDialogOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpen(false);
+  };
+
+  const handleSendOffer = () => {
+    console.log(offerAmount,description);
+  };
 
   useEffect(() => {
-    dispatch(getBoard());
-  }, [dispatch]);
+    axios.get(process.env.REACT_APP_GETALLCUSTOMTOUR).then((response) => {
+      console.log(response.data.data);
+      setCustomTour(response.data.data);
+    })
+  }, []);
+  return (
+    <>
+      <Card>
+        <CardHeader title="Custom Tour Request" sx={{ mb: 3 }} />
+        <Scrollbar>
+          <TableContainer sx={{ minWidth: 720 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Request From</TableCell>
+                  <TableCell>Phone no</TableCell>
+                  <TableCell>Max Budget</TableCell>
+                  <TableCell>seats</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Starting from</TableCell>
+                  <TableCell>Places</TableCell>
+                  <TableCell>Destination</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+               {customTour ? customTour.map((ct) => (
+                  <TableRow key={ct?.id}>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box sx={{ position: 'relative' }}>
+                          {renderAvatar(ct?.category, ct?.avatar)}
+                        </Box>
+                        <Box sx={{ ml: 2 }}>
+                         <Typography variant="subtitle2" >
+                            {ct?.by.fname}
+                          </Typography>
+                         <Typography variant="body2" sx={{ color: 'text.secondary' }} > {ct?.by.email}</Typography>
+                        </Box>
+                      </Box>
+                    </TableCell>
 
-  const onDragEnd = (result) => {
-    // Reorder card
-    const { destination, source, draggableId, type } = result;
+                    <TableCell>
+                      <Typography variant="subtitle2">{ct?.by.phoneNumber}</Typography>
+                      
+                    </TableCell>
 
-    if (!destination) return;
+                    <TableCell>{ct?.requirements.maxBudget}RS</TableCell>
+                    <TableCell>{ct?.requirements.seats}</TableCell>
 
-    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    if (type === 'column') {
-      const newColumnOrder = Array.from(board.columnOrder);
-      newColumnOrder.splice(source.index, 1);
-      newColumnOrder.splice(destination.index, 0, draggableId);
+                   <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{ct?.requirements.description}</TableCell>
+                   
+                   <TableCell >{ct?.requirements.source.name}</TableCell>
+                   <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{ct?.requirements.places}</TableCell>
+                   <TableCell >{ct?.requirements.destination.name}</TableCell>
 
-      dispatch(persistColumn(newColumnOrder));
-      return;
-    }
+                    {/* <TableCell>
+                      <Label
+                        variant={isLight ? 'ghost' : 'filled'}
+                        color={
+                          (ct?.status === 'completed' && 'success') ||
+                          (ct?.status === 'in_progress' && 'warning') ||
+                          'error'
+                        }
+                      >
+                        {sentenceCase(ct?.status)}
+                      </Label>
+                    </TableCell> */}
 
-    const start = board.columns[source.droppableId];
-    const finish = board.columns[destination.droppableId];
+                    <TableCell align="right">
+                      <MoreMenuButton handleDialog ={handleDialogOpen} />
+                    </TableCell>
+                  </TableRow>
+                )):<></>}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+        <Divider />
 
-    if (start.id === finish.id) {
-      const updatedCardIds = [...start.cardIds];
-      updatedCardIds.splice(source.index, 1);
-      updatedCardIds.splice(destination.index, 0, draggableId);
+        <Box sx={{ p: 2, textAlign: 'right' }}>
+          <Button size="small" color="inherit" endIcon={<Iconify icon={'eva:arrow-ios-forward-fill'} />}>
+            View All
+          </Button>
+        </Box>
+      </Card>
+      <div>
+        <Dialog open={open} onClose={handleDialogClose}>
+          <DialogTitle>Send Custom Tour Offer to </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter your offer amount with detail description.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="amount"
+              label="Offer Amount"
+              type="number"
+              fullWidth
+              variant="standard"
+              value={offerAmount}
+              onChange={(e) =>  setOfferAmount(e.target.value)}
+            />
+            <TextField
+              
+              margin="dense"
+              id="Description"
+              label="description"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button onClick={handleSendOffer}>Send Offer</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    </>
+  );
+}
 
-      const updatedColumn = {
-        ...start,
-        cardIds: updatedCardIds,
-      };
+// ----------------------------------------------------------------------
 
-      dispatch(
-        persistCard({
-          ...board.columns,
-          [updatedColumn.id]: updatedColumn,
-        })
-      );
-      return;
-    }
+AvatarIcon.propTypes = {
+  icon: PropTypes.string.isRequired,
+};
 
-    const startCardIds = [...start.cardIds];
-    startCardIds.splice(source.index, 1);
-    const updatedStart = {
-      ...start,
-      cardIds: startCardIds,
-    };
+function AvatarIcon({ icon }) {
+  return (
+    <Avatar
+      sx={{
+        width: 48,
+        height: 48,
+        color: 'text.secondary',
+        bgcolor: 'background.neutral',
+      }}
+    >
+      <Iconify icon={icon} width={24} height={24} />
+    </Avatar>
+  );
+}
 
-    const finishCardIds = [...finish.cardIds];
-    finishCardIds.splice(destination.index, 0, draggableId);
-    const updatedFinish = {
-      ...finish,
-      cardIds: finishCardIds,
-    };
+// ----------------------------------------------------------------------
 
-    dispatch(
-      persistCard({
-        ...board.columns,
-        [updatedStart.id]: updatedStart,
-        [updatedFinish.id]: updatedFinish,
-      })
-    );
+function renderAvatar(category, avatar) {
+  if (category === 'Books') {
+    return <AvatarIcon icon={'eva:book-fill'} />;
+  }
+  if (category === 'Beauty & Health') {
+    return <AvatarIcon icon={'eva:heart-fill'} />;
+  }
+  return avatar ? (
+    <Avatar alt={category} src={avatar} sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }} />
+  ) : null;
+}
+
+// ----------------------------------------------------------------------
+
+function MoreMenuButton({ handleDialog}) {
+  const [open, setOpen] = useState(null);
+
+  const handleOpen = (event) => {
+    setOpen(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setOpen(null);
+  };
+
+  const openDialog = () => {
+    console.log("hello");
+    handleDialog();
+  }
+  const ICON = {
+    mr: 2,
+    width: 20,
+    height: 20,
   };
 
   return (
-    <Page title="Kanban" sx={{ height: 1 }}>
-      <Container maxWidth={false} sx={{ height: 1 }}>
-        <HeaderBreadcrumbs
-          heading="Kanban"
-          links={[
-            {
-              name: 'Dashboard',
-              href: PATH_DASHBOARD.root,
-            },
-            { name: 'Kanban' },
-          ]}
-        />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="all-columns" direction="horizontal" type="column">
-            {(provided) => (
-              <Stack
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                direction="row"
-                alignItems="flex-start"
-                spacing={3}
-                sx={{ height: 'calc(100% - 32px)', overflowY: 'hidden' }}
-              >
-                {!board.columnOrder.length ? (
-                  <SkeletonKanbanColumn />
-                ) : (
-                  board.columnOrder.map((columnId, index) => (
-                    <KanbanColumn index={index} key={columnId} column={board.columns[columnId]} />
-                  ))
-                )}
+    <>
+      <IconButton size="large" onClick={handleOpen}>
+        <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
+      </IconButton>
 
-                {provided.placeholder}
-                <KanbanColumnAdd />
-              </Stack>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </Container>
-    </Page>
+      <MenuPopover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        arrow="right-top"
+        sx={{
+          mt: -0.5,
+          width: 160,
+          '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
+        }}
+      >
+        <MenuItem onClick={openDialog} >
+          <Iconify icon={'mdi:send'} rotate={3} sx={{ ...ICON }} />
+          Send Offer
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <MenuItem sx={{ color: 'error.main' }}>
+          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
+          Delete
+        </MenuItem>
+      </MenuPopover>
+    </>
   );
 }
+

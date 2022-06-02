@@ -105,7 +105,7 @@ export default function ProductDetailsCarousel({ images }) {
               <Image
                 key={img}
                 alt="large image"
-                src={`http://tourbook-backend.herokuapp.com/${img}`}
+                src={img}
                 ratio="1/1"
                 onClick={() => handleOpenLightbox(img)}
                 sx={{ cursor: 'zoom-in' }}
@@ -166,7 +166,7 @@ export default function ProductDetailsCarousel({ images }) {
               <Image
                 disabledEffect
                 alt="thumb image"
-                src={`http://tourbook-backend.herokuapp.com/${img}`}
+                src={img}
                 sx={{
                   width: THUMB_SIZE,
                   height: THUMB_SIZE,

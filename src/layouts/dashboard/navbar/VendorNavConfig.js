@@ -33,6 +33,7 @@ const VendorNavConfig = [
             { title: 'Create Tour', path: PATH_DASHBOARD.eCommerce.newProduct, icon: ICONS.ecommerce },
             { title: 'Your Listings', path: PATH_DASHBOARD.user.cards, icon: ICONS.analytics },
             { title: 'Pending Requests', path: PATH_DASHBOARD.blog.postById, icon: ICONS.analytics },
+            { title: 'Custom Tours', path: PATH_DASHBOARD.kanban, icon: ICONS.analytics },
             { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
             { title: 'Buy Credits', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
         ],
