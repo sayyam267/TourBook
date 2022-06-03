@@ -43,7 +43,7 @@ export default function TouristTourDetails(props) {
   return (
     <>
       <Card>
-        <CardHeader title="All Users" sx={{ mb: 3 }} />
+        <CardHeader title="All Tours" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer sx={{ minWidth: 720 }}>
             <Table>
@@ -203,8 +203,3 @@ function MoreMenuButton(props) {
     </>
   );
 }
-
-
-
-
-

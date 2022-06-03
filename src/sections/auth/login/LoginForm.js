@@ -7,10 +7,10 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment,Button } from '@mui/material';
+import { Link, Stack, Alert, IconButton, InputAdornment, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { gapi } from "gapi-script";
+import { gapi } from 'gapi-script';
 import { PATH_AUTH, PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
@@ -20,16 +20,12 @@ import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 import axios from '../../../utils/axios';
 
-
 // ----------------------------------------------------------------------
-
 
 // const responseGoogle = (response) => {
 //   console.log(response.profileObj);
 // };
-const ClientId ="1014899495356-umrm8imq4j77r39dg3em4vtns4ugjtvc.apps.googleusercontent.com";
-
-
+const ClientId = '1014899495356-umrm8imq4j77r39dg3em4vtns4ugjtvc.apps.googleusercontent.com';
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -40,9 +36,9 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const [gloading,setGloading] = useState(false);
+  const [gloading, setGloading] = useState(false);
 
-  const [glogin, setGlogin] = useState({ isError: false, error: "" });
+  const [glogin, setGlogin] = useState({ isError: false, error: '' });
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -50,7 +46,7 @@ export default function LoginForm() {
   });
 
   const handleFailureLogin = (response) => {
-    console.log("Login Failed", response);
+    console.log('Login Failed', response);
     if (isMountedRef.current) {
       setError('afterSubmit', response);
     }
@@ -58,23 +54,23 @@ export default function LoginForm() {
 
   const handleSuccessLogin = async (response) => {
     await axios
-      .post("http://tourbook-backend.herokuapp.com/auth/google/createuser", {
+      .post('http://tourbook-backend.herokuapp.com/auth/google/createuser', {
         fname: response.profileObj.givenName,
         lname: response.profileObj.familyName,
         email: response.profileObj.email,
         profilePicture: response.profileObj.imageUrl,
       })
       .catch((e) => {
-        console.log(e.message); 
-        console.log("hello"); 
-        const updatedError = {isError:true,error:e.message}
+        console.log(e.message);
+        console.log('hello');
+        const updatedError = { isError: true, error: e.message };
         if (isMountedRef.current) {
-          setGlogin(glogin =>({
+          setGlogin((glogin) => ({
             ...glogin,
-          ...updatedError
-
-          }))
-        } })
+            ...updatedError,
+          }));
+        }
+      })
       .then((res) => {
         console.log(res);
         console.log(res.data.data.role, res.data.data.profilePicture, res.data.data.token);
@@ -82,12 +78,10 @@ export default function LoginForm() {
         localStorage.setItem('role', res.data.data.role);
         localStorage.setItem('pic', res.data.data.profilePicture);
         localStorage.setItem('balance', 0);
-        localStorage.setItem('name', "Google User");
+        localStorage.setItem('name', res.data.data.name);
         navigate(PATH_DASHBOARD.general.app, { replace: true });
-      
       });
   };
-
 
   const defaultValues = {
     email: '',
@@ -107,12 +101,9 @@ export default function LoginForm() {
     formState: { errors, isSubmitting },
   } = methods;
 
-  
-
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      
     } catch (error) {
       console.error(error);
       reset();
@@ -132,67 +123,65 @@ export default function LoginForm() {
     function start() {
       gapi.client.init({
         clientId: ClientId,
-        scope: "",
+        scope: '',
       });
     }
-    gapi.load("client:auth2", start);
+    gapi.load('client:auth2', start);
   }, []);
- 
 
   return (
     <>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
-        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={3}>
+          {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           {!!glogin.isError && <Alert severity="error">{glogin.error}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+          <RHFTextField name="email" label="Email address" />
 
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
+          <RHFTextField
+            name="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
-        <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-          Forgot password?
-        </Link>
-      </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+          <RHFCheckbox name="remember" label="Remember me" />
+          <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
+            Forgot password?
+          </Link>
+        </Stack>
 
-      <Stack spacing={3} >
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Login
-      </LoadingButton>
-        <GoogleLogin
-          // redirectUri="http://tourbook-backend.herokuapp.com/auth/google"
-          onSuccess={handleSuccessLogin}
-          onFailure={handleFailureLogin}
-          cookiePolicy={"single_host_origin"}
-          buttonText="Sign in with Google"
-          style={{textAlign: "center"}}
-          clientId={ClientId}
+        <Stack spacing={3}>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+            Login
+          </LoadingButton>
+          <GoogleLogin
+            // redirectUri="http://tourbook-backend.herokuapp.com/auth/google"
+            onSuccess={handleSuccessLogin}
+            onFailure={handleFailureLogin}
+            cookiePolicy={'single_host_origin'}
+            buttonText="Sign in with Google"
+            style={{ textAlign: 'center' }}
+            clientId={ClientId}
             // render={renderProps => (
             //   <Button onClick={renderProps.onClick} style={{textAlign: "center"}}>This is my custom Google button</Button>
             // )}
-        />
+          />
         </Stack>
-
-    </FormProvider>
-    {/* <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={GoogleLogin} loading={gloading}>
+      </FormProvider>
+      {/* <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={GoogleLogin} loading={gloading}>
         Google Login
       </LoadingButton> */}
-      </>
+    </>
   );
 }
