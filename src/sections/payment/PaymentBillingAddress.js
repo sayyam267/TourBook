@@ -53,7 +53,7 @@ export default function PaymentBillingAddress({onGetSuccess}) {
           email: myemail,
           name: myname
         }
-      }, { headers: { "x-auth-token": window.localStorage.getItem("accessToken") }}).then(res => {console.log(res.data.data.charges.receipt_url);setLoading(false);onGetSuccess(res.data.data.charges.receipt_url);});
+      }, { headers: { "x-auth-token": window.localStorage.getItem("accessToken") }}).then(res => {console.log(res.data.data.charges.receipt_url);localStorage.setItem('balance',res.data.data.balance); console.log(res.data.data);setLoading(false);onGetSuccess(res.data.data.charges.receipt_url);});
 
     } catch (error) {
       console.error(error);

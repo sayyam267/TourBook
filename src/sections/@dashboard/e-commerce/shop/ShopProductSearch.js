@@ -26,7 +26,7 @@ const PopperStyle = styled((props) => <Popper placement="bottom-start" {...props
 
 // ----------------------------------------------------------------------
 
-export default function ShopProductSearch() {
+export default function ShopProductSearch({tour}) {
   const navigate = useNavigate();
 
   const isMountedRef = useIsMountedRef();
@@ -37,23 +37,23 @@ export default function ShopProductSearch() {
 
   const handleChangeSearch = async (value) => {
     try {
-      setSearchQuery(value);
-      if (value) {
-        const response = await axios.get('/api/products/search', {
-          params: { query: value },
-        });
+      console.log(tour);
 
         if (isMountedRef.current) {
-          setSearchResults(response.data.results);
+          setSearchResults(tour);
         }
       }
-    } catch (error) {
+    catch (error) {
       console.error(error);
     }
   };
 
-  const handleClick = (name) => {
-    navigate(`${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(name)}`);
+  const handleClick = ({_id}) => {
+    console.log("tour id",_id);
+    localStorage.setItem('tourId', _id);
+    navigate(`${PATH_DASHBOARD.eCommerce.root}/checkout`, { replace: true });
+    
+
   };
 
   const handleKeyUp = (event) => {
@@ -89,15 +89,16 @@ export default function ShopProductSearch() {
           }}
         />
       )}
-      renderOption={(props, product, { inputValue }) => {
-        const { name, cover } = product;
+      renderOption={(props, tour, { inputValue }) => {
+        const {_id, name, tourpics} = tour;
+        console.log("tour name",name,_id,tourpics);
         const matches = match(name, inputValue);
         const parts = parse(name, matches);
 
         return (
           <li {...props}>
-            <Image alt={cover} src={cover} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
-            <Link underline="none" onClick={() => handleClick(name)}>
+            <Image alt={"pic"} src={tourpics[0]} sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }} />
+            <Link underline="none" onClick={() => handleClick({_id})}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

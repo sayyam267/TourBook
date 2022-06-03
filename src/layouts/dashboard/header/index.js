@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 // @mui
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar,Button } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -84,6 +84,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
     }
       return false;
   };
+  useEffect(() => {
+    setCredits(localStorage.getItem('balance'));
+  }, [localStorage.getItem('balance')]);
 
   const handleLogout = async () => {
     try {

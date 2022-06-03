@@ -38,6 +38,7 @@ import {
 } from '@mui/material';
 import axios from '../../../utils/axios';
 import Map from '../../../components/map/Map';
+import MeetMap from '../../../components/map/MeetMap';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -183,13 +184,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     setfile(f);
   };
 
-  //   const getpicsArray = (input, field) => {
-  //     const output = [];
-  //     input.map(i => { output.push(input[i][field]);
-  // })
-  //     return output;
-  // }
-
+  
   const onSubmit = async (e) => {
     try {
       const formData = new FormData();
@@ -201,14 +196,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       navigate(PATH_DASHBOARD.user.profile);
       console.log('Array of images', values.images);
 
-      //   console.log(food,guide,hotel,transport);
-      //   console.log(values.name,values.description);
-      //   const imageNames1=[];
-      //   values.images.forEach(image=>imageNames1.push(image.preview))
-      // //  const pics = getpicsArray(values.images, 'preview');
-      //  console.log(imageNames1);
-
-      // const data = new FormData();
+     
       formData.append('name', values.name);
 
       const files = [...e.images];
@@ -346,17 +334,11 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
       })
       .catch((e) => console.log(e.data));
-    // data.append("muliImages", e.target.multiImage.file);
-    // data.forEach((i) => console.log(i));
-    // console.log(e.target.name.value);
-    // const { name, price, multiImages } = e.target;
-    // console.log(name.value, price.value);
-    // console.log(multiImages.files);
+    
   };
   return (
     <>
-    {/* // <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}> */}
-    <form onSubmit={handleSubmit1}>
+    <form >
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
@@ -370,11 +352,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <Input id="description" aria-describedby="Enter Your Description" />
               </FormGroup>
               <FormGroup>
-                {/* {files?.length &&
-                  files.map((image) => {
-                    return <img src={file.name} width="200px" alt={file.name} />;
-                  })} */}
-                <InputLabel htmlFor="multiImages">Select Images</InputLabel>
+              <Stack direction="row" spacig={5}>
+                <InputLabel sx={{mr:5,py:1}} htmlFor="multiImages">Select Images</InputLabel>
                 <label htmlFor="multiImages">
                   <input
                     accept="image/*"
@@ -391,37 +370,57 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     {files?.length ? `${files.length}   Images Selected` : 'Upload'}
                   </Button>
                 </label>
+                </Stack>
               </FormGroup>
+
+              <Stack direction="row" spacing={3}>
               <FormGroup>
-                <InputLabel htmlFor="hasFood">Are You Providing Food?</InputLabel>
-                {/* <Input id="description" aria-describedby="Enter Tour Title" /> */}
+              <Stack direction="row" spacig={3}>
+                <InputLabel sx={{py:1}} htmlFor="hasFood">Are You Providing Food?</InputLabel>
                 <Checkbox value={food} checked={food} onChange={() => setFood(!food)} />
+                  </Stack>
               </FormGroup>
+
               <FormGroup>
-                <InputLabel htmlFor="hasTransport">Are You Providing Transport?</InputLabel>
-                {/* <Input id="description" aria-describedby="Enter Tour Title" /> */}
+                  <Stack direction="row" spacig={3}>
+                    <InputLabel sx={{ py: 1 }} htmlFor="hasTransport">Are You Providing Transport?</InputLabel>
                 <Checkbox value={transport} checked={transport} onChange={() => setTransport(!transport)} />
+                </Stack>
               </FormGroup>
+                </Stack>
+
+                <Stack direction="row" spacing={3}>
               <FormGroup>
-                <InputLabel htmlFor="hasGuide">Are You Providing Guide?</InputLabel>
-                {/* <Input id="description" aria-describedby="Enter Tour Title" /> */}
+                  <Stack direction="row" spacig={3}>
+                    <InputLabel sx={{ py: 1 }} htmlFor="hasGuide">Are You Providing Guide?</InputLabel>
                 <Checkbox value={guide} checked={guide} onChange={() => setGuide(!guide)} />
+                </Stack>
               </FormGroup>
               <FormGroup>
-                <InputLabel htmlFor="hasHotel">Are You Providing Hotel?</InputLabel>
-                {/* <Input id="description" aria-describedby="Enter Tour Title" /> */}
+                  <Stack direction="row" spacig={3}>
+                    <InputLabel sx={{ py: 1 }} htmlFor="hasHotel">Are You Providing Hotel?</InputLabel>
                 <Checkbox value={hotel} checked={hotel} onChange={() => setHotel(!hotel)} />
+                </Stack>
               </FormGroup>
-
-              
-              
+              </Stack>
             </Stack>
-            <Box sx={{height:1}}>
-              <Map />
-            </Box>
           </Card>
-        </Grid>
+            <Card container sx={{ p: 3,my:3 }}>
+              <LabelStyle>Meet Location</LabelStyle>
+              <Stack sx={{ ml: 2 }} spacing={3}>
+                <Map />
+              </Stack>
+            </Card>
 
+            <Card container sx={{ p: 3, my: 3 }}>
+              <LabelStyle>Places of Attraction</LabelStyle>
+              <Stack  spacing={3}>
+                <MeetMap />
+              </Stack>
+            </Card>
+        </Grid>
+            
+          
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
             <Card sx={{ p: 3 }}>
@@ -471,26 +470,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             </Card>
 
             <Card sx={{ p: 3 }}>
-              {/* <RHFSwitch name="inStock" label="In stock" /> */}
+             
               <LabelStyle>Locations</LabelStyle>
 
               <Stack spacing={3} mt={2}>
-                {/* <RHFTextField name="startLocation" label="Enter Source Location" /> */}
-                {/* <RHFSelect name="startLocation" label="Enter Source Location" placeholder="City">
-                  {cities?.map(({ _id, name }) => (
-                    <option key={_id} value={_id}>
-                      {name}
-                    </option>
-                  ))}
-                </RHFSelect>
-
-                <RHFSelect name="endLocation" label="Enter Destination Location" placeholder="City">
-                  {cities?.map(({ _id, name }) => (
-                    <option key={_id} value={_id}>
-                      {name}
-                    </option>
-                  ))}
-                </RHFSelect> */}
                 <FormGroup>
                   <Select
                     labelId="source"
@@ -506,7 +489,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </FormGroup>
                 <FormGroup>
                   <FormLabel htmlFor="destination">Destination City</FormLabel>
-                  {/* <TextField id="destination" type="text" /> */}
                   <Select
                     labelId="destination"
                     id="destination"
@@ -523,6 +505,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 {/* <RHFTextField name="endLocation" label="Enter Destination" /> */}
               </Stack>
             </Card>
+            
             <Card sx={{ p: 3 }}>
               <Stack spacing={3} mb={2}>
                
@@ -539,24 +522,23 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
              
             </Card>
             
+              <LoadingButton
+                variant="contained"
+                size="large"
+                onClick={handleSubmit}
+              // loading={isSubmitting}
+              >
+                {!isEdit ? 'Create TOur' : 'Save Changes'}
+              </LoadingButton>
             
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              size="large"
-            // loading={isSubmitting}
-            >
-              {!isEdit ? 'Create Product' : 'Save Changes'}
-            </LoadingButton>
           </Stack>
         </Grid>
+        
       </Grid>
+      
       {/* </FormProvider> */}
     </form>
-    <Box h="40%">
-    <Typography variant="caption">hello</Typography>
-      <Map />
-    </Box>
+     
     </>
   );
 }

@@ -56,7 +56,7 @@ export default function GeneralAnalytics() {
         console.log(res);
         console.log(res.data.data.allUsers, res.data.data.totalNoOfUsers);
         setAllUsers([...res.data.data.allUsers]);
-        // console.log(typeof [...res.data.data.allUsers]);
+        
         console.log(allUsers);
         setTotalUser(res.data.data.totalNoOfUsers);
         setPendingReq(res.data.data.pendingVendorRequests);

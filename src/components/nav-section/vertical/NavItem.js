@@ -28,6 +28,7 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
 
   const renderContent = (
     <>
+      {/* <Iconify icon={'eva:shield-fill'} sx={{ width: 20, height: 20, color: 'primary.main' }} /> */}
       {icon && <ListItemIconStyle>{icon}</ListItemIconStyle>}
       <ListItemTextStyle disableTypography primary={title} isCollapse={isCollapse} />
       {!isCollapse && (

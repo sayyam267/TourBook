@@ -138,7 +138,7 @@ export default function EcommerceShop() {
           justifyContent="space-between"
           sx={{ mb: 2 }}
         >
-          <ShopProductSearch />
+          <ShopProductSearch tour={allTours}/>
 
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 3 }}>
             <FormProvider methods={methods}>

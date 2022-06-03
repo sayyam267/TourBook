@@ -39,7 +39,9 @@ export const PATH_DASHBOARD = {
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),
-    booking: path(ROOTS_DASHBOARD, '/booking')
+    booking: path(ROOTS_DASHBOARD, '/booking'),
+    vendoranalytics: path(ROOTS_DASHBOARD, '/vendoranalytics'),
+    adminanalytics: path(ROOTS_DASHBOARD, '/adminanalytics'),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
@@ -76,7 +78,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/blog'),
     posts: path(ROOTS_DASHBOARD, '/blog/posts'),
     post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
-    postById: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
+    postById: path(ROOTS_DASHBOARD, '/blog/post/'),
     newPost: path(ROOTS_DASHBOARD, '/blog/new-post')
   }
 };

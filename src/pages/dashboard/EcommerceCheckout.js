@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 // @mui
 import { alpha,styled } from '@mui/material/styles';
-import { Box, Grid,Divider, Tab, Stepper, Container, StepLabel, StepConnector,Card,Typography ,Button} from '@mui/material';
+import { Box, Grid,Divider, Tab, Stepper, Container, StepLabel, StepConnector,Card,Typography ,Button,Stack} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCart, createBilling } from '../../redux/slices/product';
@@ -36,10 +36,17 @@ import {
   ProductDetailsCarousel,
 } from '../../sections/@dashboard/e-commerce/product-details';
 
+import BookTourMap from '../../components/map/BookTourMap';
+
 
 // ----------------------------------------------------------------------
+const LabelStyle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  color: theme.palette.text.secondary,
+  marginBottom: theme.spacing(1),
+}));
 
-const STEPS = ['Cart', 'Billing & address', 'Payment'];
+
 const PRODUCT_DESCRIPTION = [
   {
     title: 'Accmodation',
@@ -141,24 +148,7 @@ function QontoStepIcon({ active, completed }) {
 
 export default function EcommerceCheckout() {
   const { themeStretch } = useSettings();
-  const dispatch = useDispatch();
-  const isMountedRef = useIsMountedRef();
-  const { checkout } = useSelector((state) => state.product);
-  const { cart, billing, activeStep } = checkout;
-  const isComplete = activeStep === STEPS.length;
-
-  useEffect(() => {
-    if (isMountedRef.current) {
-      dispatch(getCart(cart));
-    }
-  }, [dispatch, isMountedRef, cart]);
-
-  useEffect(() => {
-    if (activeStep === 1) {
-      dispatch(createBilling(null));
-    }
-  }, [dispatch, activeStep]);
-
+  
 
 
   const [tour,setTour] = useState([null]);
@@ -199,6 +189,25 @@ export default function EcommerceCheckout() {
                 </Grid>:<></>}
               </Grid>
             </Card>
+
+            <Stack direction="row" spacing={2}>
+            <Grid md={8} sm={12}>
+            <Card container sx={{ p: 3, my: 3 }}>
+              <LabelStyle>Places of Attraction</LabelStyle>
+              <Stack spacing={3}>
+                <BookTourMap Width="47vw" Height="50vh"  />
+              </Stack>
+            </Card>
+              </Grid>
+              <Grid md={4} sm={8}>
+            <Card container sx={{ p: 3, my: 3 }}>
+              <LabelStyle>Meet Location</LabelStyle>
+              <Stack spacing={3}>
+                    <BookTourMap Width="23vw" Height="50vh"  />
+              </Stack>
+            </Card>
+              </Grid>
+            </Stack>
 
           <Typography variant="h4" gutterBottom sx={{mt:4}}>
             What's Included

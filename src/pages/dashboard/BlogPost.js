@@ -63,7 +63,7 @@ export default function ProfileFriends() {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={8} md={6}>
-          {refund ? <>{refund?.map(refud => { return <VendorRequestCard name={order.touristID.fname} email="Tour Reservation for 3 seats" title={"Approve Request"} button1="Don't Verify" button2="Verify" /> })}</> : <SkeletonProductItem />}
+          {refund ? <>{refund?.map(refund => { return <VendorRequestCard name={refund.touristID.fname} email="Tour Reservation for 3 seats" title={"Approve Request"} button1="Don't Verify" button2="Verify" /> })}</> : <SkeletonProductItem />}
         </Grid>
       </Grid>
 

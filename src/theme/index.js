@@ -31,6 +31,9 @@ export default function ThemeProvider({ children }) {
       direction: themeDirection,
       shadows: isLight ? shadows.light : shadows.dark,
       customShadows: isLight ? customShadows.light : customShadows.dark,
+      background: {
+        default: '#effac9',
+      },
     }),
     [isLight, themeDirection]
   );

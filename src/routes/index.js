@@ -11,7 +11,7 @@ import AuthGuard from '../guards/AuthGuard';
 // config
 
 
-import {PATH_DASHBOARD} from './paths'
+import {PATH_DASHBOARD} from './paths';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -93,6 +93,8 @@ export default function Router() {
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
+        { path: 'vendoranalytics', element: <VendorAnalytics /> },
+        { path: 'adminanalytics', element: <AdminAnalytics /> },
 
         {
           path: 'e-commerce',
@@ -124,7 +126,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
             { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
+            { path: 'post/', element: <BlogPost /> },
             { path: 'new-post', element: <BlogNewPost /> },
           ],
         },
@@ -211,6 +213,8 @@ const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
 const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
+const VendorAnalytics = Loadable(lazy(() => import('../pages/dashboard/VendorAnalytics')));
+const AdminAnalytics = Loadable(lazy(() => import('../pages/dashboard/AdminAnalytics')));
 // Main
 const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const About = Loadable(lazy(() => import('../pages/About')));
