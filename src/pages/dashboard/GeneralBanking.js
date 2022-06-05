@@ -203,8 +203,20 @@ export default function UserProfile() {
   const onSubmit = async () => {
     try {
       console.log(values.fname, values.lname, values.country, values.city, values.phoneNumber, values.email);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar('Update success!');
+     
+      axios.put("http://tourbook-backend.herokuapp.com/user/update/profile", {
+        fname: values.fname,
+        lname: values.lname,
+        email: values.email,
+        city:values.city,
+        phoneNumber:values.phoneNumber,
+        country:values.country,
+      }, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
+        console.log(res);
+        enqueueSnackbar('Update success!');
+        
+      }).catch(error => console.log(error));
+      
     } catch (error) {
       console.error(error);
     }

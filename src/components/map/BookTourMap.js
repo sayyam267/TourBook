@@ -14,30 +14,33 @@ Geocode.setRegion('pk');
 Geocode.setLocationType('ROOFTOP');
 Geocode.enableDebug();
 
-export default function BookTourMap({ Width, Height, Places }) {
+export default function BookTourMap({ Width, Height,location}) {
   const center = { lat: 31.5204, lng: 74.3587 };
 
-  const [location, setLocation] = useState();
+  console.log("location",location);
+ 
 
+  const [markers, setmak] = useState([]);
+
+
+  
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyBsKW_CHifccy_0JkqchnuoWWucLcslhFs',
     libraries: ['places'],
   });
 
-  const [markers, setmak] = useState([
-    {
-      id: 0,
-      name: 'Lahore',
-      position: { lat: 31.5203696, lng: 74.35874729999999 },
-    },
-  ]);
+
+  
   const [activeMarker, setActiveMarker] = useState(null);
 
   const [plac, setPlace] = useState([]);
 
   const [map, setMap] = useState();
 
-  const [getdata, setGetData] = useState(false);
+  const [Location,setLocation] =useState();
+
+  // const [arr,setarr] = useState();
+
 
   const handleActiveMarker = (marker) => {
     if (marker === activeMarker) {
@@ -52,6 +55,8 @@ export default function BookTourMap({ Width, Height, Places }) {
 
   const handleOnLoad = (map) => {
     const bounds = new window.google.maps.LatLngBounds();
+    
+    console.log("the markers",markers);
     markers?.forEach(({ position }) => bounds.extend(position));
     map.fitBounds(bounds);
     console.log(map);
@@ -80,9 +85,9 @@ export default function BookTourMap({ Width, Height, Places }) {
           onClick={() => setActiveMarker(null)}
           mapContainerStyle={{ width: Width, height: Height }}
         >
-          {markers?.map(({ id, name, position }) => (
-            <Marker key={id} position={position} onClick={() => handleActiveMarker(id)}>
-              {activeMarker === id ? (
+          {location?.map(({name, location }) => ( 
+            <Marker key={name} position={location} onClick={() => handleActiveMarker(name)}>
+              {activeMarker === name ? (
                 <InfoWindow onCloseClick={() => setActiveMarker(null)}>
                   <div>{name}</div>
                 </InfoWindow>

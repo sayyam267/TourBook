@@ -20,6 +20,7 @@ import axios from '../../../utils/axios';
 
 
 
+
 // ----------------------------------------------------------------------
 
 const TAGS_OPTION = [
@@ -132,13 +133,18 @@ export default function BlogNewPostForm() {
           source: values.source,
           destination: values.destination,
           isHotel: values.isHotel,
-          isGuide: values.isGuide
+          isGuide: values.isGuide,
+          places:values.places,
+          startDate: values.start,
+          endDate:values.end,
+
+          
         }
         
       }, {headers: {'x-auth-token': localStorage.getItem('accessToken')}}).then((response) => {console.log(response)})
       reset();
       enqueueSnackbar('CustomTour Created!');
-      // navigate(PATH_DASHBOARD.blog.posts);
+      navigate(PATH_DASHBOARD.user.account, { replace: true });
     } catch (error) {
       console.error(error);
     }

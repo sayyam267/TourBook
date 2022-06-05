@@ -150,10 +150,10 @@ export default function EcommerceCheckout() {
   const { themeStretch } = useSettings();
   
 
-
   const [tour,setTour] = useState([null]);
   const [value, setValue] = useState('1');
   const [booked,setBooked] =useState(false);
+  const [meetLocation,setmeetLocaion] = useState();
 
   const handleBook = () => {
     setBooked(true);
@@ -162,7 +162,10 @@ export default function EcommerceCheckout() {
 
   useEffect(() => {
     axios.get(`http://tourbook-backend.herokuapp.com/tour/get/${localStorage.getItem('tourId')}`).then(res => {console.log(res);
-      console.log(res.data.data.tours); setTour(res.data.data.tours);
+      console.log(res.data.data.tours); 
+      setTour(res.data.data.tours);
+      setmeetLocaion(res.data.data.tours?.meetLocation.map(JSON.parse));
+      
 })
       
   }, []);
@@ -195,7 +198,7 @@ export default function EcommerceCheckout() {
             <Card container sx={{ p: 3, my: 3 }}>
               <LabelStyle>Places of Attraction</LabelStyle>
               <Stack spacing={3}>
-                <BookTourMap Width="47vw" Height="50vh"  />
+                <BookTourMap Width="47vw" Height="50vh" location={tour?.places}  />
               </Stack>
             </Card>
               </Grid>
@@ -203,7 +206,7 @@ export default function EcommerceCheckout() {
             <Card container sx={{ p: 3, my: 3 }}>
               <LabelStyle>Meet Location</LabelStyle>
               <Stack spacing={3}>
-                    <BookTourMap Width="23vw" Height="50vh"  />
+                   {meetLocation ? <BookTourMap Width="23vw" Height="50vh" location={meetLocation}  />:<></>}
               </Stack>
             </Card>
               </Grid>
@@ -341,7 +344,7 @@ export default function EcommerceCheckout() {
                 <strong>Profile</strong>
               </Typography>
 
-              <Button size="large" variant="contained" component={RouterLink} to={PATH_DASHBOARD.user.profile} sx={{ mt: 5 }}>
+              <Button size="large" variant="contained" component={RouterLink} to={PATH_DASHBOARD.user.list} sx={{ mt: 5 }}>
                 Back
               </Button>
             </Box>

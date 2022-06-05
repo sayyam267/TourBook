@@ -64,12 +64,17 @@ export default function BankingRecentTransitions() {
     axios
       .post(
         // 'http://tourbook-backend.herokuapp.com/customtour/all',
-        'http://tourbook-backend.herokuapp.com/offer/give',
-        { requestID, amount: offerAmount, description },
+        'http://tourbook-backend.herokuapp.com/customtour/offer/give',
+        {
+          requestID,
+          amount:offerAmount,
+          description
+        },
+        // { requestID, amount: offerAmount, description },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((response) => {
-        console.log(response.data.data);
+        console.log(response);
         // setCustomTour(response.data.data);
       });
   };

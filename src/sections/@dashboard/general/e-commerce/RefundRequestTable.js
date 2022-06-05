@@ -3,7 +3,6 @@ import { styled,useTheme } from '@mui/material/styles';
 import {useState} from 'react';
 import { Button, Card, Typography, Stack,CardHeader,TableHead,TableBody,Table,Box,IconButton,TableContainer,Divider,TableRow,TableCell,MenuItem} from '@mui/material';
 // utils
-import { useSnackbar } from 'notistack';
 
 import { sentenceCase } from 'change-case';
 import { fCurrency } from '../../../../utils/formatNumber';
@@ -12,7 +11,6 @@ import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +21,7 @@ const RowStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-export default function VendorRequestCard({ name, email, seats, tourid, amount, _id, date, fetchRequest}) {
+export default function RefundRequestTable({ name, email, seats, tourid, amount, _id, date, fetchRequest}) {
   // const RequestTitle = title;
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
@@ -57,7 +55,7 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
   };
   return (
     <>
-                  <TableRow key={_id}>
+                  {/* <TableRow key={_id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography variant="subtitle2">
@@ -91,9 +89,9 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
         </TableCell>
 
                     <TableCell align="right">
-                      <MoreMenuButton id={_id} fetch={fetchRequest} />
+                      <MoreMenuButton id={_id} />
                     </TableCell>
-                  </TableRow>
+                  </TableRow> */}
 
         <Divider />
 
@@ -104,41 +102,35 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
 
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const handleAccept = () => {
+  const handleBlock = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/accept/',
+        'http://localhost:4000/admin/user/block',
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
-        props.fetch();
         console.log(res.data);
-        enqueueSnackbar('Request Accepted!');
-        
       })
       .catch((e) => {
         console.log(e);
       });
   };
-  const handleReject = () => {
+  const handleRequest = () => {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/reject/',
-        { id: props.id },
+        'http://tourbook-backend.herokuapp.com/order/request/refund/',
+        { orderID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
-        props.fetch();
         console.log(res.data);
-        enqueueSnackbar('Request Rejected!');
       })
       .catch((e) => {
         console.log(e);
@@ -174,15 +166,22 @@ function MoreMenuButton(props) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={handleAccept}>
+        <MenuItem onClick={handleRequest}>
           <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
-          Accept Request
+          Request Refund
         </MenuItem>
 
-        <MenuItem onClick={handleReject}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
-          Reject Request
+        {/* <MenuItem>
+          <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
+          Print
         </MenuItem>
+
+        <MenuItem>
+          <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
+          Share
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: 'dashed' }} /> */}
       </MenuPopover>
     </>
   );

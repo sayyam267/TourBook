@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
-
+import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -35,8 +35,9 @@ import axios from '../../../../utils/axios';
 export default function TouristTourDetails(props) {
   const theme = useTheme();
 
-  console.log(props.user);
-  const users = props.user;
+  console.log(props.tours);
+  const tour = props.tours;
+  // setTours(tours);
 
   const isLight = theme.palette.mode === 'light';
 
@@ -50,44 +51,60 @@ export default function TouristTourDetails(props) {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ minWidth: 240 }}>Tour Name</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Status</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Vendor Name</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Amount</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Refund Request</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Seats</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Date</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Status</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Refund</TableCell>
+                  
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users?.map((user) => (
-                  <TableRow key={user._id}>
+                {tour?.map((tour) => (
+                  <TableRow key={tour.tourID._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography variant="subtitle2">
-                          {user.fname} {user.lname}
+                          {tour.tourID.name} 
                         </Typography>
                       </Stack>
                     </TableCell>
-
-                    <TableCell>
-                      <Label variant={isLight ? 'ghost' : 'filled'} color={user.isVerified ? 'success' : 'error'}>
-                        {sentenceCase(String(user.isVerified))}
-                      </Label>
-                    </TableCell>
-                    <TableCell>
-                      <Label variant={isLight ? 'ghost' : 'filled'} color={user.isActive ? 'success' : 'error'}>
-                        {sentenceCase(String(user.isActive))}
-                      </Label>
-                    </TableCell>
-
-                    <TableCell>{user.phoneNumber}</TableCell>
+                    
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">{user.userType}</Typography>
+                        <Typography variant="subtitle2">{tour.amount}</Typography>
                       </Stack>
                     </TableCell>
 
+                    <TableCell>
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Typography variant="subtitle2">{tour.seats}</Typography>
+                      </Stack>
+                    </TableCell>
+
+                    <TableCell>
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Typography variant="subtitle2">{tour.createdAt}</Typography>
+                      </Stack>
+                    </TableCell>
+
+                    <TableCell>
+                      <Label variant={isLight ? 'ghost' : 'filled'} color={tour.isApproved ? 'success' : 'error'}>
+                        {sentenceCase(tour.isApproved ? 'Approved':'Pending' )}
+                      </Label>
+                    </TableCell>
+                    <TableCell>
+                      <Label variant={isLight ? 'ghost' : 'filled'} color={tour.isRefunded ? 'success' : 'error'}>
+                        {sentenceCase(tour.isRefunded ? 'Yes' : 'No')}
+                      </Label>
+                    </TableCell>
+
+                    
+                    
+
                     <TableCell align="right">
-                      <MoreMenuButton key={user._id} isActive={user.isActive} />
+                      <MoreMenuButton id={tour._id}  />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -113,33 +130,38 @@ export default function TouristTourDetails(props) {
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
-  const [block, setBlock] = useState(!props.isActive);
   const handleBlock = () => {
     axios
       .put(
         'http://localhost:4000/admin/user/block',
-        { id: props._id },
+        { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        
         console.log(res.data);
       })
       .catch((e) => {
         console.log(e);
       });
   };
-  const handleunblock = () => {
+  const handleRequest = () => {
+    console.log(props.id);
     axios
       .put(
-        'http://localhost:4000/admin/user/unblock',
-        { id: props._id },
+        'http://tourbook-backend.herokuapp.com/order/request/refund/',
+        { orderID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        enqueueSnackbar('Request Sent!');
+        setOpen(false);
         console.log(res.data);
       })
       .catch((e) => {
@@ -176,17 +198,10 @@ function MoreMenuButton(props) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        {block ? (
-          <MenuItem onClick={handleunblock}>
-            <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
-            Unblock
-          </MenuItem>
-        ) : (
-          <MenuItem sx={{ color: 'error.main' }} onClick={handleBlock}>
-            <Iconify icon={'eva:lock-outline'} sx={{ ...ICON }} />
-            Block
-          </MenuItem>
-        )}
+        <MenuItem onClick={handleRequest}>
+          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+          Request Refund
+        </MenuItem>
 
         {/* <MenuItem>
           <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />

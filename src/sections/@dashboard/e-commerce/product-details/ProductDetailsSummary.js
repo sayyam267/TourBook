@@ -59,6 +59,9 @@ export default function ProductDetailsSummary({tour,booked}) {
 
   const [quantity,setquantity] = useState(0);
 
+
+  
+
   // const alreadyProduct = cart.map((item) => item.id).includes(id);
 
   // const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
@@ -241,6 +244,7 @@ export default function ProductDetailsSummary({tour,booked}) {
             startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
             onClick={onSubmit}
             sx={{ whiteSpace: 'nowrap' }}
+            disabled={quantity <= 0}
           >
             Book tour
           </Button>
@@ -251,7 +255,7 @@ export default function ProductDetailsSummary({tour,booked}) {
           <Typography variant="caption" component="div" sx={{ mt: 0, textAlign: 'right', color: 'text.danger' }}>
            You do not have sufficient credit for booking a tour
           </Typography>
-          <Button fullWidth size="large" type="submit" onClick={() => navigate(PATH_PAGE.payment)} variant="contained">
+          <Button fullWidth  size="large" type="submit" onClick={() => navigate(PATH_DASHBOARD.calendar)} variant="contained">
           Buy Credits Now
         </Button>
         </Stack>:<></>}

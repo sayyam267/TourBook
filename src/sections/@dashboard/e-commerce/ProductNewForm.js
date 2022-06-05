@@ -166,7 +166,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   }, [isEdit, currentProduct]);
 
   const [cities, setCities] = useState();
-  const [fileList, setfileList] = useState([]);
   const [file, setfile] = useState();
   const [source, setSource] = useState('626e2a89c65f4c055b643653');
   const [destination, setDestination] = useState('626e2a89c65f4c055b643653');
@@ -202,153 +201,84 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   }
 
-  
-  const onSubmit = async (e) => {
-    try {
-      const formData = new FormData();
-      
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.profile);
-      console.log('Array of images', values.images);
-
-     
-      formData.append('name', values.name);
-
-      const files = [...e.images];
-      if (files.length !== 0) {
-        files.forEach((file) => {
-          formData.append('multiImages', file);
-        });
-      } else formData.append('multiImages', e.images[0]);
-      formData.append('vendorId', String('6231b8ae83f24e5f778fdf88'));
-      // console.log(e.expiry.value);
-      formData.append('price', e.price);
-      formData.append('hasHotel', hotel);
-      formData.append('hasTransport', transport);
-      formData.append('hasFood', food);
-      formData.append('validTill', e.end);
-      formData.append('seats', e.seats);
-      formData.append('hasGuide', guide);
-      formData.append('source', e.startLocation);
-      formData.append('destination', e.endLocation);
-      // console.log(values.images.files);
-
-      const response = await axios
-        .post(
-          'http://tourbook-backend.herokuapp.com/tour/create',
-          {
-            formData,
-            // name: values.name,
-            // price: values.price,
-            // source: values.startLocation,
-            // destination: values.endLocation,
-            // addedOn: values.start,
-            // vendorID: '6231b8ae83f24e5f778fdf88',
-            // seats: values.seats,
-            // validTill: values.end,
-            // hasGuide: guide,
-            // hasFood: food,
-            // hasTransport: transport,
-            // hasHotel: hotel,
-            // multiImages: data.multiImages,
-            // meetLocation: {
-            //   long: 'a',
-            //   lat: 'v',
-            // },
-          },
-          { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
-        )
-        .then((res) => {
-          // localStorage.setItem("code", res.data.data);
-          console.log(res);
-          reset();
-          enqueueSnackbar(!isEdit ? 'Create; success!' : 'Update success!');
-          // navigate(PATH_DASHBOARD.eCommerce.list);
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      console.error(error);
-      console.log('hello');
-      enqueueSnackbar(!isEdit ? 'Create; success!' : 'Update success!');
-    }
-  };
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
-    },
-    [setValue]
-  );
-
   const handleRemoveAll = () => {
     setValue('images', []);
   };
 
-  const handleRemove = (file) => {
-    const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('images', filteredItems);
-  };
 
+
+  const [title,setTitle]=useState();
+  const [description,setDescription]=useState();
+  const [price,setprice]=useState();
+  const [seats,setSeats]=useState();
   const [startdate, handleStartDate] = useState(new Date());
   const [enddate, handleEndDate] = useState(new Date());
   const [food, setFood] = useState(currentProduct?.hasFood || false);
   const [guide, setGuide] = useState(currentProduct?.hasGuide || false);
   const [transport, setTransport] = useState(currentProduct?.hasTransport || false);
   const [hotel, setHotel] = useState(currentProduct?.hasHotel || false);
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit1 = (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    console.log(e.target);
-    console.log(e.target.multiImages);
-  
-    data.append('description', e.target.description.value);
 
-   
-    const files1 = [...e.target.multiImages.files];
+    setLoading(true)
+    console.log("meetlocation",JSON.stringify(meetLocation),"Places",places);
+    e.preventDefault();
+    const data = new FormData();
     
-    if (files1.length !== 0) {
-      files1.map((file) => {
+
+    // console.log(e.target);
+  
+  
+    // console.log(files[0]);
+   
+    // const files1 = [...e.target.multiImages.files];
+
+    console.log(files[0]);
+    const fi = files[0];
+
+    
+    if (files[0].length !== 0) {
+      [...fi].forEach((file) => {
+        console.log("this",file);
         return data.append('multiImages', file);
       });
-    } else data.append('multiImages', e.target.multiImages.files[0]);
-    console.log(files1);
+    } else data.append('multiImages', files[0]);
+    
+    console.log(description,guide,food,transport,hotel,price,enddate,seats,source,destination,title,meetLocation,places);
+    const mLocation = JSON.stringify(meetLocation);
+    const Place = JSON.stringify(places);
+
+    data.append('description', description);
     data.append('hasGuide', guide);
     data.append('hasFood', food);
     data.append('hasTransport', transport);
     data.append('hasHotel', hotel);
-    data.append('price', e.target.price.value);
+    data.append('price', price);
     data.append('validTill', enddate);
-    data.append('seats', e.target.seats.value);
+    data.append('seats', seats);
     data.append('source', source);
     data.append('destination', destination);
-    data.append('name', e.target.name.value);
+    data.append('name', title);
+    data.append('meetLocation', mLocation);
+    data.append('places', Place);
 
 
-    // axios
-    //   .post('http://tourbook-backend.herokuapp.com/tour/create', data, {
-    //     headers: {
-    //       'x-auth-token': localStorage.getItem('accessToken'),
-    //     },
-    //   })
-    //   .then((r) => {
-    //     console.log(r);
-    //      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-    //   navigate(PATH_DASHBOARD.user.profile);
+    axios
+      .post('http://tourbook-backend.herokuapp.com/tour/create', data, {
+        headers: {
+          'x-auth-token': localStorage.getItem('accessToken'),
+        },
+      })
+      .then((r) => {
+        console.log(r);
+         enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+         setLoading(false);
+      // navigate(PATH_DASHBOARD.user.profile);
 
-    //   })
-    //   .catch((e) => console.log(e.data));
+      })
+      .catch((e) => console.log(e.data));
     
   };
   return (
@@ -360,11 +290,11 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             <Stack spacing={3}>
               <FormGroup>
                 <InputLabel htmlFor="name">Enter Tour Title</InputLabel>
-                <Input id="name" aria-describedby="Enter Tour Title" />
+                <Input id="name" aria-describedby="Enter Tour Title" onChange={(e) => setTitle(e.target.value)} />
               </FormGroup>
               <FormGroup>
                 <InputLabel htmlFor="desription">Enter Tour Description</InputLabel>
-                <Input id="description" aria-describedby="Enter Your Description" />
+                  <Input id="description" aria-describedby="Enter Your Description" onChange={(e) => setDescription(e.target.value)}  />
               </FormGroup>
               <FormGroup>
               <Stack direction="row" spacig={5}>
@@ -377,12 +307,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     type="file"
                     hidden
                     onChange={(e) => {
-                      setFiles(e.target.files);
+                      setFiles(files => [...files,e.target.files]);
                       console.log(files);
                     }}
                   />
                   <Button variant="contained" component="span">
-                    {files?.length ? `${files.length}   Images Selected` : 'Upload'}
+                    {files?.length ? `${files[0].length}   Images Selected` : 'Upload'}
                   </Button>
                 </label>
                 </Stack>
@@ -517,7 +447,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   </Select>
                 </FormGroup>
 
-                {/* <RHFTextField name="endLocation" label="Enter Destination" /> */}
+          
               </Stack>
             </Card>
             
@@ -526,11 +456,11 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                
                 <FormGroup>
                   <FormLabel htmlFor="price">Price</FormLabel>
-                  <TextField id="price" type="number" />
+                    <TextField id="price" type="number" onChange={(e) => setprice(e.target.value)}  />
                 </FormGroup>
                 <FormGroup>
                   <FormLabel htmlFor="seats">Seats</FormLabel>
-                  <TextField id="seats" type="number" />
+                    <TextField id="seats" type="number" onChange={(e) => setSeats(e.target.value)}  />
                 </FormGroup>
               </Stack>
 
@@ -541,8 +471,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 variant="contained"
                 size="large"
                 onClick={handleSubmit1}
+                loading={loading}
               >
-                {!isEdit ? 'Create TOur' : 'Save Changes'}
+                {!isEdit ? 'Create Tour' : 'Save Changes'}
               </LoadingButton>
             
           </Stack>

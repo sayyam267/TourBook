@@ -65,6 +65,7 @@
     "deck.gl": "^8.6.5",
     "emoji-mart": "^3.0.0",
     "firebase": "^9.6.1",
+    "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "gapi-script": "^1.2.0",
     "google-map-react": "^2.1.10",

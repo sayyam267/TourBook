@@ -32,9 +32,11 @@ export default function PlacesMap({getPlaces}) {
         libraries: ["places"]
     })
 
-    const [markers, setmak] = useState([]);
+    
 
+    const [markers, setmak] = useState([]);
     useEffect(() => { }, [[markers]]);
+   
     const [activeMarker, setActiveMarker] = useState(null);
 
     const [plac, setPlace] = useState([]);
@@ -75,7 +77,8 @@ export default function PlacesMap({getPlaces}) {
 
     const handleLocation = () => {
         console.log("hello");  
-        
+        getPlaces(meetLocations);
+        console.log(meetLocations);
         setLabel(true);    
 
     }
@@ -100,13 +103,16 @@ export default function PlacesMap({getPlaces}) {
                     ]);
                     console.log(plac);
                     const location = { name: place, location: { lat: Lat, lon: Lng } };
+                    console.log(meetLocations);
                     setmeetLocations([...meetLocations, location]);
                     getPlaces(meetLocations);
+                    
                     const bounds = new window.google.maps.LatLngBounds();
                     markers?.forEach(({ position }) => bounds.extend(position));
                     map.fitBounds(bounds);
                     console.log(map);
-                    getPlaces(meetLocations);
+                    
+                   
                 },
                 (error) => {
                     console.error(error);

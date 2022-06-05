@@ -16,12 +16,15 @@ import axios from '../../utils/axios';
 // ----------------------------------------------------------------------
 
 export default function ProfileFriends() {
-  useEffect(() => {
-    axios
+
+  const [tour,setTour] = useState();
+  useEffect(async () => {
+    await axios
       .get('http://tourbook-backend.herokuapp.com/order/mine', {
         headers: { 'x-auth-token': localStorage.getItem('accessToken') },
       })
-      .then((response) => console.log(response));
+      .then((response) => { console.log(response.data); setTour(response.data);  });
+      
   }, []);
 
   return (
@@ -29,7 +32,7 @@ export default function ProfileFriends() {
       <Typography variant="h4" sx={{ mb: 3 }}>
         Your Reserved Tour
       </Typography>
-      <TouristTourDetails />
+      {tour ? <TouristTourDetails tours={tour} />: <h2>Loading</h2>}
     </Box>
   );
 }
