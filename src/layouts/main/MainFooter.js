@@ -52,8 +52,8 @@ export default function MainFooter() {
           justifyContent={{ xs: 'center', md: 'space-between' }}
           sx={{ textAlign: { xs: 'center', md: 'left' } }}
         >
-          <Grid item xs={12} sx={{ mb: 3 }}>
-            <Logo sx={{ mx: { xs: 'auto', md: 'inherit' } }} />
+          <Grid item xs={12} sx={{ mb: 1 }}>
+            <Logo sx={{ mx: { xs: 'auto', md: 'inherit' }}} />
           </Grid>
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>

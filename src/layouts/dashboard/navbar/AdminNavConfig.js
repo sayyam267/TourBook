@@ -15,12 +15,10 @@ const ICONS = {
     mail: getIcon('ic_mail'),
     user: getIcon('ic_user'),
     kanban: getIcon('ic_kanban'),
-    banking: getIcon('ic_banking'),
-    calendar: getIcon('ic_calendar'),
     ecommerce: getIcon('ic_ecommerce'),
     analytics: getIcon('ic_analytics'),
     dashboard: getIcon('ic_dashboard'),
-    booking: getIcon('ic_booking'),
+    profile: getIcon('ic_profile'),
 };
 
 const navConfig = [
@@ -32,7 +30,7 @@ const navConfig = [
             { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
             { title: 'Analytics', path: PATH_DASHBOARD.general.adminanalytics, icon: ICONS.dashboard },
             { title: 'AdminPanel', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-            { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
+            { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.profile },
             
         ],
     },

@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 // form
 import { useForm } from 'react-hook-form';
@@ -31,6 +32,7 @@ export default function LoginForm() {
   const { login } = useAuth();
 
   const isMountedRef = useIsMountedRef();
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string().required('Password is required').min(8),
   });
 
   const handleFailureLogin = (response) => {
@@ -54,6 +56,7 @@ export default function LoginForm() {
 
   const handleSuccessLogin = async (response) => {
     await axios
+      // .post('http://tourbook-backend.herokuapp.com/auth/google/createuser', {
       .post('http://tourbook-backend.herokuapp.com/auth/google/createuser', {
         fname: response.profileObj.givenName,
         lname: response.profileObj.familyName,
@@ -79,6 +82,8 @@ export default function LoginForm() {
         localStorage.setItem('pic', res.data.data.profilePicture);
         localStorage.setItem('balance', 0);
         localStorage.setItem('name', res.data.data.name);
+
+        enqueueSnackbar('Login success!');
         navigate(PATH_DASHBOARD.general.app, { replace: true });
       });
   };
@@ -98,15 +103,19 @@ export default function LoginForm() {
     reset,
     setError,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = methods;
+
+  const values = watch();
 
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
+      enqueueSnackbar('Login success!');
     } catch (error) {
       console.error(error);
-      reset();
+      // reset();
       if (isMountedRef.current) {
         setError('afterSubmit', error);
       }
@@ -140,6 +149,7 @@ export default function LoginForm() {
 
           <RHFTextField
             name="password"
+            helperText={values.password.length >= '8' ? "" : "password must be atleast 8 characters"}
             label="Password"
             type={showPassword ? 'text' : 'password'}
             InputProps={{

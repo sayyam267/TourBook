@@ -75,11 +75,13 @@ export default function BookingDetails(props) {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ minWidth: 240 }}>Name</TableCell>
+                  <TableCell sx={{ minWidth: 140 }}>Name</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Verify</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Active</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>PhoneNo</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>UserType</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Date Created</TableCell>
+
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -108,12 +110,14 @@ export default function BookingDetails(props) {
                     <TableCell>{user.phoneNumber}</TableCell>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">{user.userType}</Typography>
+                        <Typography variant="subtitle2">
+                          {String(user.userType.charAt(0).toUpperCase() + user.userType.slice(1))}
+                        </Typography>
                       </Stack>
                     </TableCell>
-
+                    <TableCell>{user.createdAt}</TableCell>
                     <TableCell align="right">
-                      <MoreMenuButton key={user._id} isActive={user.isActive} />
+                      <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -147,8 +151,23 @@ function MoreMenuButton(props) {
   const handleBlock = () => {
     axios
       .put(
-        'http://localhost:4000/admin/user/block',
+        'http://tourbook-backend.herokuapp.com/admin/user/block',
         { id: props._id },
+        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const handleDelete = () => {
+    // console.log(props._id);
+    axios
+      .put(
+        'http://tourbook-backend.herokuapp.com/admin/user/delete',
+        { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
@@ -161,8 +180,8 @@ function MoreMenuButton(props) {
   const handleunblock = () => {
     axios
       .put(
-        'http://localhost:4000/admin/user/unblock',
-        { id: props._id },
+        'http://tourbook-backend.herokuapp.com/admin/user/unblock',
+        { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
@@ -213,6 +232,10 @@ function MoreMenuButton(props) {
             Block
           </MenuItem>
         )}
+        <MenuItem onClick={handleDelete}>
+          <Iconify icon="ant-design:delete-outlined" color="red" sx={{ ...ICON }} />
+          Delete User
+        </MenuItem>
 
         {/* <MenuItem>
           <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
@@ -230,15 +253,9 @@ function MoreMenuButton(props) {
   );
 }
 
-
-
-
-
-
 // import { useState } from 'react';
 // import { format } from 'date-fns';
 // import { sentenceCase } from 'change-case';
-
 
 // import { useTheme } from '@mui/material/styles';
 // import {
@@ -387,7 +404,6 @@ function MoreMenuButton(props) {
 //     height: 20,
 //   };
 
-  
 //   return (
 //     <>
 //       <IconButton size="large" onClick={handleOpen}>
@@ -427,7 +443,6 @@ function MoreMenuButton(props) {
 
 //         <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-        
 //       </MenuPopover>
 //     </>
 //   );

@@ -38,7 +38,7 @@ import {
 } from '@mui/material';
 import axios from '../../../utils/axios';
 import Map from '../../../components/map/Map';
-import MeetMap from '../../../components/map/MeetMap';
+import PlacesMap from '../../../components/map/PlacesMap';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -170,6 +170,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [file, setfile] = useState();
   const [source, setSource] = useState('626e2a89c65f4c055b643653');
   const [destination, setDestination] = useState('626e2a89c65f4c055b643653');
+  const [meetLocation, setMeetLocation] = useState();
+  const [places, setPlaces] = useState();
 
   useEffect(() => {
     axios.get('http://tourbook-backend.herokuapp.com/city/all').then((res) => {
@@ -183,6 +185,22 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     const f = e.target.value;
     setfile(f);
   };
+
+  const getMeetLocation = (meetLocation) =>{
+
+    setMeetLocation(meetLocation);
+
+    console.log("the meet location",meetLocation);
+    
+  }
+
+  const getPlaces = (places) => {
+
+    setPlaces(places);
+
+    console.log("Places", places);
+
+  }
 
   
   const onSubmit = async (e) => {
@@ -288,52 +306,49 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [transport, setTransport] = useState(currentProduct?.hasTransport || false);
   const [hotel, setHotel] = useState(currentProduct?.hasHotel || false);
   const [files, setFiles] = useState(null);
+
   const handleSubmit1 = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
     console.log(e.target);
     console.log(e.target.multiImages);
-    // console.log(e.target.hasFood);
+  
     data.append('description', e.target.description.value);
 
-    // console.log(e.target.files);
-    // console.log([...e.target.multiImages.files]);
+   
     const files1 = [...e.target.multiImages.files];
-    // const files1 = [...files];
+    
     if (files1.length !== 0) {
       files1.map((file) => {
         return data.append('multiImages', file);
       });
     } else data.append('multiImages', e.target.multiImages.files[0]);
     console.log(files1);
-    // data.append("multiImages", files1);
     data.append('hasGuide', guide);
     data.append('hasFood', food);
     data.append('hasTransport', transport);
     data.append('hasHotel', hotel);
-    // data.append("vendorId", String("6231b8ae83f24e5f778fdf88"));
-    // console.log(e.target.expiry.value);
     data.append('price', e.target.price.value);
-    // console.log(startdate, enddate);
     data.append('validTill', enddate);
     data.append('seats', e.target.seats.value);
     data.append('source', source);
     data.append('destination', destination);
     data.append('name', e.target.name.value);
-    // data.append("description", "Hello i am hosting a toru");
-    axios
-      .post('http://tourbook-backend.herokuapp.com/tour/create', data, {
-        headers: {
-          'x-auth-token': localStorage.getItem('accessToken'),
-        },
-      })
-      .then((r) => {
-        console.log(r);
-         enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.profile);
 
-      })
-      .catch((e) => console.log(e.data));
+
+    // axios
+    //   .post('http://tourbook-backend.herokuapp.com/tour/create', data, {
+    //     headers: {
+    //       'x-auth-token': localStorage.getItem('accessToken'),
+    //     },
+    //   })
+    //   .then((r) => {
+    //     console.log(r);
+    //      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+    //   navigate(PATH_DASHBOARD.user.profile);
+
+    //   })
+    //   .catch((e) => console.log(e.data));
     
   };
   return (
@@ -408,14 +423,14 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             <Card container sx={{ p: 3,my:3 }}>
               <LabelStyle>Meet Location</LabelStyle>
               <Stack sx={{ ml: 2 }} spacing={3}>
-                <Map />
+                <Map getMeetLocation={getMeetLocation} />
               </Stack>
             </Card>
 
             <Card container sx={{ p: 3, my: 3 }}>
               <LabelStyle>Places of Attraction</LabelStyle>
               <Stack  spacing={3}>
-                <MeetMap />
+                <PlacesMap getPlaces={getPlaces} />
               </Stack>
             </Card>
         </Grid>
@@ -525,8 +540,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
               <LoadingButton
                 variant="contained"
                 size="large"
-                onClick={handleSubmit}
-              // loading={isSubmitting}
+                onClick={handleSubmit1}
               >
                 {!isEdit ? 'Create TOur' : 'Save Changes'}
               </LoadingButton>

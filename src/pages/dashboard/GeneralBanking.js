@@ -70,7 +70,7 @@
 //   );
 // }
 
-import { useState, useCallback,useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 
@@ -80,7 +80,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Container, Grid,  Stack, Typography } from '@mui/material';
+import { Box, Card, Container, Grid, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -99,7 +99,7 @@ import {
 } from '../../sections/@dashboard/user/profile';
 
 import { fData } from '../../utils/formatNumber';
-import axios  from '../../utils/axios';
+import axios from '../../utils/axios';
 // _mock
 import { countries } from '../../_mock';
 // componentsw
@@ -128,13 +128,11 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 export default function UserProfile() {
   const { themeStretch } = useSettings();
   // const { user } = useAuth();
-  const _userAbout = {name:'sayyam',}
-
+  const _userAbout = { cover: '' };
+  const [user, setUser] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
-
- 
-
-
+  const [city, setCity] = useState('');
+  const [cities, setCities] = useState(null);
 
   const UpdateUserSchema = Yup.object().shape({
     fname: Yup.string().required('FirstName is required'),
@@ -146,11 +144,11 @@ export default function UserProfile() {
   });
 
   const defaultValues = {
-    fname:  '',
+    fname: '',
     lname: '',
     photoURL: '',
-    email:'',
-    phoneNumber:'',
+    email: '',
+    phoneNumber: '',
     country: 'Pakistan',
     city: '',
   };
@@ -168,23 +166,43 @@ export default function UserProfile() {
     formState: { isSubmitting },
   } = methods;
 
-
-  const values  = watch();
+  const values = watch();
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_GETUSERBYEMAIL);
-    const Email= localStorage.getItem('email');
-    axios.get(process.env.REACT_APP_GETUSERBYEMAIL, { params: { email: Email } }).then((response) => {
-      console.log(response.data.data[0])
-      const user = response.data.data[0]
-      // setValue('fname', 'Bob')
-      reset({fname:user.fname,lname:user.lname,email:user.email,phoneNumber:user.phoneNumber,country:user.country,city:user.city});
-    })
+    // console.log(process.env.REACT_APP_GETUSERBYEMAIL);
+    // const Email = localStorage.getItem('email');
+    // axios.get("http://tourbook-backend.herokuapp.com/user/mydetails", { params: { email: Email } }).then((response) => {
+
+    axios
+      .get('http://tourbook-backend.herokuapp.com/city/all')
+      .then((res) => {
+        setCities(res.data.data);
+      })
+      .catch((err) => console.log(err));
+    axios
+      .get('http://tourbook-backend.herokuapp.com/user/mydetails', {
+        headers: { 'x-auth-token': localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log(response.data.data);
+        const user = response.data.data;
+        setUser(response.data.data);
+        // setValue('fname', 'Bob')
+        reset({
+          fname: user?.fname,
+          photoURL: user?.profilePicture,
+          lname: user?.lname,
+          email: user?.email,
+          phoneNumber: user?.phoneNumber,
+          country: user?.country,
+          city: user?.city?._id,
+        });
+      });
   }, []);
 
   const onSubmit = async () => {
     try {
-      console.log(values.fname,values.lname,values.country, values.city,values.phoneNumber,values.email);
+      console.log(values.fname, values.lname, values.country, values.city, values.phoneNumber, values.email);
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
     } catch (error) {
@@ -208,7 +226,6 @@ export default function UserProfile() {
     [setValue]
   );
 
-
   return (
     <Page title="Profile">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -219,9 +236,7 @@ export default function UserProfile() {
             position: 'relative',
           }}
         >
-          <ProfileCover myProfile={_userAbout} />
-
-          
+          <ProfileCover myProfile={{ cover: user?.profilePicture }} />
         </Card>
 
         <Box>
@@ -265,20 +280,54 @@ export default function UserProfile() {
                     <RHFTextField name="fname" label="First Name" />
                     <RHFTextField name="lname" label="Last Name" />
                     <RHFTextField name="email" label="Email Address" />
-
                     <RHFTextField name="phoneNumber" label="Phone Number" />
 
+                    
+                    
+
                     <RHFSelect name="country" label="Country" placeholder="Country">
-                      <option  value="Pakistan">Pakistan</option>
-                      {/* {countries.map((option) => (
-                        <option key={option.code} value={option.label}>
-                          {option.label}
-                        </option>
-                      ))} */}
+                      <option value="Pakistan">Pakistan</option>
+                      
                     </RHFSelect>
 
+                    <RHFSelect name="city" label="City" placeholder="City">
+                      <option value={user?.city._id}>{user?.city.name}</option>
+                      {cities?.map((city) => {
+                        return (
+                          <option key={city._id} value={city._id}>
+                            {city.name}
+                          </option>
+                        );
+                      })}
 
-                    <RHFTextField name="city" label="City" />
+                    </RHFSelect>
+
+                    {/* <RHFTextField name="city" label="City" /> */}
+                    {/* <TextField name="city" select value={city} label="City" onChange={(e) => setCity(e.target.value)}>
+                      {cities?.map((city) => {
+                        return (
+                          <MenuItem key={city._id} value={city._id}>
+                            {city.name}
+                          </MenuItem>
+                        );
+                      })}
+                      <Select
+                        helperText="City"
+                        labelId="city"
+                        id="city"
+                        value={city}
+                        label="Age"
+                        onChange={(e) => setCity(e.target.value)}
+                      >
+                        {cities?.map((city) => {
+                          return (
+                            <MenuItem key={city._id} value={city._id}>
+                              {city.name}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </TextField> */}
                   </Box>
 
                   <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
@@ -292,11 +341,7 @@ export default function UserProfile() {
               </Grid>
             </Grid>
           </FormProvider>
-
-
-
-</Box>
-    
+        </Box>
       </Container>
     </Page>
   );

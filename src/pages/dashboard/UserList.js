@@ -15,18 +15,14 @@ import axios from '../../utils/axios';
 // } from '../../e-commerce/';
 // ----------------------------------------------------------------------
 
-
-
-
-
-
 export default function ProfileFriends() {
-
   useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/order/create")
-      .then(response => console.log(response))
-
-  }, [])
+    axios
+      .get('http://tourbook-backend.herokuapp.com/order/mine', {
+        headers: { 'x-auth-token': localStorage.getItem('accessToken') },
+      })
+      .then((response) => console.log(response));
+  }, []);
 
   return (
     <Box sx={{ mt: 5 }}>
@@ -34,10 +30,8 @@ export default function ProfileFriends() {
         Your Reserved Tour
       </Typography>
       <TouristTourDetails />
-
     </Box>
   );
 }
 
 // ----------------------------------------------------------------------
-

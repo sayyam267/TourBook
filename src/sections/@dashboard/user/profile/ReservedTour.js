@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {useEffect,useState} from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { Box, Grid, Card, Link, Avatar, IconButton, Typography, InputAdornment } from '@mui/material';
 // components
@@ -16,32 +16,24 @@ import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
 ProfileFriends.propTypes = {
-    friends: PropTypes.array,
-    findFriends: PropTypes.string,
-    onFindFriends: PropTypes.func,
+  friends: PropTypes.array,
+  findFriends: PropTypes.string,
+  onFindFriends: PropTypes.func,
 };
 
-
-
-
 export default function ProfileFriends() {
+  useEffect(() => {
+    axios.get('http://tourbook-backend.herokuapp.com/order/mine').then((response) => console.log(response));
+  }, []);
 
-    useEffect(() => {
-        axios.get("http://tourbook-backend.herokuapp.com/order/create")
-            .then(response => console.log(response))
-
-    }, [])
-
-    return (
-        <Box sx={{ mt: 5 }}>
-            <Typography variant="h4" sx={{ mb: 3 }}>
-                Your Reserved Tour
-            </Typography>
-            <TouristTourDetails />
-            
-        </Box>
-    );
+  return (
+    <Box sx={{ mt: 5 }}>
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        Your Reserved Tour
+      </Typography>
+      <TouristTourDetails />
+    </Box>
+  );
 }
 
 // ----------------------------------------------------------------------
-

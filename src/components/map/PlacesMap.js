@@ -1,5 +1,5 @@
 import { Box, Button, Stack } from '@mui/material';
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import {
     GoogleMap,
     InfoWindow,
@@ -8,6 +8,7 @@ import {
     useJsApiLoader
 } from "@react-google-maps/api";
 import TextField from "@mui/material/TextField";
+import Chip from '@mui/material/Chip';
 import Geocode from "react-geocode";
 
 Geocode.setApiKey("AIzaSyBsKW_CHifccy_0JkqchnuoWWucLcslhFs");
@@ -20,7 +21,7 @@ Geocode.setRegion("pk");
 Geocode.setLocationType("ROOFTOP");
 Geocode.enableDebug();
 
-export default function MeetMap() {
+export default function PlacesMap({getPlaces}) {
 
     const center = { lat: 31.5204, lng: 74.3587 }
 
@@ -31,20 +32,17 @@ export default function MeetMap() {
         libraries: ["places"]
     })
 
-    const [markers, setmak] = useState([
-        {
-            id: 0,
-            name: "Lahore",
-            position: { lat: 31.5203696, lng: 74.35874729999999 }
-        }
-    ]);
+    const [markers, setmak] = useState([]);
+
+    useEffect(() => { }, [[markers]]);
     const [activeMarker, setActiveMarker] = useState(null);
 
     const [plac, setPlace] = useState([]);
 
     const [map, setMap] = useState();
+    const [label,setLabel] = useState(false);
 
-    const [getdata, setGetData] = useState(false);
+    const [meetLocations, setmeetLocations] = useState([]);
 
     const handleActiveMarker = (marker) => {
         if (marker === activeMarker) {
@@ -61,10 +59,9 @@ export default function MeetMap() {
         const bounds = new window.google.maps.LatLngBounds();
         markers?.forEach(({ position }) => bounds.extend(position));
         map.fitBounds(bounds);
-        console.log(map);
+        console.log("hello load");
         setMap(map);
     };
-
     const handleBoundsChanged = () => {
         console.log("handleBoundsChanged");
         const Lat = map.getCenter().lat();
@@ -76,15 +73,14 @@ export default function MeetMap() {
         map.setCenter(mapCenter);
     };
 
-    const handleLocation = (e) => {
-        console.log(e.target.value);
-        // if(e.keycode === '13')
-        // console.log(e.target.value);
+    const handleLocation = () => {
+        console.log("hello");  
         
+        setLabel(true);    
 
     }
     const keyPress = (e) => {
-        if (e.keycode === '30') {
+        if (e.keyCode === 13) {
             console.log("value", e.target.value);
             console.log("hello");
             const place = e.target.value;
@@ -94,7 +90,6 @@ export default function MeetMap() {
                     console.log(lat, lng, "lat long");
                     const Lat = lat;
                     const Lng = lng;
-                    console.log(markers.length);
                     setmak((markers) => [
                         ...markers,
                         {
@@ -104,13 +99,14 @@ export default function MeetMap() {
                         }
                     ]);
                     console.log(plac);
+                    const location = { name: place, location: { lat: Lat, lon: Lng } };
+                    setmeetLocations([...meetLocations, location]);
+                    getPlaces(meetLocations);
                     const bounds = new window.google.maps.LatLngBounds();
                     markers?.forEach(({ position }) => bounds.extend(position));
-
-                    console.log(map);
-                    console.log("hello");
                     map.fitBounds(bounds);
-                    map.panToBounds(bounds);
+                    console.log(map);
+                    getPlaces(meetLocations);
                 },
                 (error) => {
                     console.error(error);
@@ -129,22 +125,27 @@ export default function MeetMap() {
                             <TextField
                                 name="meetLocation"
                                 type="text"
-                                placeholder="Enter Meet Location"
-                                onKeyDown={handleLocation}
+                                placeholder="Add Places Of Attraction"
+                                onKeyDown={keyPress}
                                 ref={originRef}
 
                             />
                         </Autocomplete>
 
-                        <Button onClick={handleLocation}>Set Location</Button>
+                        <Button onClick={handleLocation}>Add Location</Button>
                         
                     </Stack>
+                    {label ? <Stack direction="row" spacing={1}><h4 sx={{ pt: 1 }} >your meet location:</h4>{meetLocations?.map(({ name}) => (
+                        <Chip label={name} />
+                    ))} </Stack> : ""}
                  
                 
                     <GoogleMap
                         onLoad={handleOnLoad}
                         onClick={() => setActiveMarker(null)}
                         mapContainerStyle={{ width: "45vw", height: "70vh" }}
+                        zoom={10}
+                        center={markers.length >= 1 ? markers[0]?.position : { lat: 31.5204, lng: 74.3587 }}
 
                     >
                         {markers?.map(({ id, name, position }) => (

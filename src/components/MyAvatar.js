@@ -14,12 +14,7 @@ export default function MyAvatar({ ...other }) {
   const name = localStorage.getItem('name');
 
   return (
-    <Avatar
-      src={photo}
-      alt={name}
-      color={photo ? 'default' : createAvatar(name).color}
-      {...other}
-    >
+    <Avatar src={photo} alt={name} color={photo ? 'default' : createAvatar(name).color} {...other}>
       {createAvatar(name).name}
     </Avatar>
   );

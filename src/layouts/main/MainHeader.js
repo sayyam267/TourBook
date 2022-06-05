@@ -77,7 +77,7 @@ export default function MainHeader() {
             justifyContent: 'space-between',
           }}
         >
-          <Logo sx={{pt:2}} />
+          <Logo sx={{pt:1.3}} />
           <Typography variant="h4" sx={{ml:1,pt:1.3}}> TOURBOOK</Typography>
 
           {/* <Label color="info" sx={{ ml: 1 }}>

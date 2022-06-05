@@ -53,7 +53,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     useCollapseDrawer();
 
   const checkRole = () => {
-    if (localStorage.getItem('role') === 'tourguide') {
+    if (localStorage.getItem('role') === 'vendor') {
       return true;
     }
     return false;
@@ -90,7 +90,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Logo />
+          <Logo sx={{mt:-4}}/>
 
           {isDesktop && !isCollapse && (
             <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />

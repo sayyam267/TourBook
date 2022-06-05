@@ -38,23 +38,21 @@ import Scrollbar from '../../components/Scrollbar';
 import MenuPopover from '../../components/MenuPopover';
 import axios from '../../utils/axios';
 
-
-
 // ----------------------------------------------------------------------
 
 export default function BankingRecentTransitions() {
   const theme = useTheme();
 
-  const [customTour,setCustomTour] = useState();
+  const [customTour, setCustomTour] = useState();
   const isLight = theme.palette.mode === 'light';
-
 
   const [open, setOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState();
   const [description, setDescription] = useState();
-
-  const handleDialogOpen = () => {
+  const [requestID, setreqID] = useState(null);
+  const handleDialogOpen = (id) => {
     setOpen(true);
+    setreqID(id);
   };
 
   const handleDialogClose = () => {
@@ -62,21 +60,34 @@ export default function BankingRecentTransitions() {
   };
 
   const handleSendOffer = () => {
-    console.log(offerAmount,description);
+    console.log(offerAmount, description, requestID);
+    axios
+      .post(
+        // 'http://tourbook-backend.herokuapp.com/customtour/all',
+        'http://tourbook-backend.herokuapp.com/offer/give',
+        { requestID, amount: offerAmount, description },
+        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+      )
+      .then((response) => {
+        console.log(response.data.data);
+        // setCustomTour(response.data.data);
+      });
   };
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_GETALLCUSTOMTOUR).then((response) => {
-      console.log(response.data.data);
-      setCustomTour(response.data.data);
-    })
+    axios
+      .get('http://tourbook-backend.herokuapp.com/customtour/all', { headers: { 'x-auth-token': localStorage.getItem('accessToken') } })
+      .then((response) => {
+        console.log(response.data.data);
+        setCustomTour(response.data.data);
+      });
   }, []);
   return (
     <>
       <Card>
         <CardHeader title="Custom Tour Request" sx={{ mb: 3 }} />
         <Scrollbar>
-          <TableContainer sx={{ minWidth: 720 }}>
+          <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
@@ -92,38 +103,40 @@ export default function BankingRecentTransitions() {
                 </TableRow>
               </TableHead>
               <TableBody>
-               {customTour ? customTour.map((ct) => (
-                  <TableRow key={ct?.id}>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ position: 'relative' }}>
-                          {renderAvatar(ct?.category, ct?.avatar)}
+                {customTour ? (
+                  customTour.map((ct) => (
+                    <TableRow key={ct?.id}>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box sx={{ position: 'relative' }}>{renderAvatar(ct?.category, ct?.avatar)}</Box>
+                          <Box sx={{ ml: 2 }}>
+                            <Typography variant="subtitle2">{ct?.by.fname}</Typography>
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {' '}
+                              {ct?.by.email}
+                            </Typography>
+                          </Box>
                         </Box>
-                        <Box sx={{ ml: 2 }}>
-                         <Typography variant="subtitle2" >
-                            {ct?.by.fname}
-                          </Typography>
-                         <Typography variant="body2" sx={{ color: 'text.secondary' }} > {ct?.by.email}</Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
+                      </TableCell>
 
-                    <TableCell>
-                      <Typography variant="subtitle2">{ct?.by.phoneNumber}</Typography>
-                      
-                    </TableCell>
+                      <TableCell>
+                        <Typography variant="subtitle2">{ct?.by.phoneNumber}</Typography>
+                      </TableCell>
 
-                    <TableCell>{ct?.requirements.maxBudget}RS</TableCell>
-                    <TableCell>{ct?.requirements.seats}</TableCell>
+                      <TableCell>{ct?.requirements.maxBudget}RS</TableCell>
+                      <TableCell>{ct?.requirements.seats}</TableCell>
 
+                      <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                        {ct?.requirements.description}
+                      </TableCell>
 
-                   <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{ct?.requirements.description}</TableCell>
-                   
-                   <TableCell >{ct?.requirements.source.name}</TableCell>
-                   <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{ct?.requirements.places}</TableCell>
-                   <TableCell >{ct?.requirements.destination.name}</TableCell>
+                      <TableCell>{ct?.requirements.source.name}</TableCell>
+                      <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                        {ct?.requirements.places}
+                      </TableCell>
+                      <TableCell>{ct?.requirements.destination.name}</TableCell>
 
-                    {/* <TableCell>
+                      {/* <TableCell>
                       <Label
                         variant={isLight ? 'ghost' : 'filled'}
                         color={
@@ -136,11 +149,14 @@ export default function BankingRecentTransitions() {
                       </Label>
                     </TableCell> */}
 
-                    <TableCell align="right">
-                      <MoreMenuButton handleDialog ={handleDialogOpen} />
-                    </TableCell>
-                  </TableRow>
-                )):<></>}
+                      <TableCell align="right">
+                        <MoreMenuButton handleDialog={handleDialogOpen} id={ct._id} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <></>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -157,9 +173,7 @@ export default function BankingRecentTransitions() {
         <Dialog open={open} onClose={handleDialogClose}>
           <DialogTitle>Send Custom Tour Offer to </DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Please enter your offer amount with detail description.
-            </DialogContentText>
+            <DialogContentText>Please enter your offer amount with detail description.</DialogContentText>
             <TextField
               autoFocus
               margin="dense"
@@ -169,10 +183,9 @@ export default function BankingRecentTransitions() {
               fullWidth
               variant="standard"
               value={offerAmount}
-              onChange={(e) =>  setOfferAmount(e.target.value)}
+              onChange={(e) => setOfferAmount(e.target.value)}
             />
             <TextField
-              
               margin="dense"
               id="Description"
               label="description"
@@ -230,7 +243,7 @@ function renderAvatar(category, avatar) {
 
 // ----------------------------------------------------------------------
 
-function MoreMenuButton({ handleDialog}) {
+function MoreMenuButton({ handleDialog, id }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -242,15 +255,17 @@ function MoreMenuButton({ handleDialog}) {
   };
 
   const openDialog = () => {
-    console.log("hello");
-    handleDialog();
-  }
+    console.log('hello', id);
+    handleDialog(id);
+  };
   const ICON = {
     mr: 2,
     width: 20,
     height: 20,
   };
-
+  const handleDelete = () => {
+    // axios.
+  };
   return (
     <>
       <IconButton size="large" onClick={handleOpen}>
@@ -270,14 +285,14 @@ function MoreMenuButton({ handleDialog}) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={openDialog} >
+        <MenuItem onClick={openDialog}>
           <Iconify icon={'mdi:send'} rotate={3} sx={{ ...ICON }} />
           Send Offer
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleDelete}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
           Delete
         </MenuItem>
@@ -285,4 +300,3 @@ function MoreMenuButton({ handleDialog}) {
     </>
   );
 }
-

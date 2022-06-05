@@ -18,6 +18,7 @@ import SocialsButton from '../../../../components/SocialsButton';
 import { ColorSinglePicker } from '../../../../components/color-utils';
 import { FormProvider, RHFSelect } from '../../../../components/hook-form';
 import axios from '../../../../utils/axios';
+import { fDateTime } from '../../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -162,9 +163,9 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Typography>
 
           <div>
-            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              {tour.addedOn}
-            </Typography>
+            {tour ? <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              {/* {fDateTime(tour.addedOn)} */}{tour.addedOn}
+            </Typography>: <></>}
           </div>
         </Stack>
 
@@ -174,9 +175,9 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Typography>
 
           <div>
-            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              {tour.validTill}
-            </Typography>
+            {tour ? <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              {/* {fDateTime(tour.validTill)} */}{tour.validTill}
+            </Typography> :<></>}
           </div>
         </Stack>
 

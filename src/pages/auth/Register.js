@@ -71,10 +71,8 @@ export default function Register() {
       <RootStyle>
         <HeaderStyle>
           <div>
-            <Logo/>
-          {/* <Typography component='span' variant="h4" sx={{ mt: { md: -2 },color:'primary.main' }}>
-            TOURBOOK
-          </Typography> */}
+            <Logo sx={{ mt: -5.5 }} />
+          
           </div>
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>

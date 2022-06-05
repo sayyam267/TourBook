@@ -1,12 +1,13 @@
 import * as Yup from 'yup';
 import { useCallback, useState, useEffect} from 'react';
 import { useSnackbar } from 'notistack';
+import { isBefore } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 // @mui
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { Grid, Card, Chip, Stack, Button, TextField, Typography, Autocomplete } from '@mui/material';
 // routes
@@ -16,6 +17,8 @@ import { RHFSwitch, RHFSelect, FormProvider, RHFTextField, RHFCheckbox } from '.
 //
 import BlogNewPostPreview from './BlogNewPostPreview';
 import axios from '../../../utils/axios';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +57,7 @@ export default function BlogNewPostForm() {
 
   const [cities,setCities] = useState();
 
-
+  
  
 
   const handleOpenPreview = () => {
@@ -74,6 +77,8 @@ export default function BlogNewPostForm() {
     place: Yup.array(),
     isHotel: Yup.boolean(),
     isGuide: Yup.boolean(),
+    start: Yup.date().required('Date is Required'),
+    end: Yup.date(),
   });
 
   const defaultValues = {
@@ -103,6 +108,8 @@ export default function BlogNewPostForm() {
 
   const values = watch();
 
+  const isDateError = isBefore(new Date(values.end), new Date(values.start));
+
   useEffect(() => {
     axios.get('http://tourbook-backend.herokuapp.com/city/all').then((res) => {
       console.log(res);
@@ -115,7 +122,7 @@ export default function BlogNewPostForm() {
 
   const onSubmit = async () => {
     
-    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places);
+    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places,values.start,values.end);
     try {
       axios.post("http://tourbook-backend.herokuapp.com/customtour/create",{
         requirements:{
@@ -188,6 +195,50 @@ export default function BlogNewPostForm() {
                     </Stack>
                   </Stack>
                 </div>
+                <LabelStyle>Availability</LabelStyle>
+
+                <Stack spacing={3} mt={2}>
+                  <Stack direction="row" spacing={3} mt={2}>
+                  <Controller
+                    name="start"
+                    id="startDate"
+                    control={control}
+                    render={({ field }) => (
+                      <MobileDateTimePicker
+                        {...field}
+                        id="startDate"
+                        label="Start date"
+                        // value={startdate}
+                        inputFormat="dd/MM/yyyy hh:mm a"
+                        renderInput={(params) => <TextField {...params} fullWidth />}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="end"
+                    id="endDate"
+                    control={control}
+                    render={({ field }) => (
+                      <MobileDateTimePicker
+                        {...field}
+                        label="End date"
+                        inputFormat="dd/MM/yyyy hh:mm a"
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            id="endDate"
+                            fullWidth
+                            // value={enddate}
+                            error={!!isDateError}
+                            helperText={isDateError && 'End date must be later than start date'}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                  </Stack>
+                </Stack>
                 <div>
                   <Stack spacing={1}>
                     <LabelStyle>Extras</LabelStyle>
@@ -243,21 +294,21 @@ export default function BlogNewPostForm() {
 
             <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
               <LoadingButton sx={{mx:2}} fullWidth type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Post
+                Create Cutstom Tour
               </LoadingButton>
             </Stack>
           </Grid>
         </Grid>
       </FormProvider>
 
-      <BlogNewPostPreview
+      {/* <BlogNewPostPreview
         values={values}
         isOpen={open}
         isValid={isValid}
         isSubmitting={isSubmitting}
         onClose={handleClosePreview}
         onSubmit={handleSubmit(onSubmit)}
-      />
+      /> */}
     </>
   );
 }

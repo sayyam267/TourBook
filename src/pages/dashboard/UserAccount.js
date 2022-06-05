@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 // @mui
@@ -38,31 +38,105 @@ export default function BankingRecentTransitions() {
   const theme = useTheme();
 
   const isLight = theme.palette.mode === 'light';
-
+  const [myCustomTours, setCustomTours] = useState(null);
   useEffect(() => {
-    
-    axios.get(process.env.REACT_APP_MYCUSTOMTOUR).then((response) =>{
-      console.log(response);
-    }, { headers: { 'x-auth-token': localStorage.getItem('accessToken') }})
+    axios
+      // .get('http://tourbook-backend.herokuapp.com/customtour/mine', {
+      .get('http://tourbook-backend.herokuapp.com/customtour/mine', {
+        headers: { 'x-auth-token': localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log(response);
+        setCustomTours(response.data.data);
+      });
   }, []);
   return (
     <>
       <Card>
         <CardHeader title="My Custom Tour Request" sx={{ mb: 3 }} />
         <Scrollbar>
-          <TableContainer sx={{ minWidth: 720 }}>
+          <TableContainer>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Description</TableCell>
                   <TableCell>Date</TableCell>
-                  <TableCell>Amount</TableCell>
+                  <TableCell>Budget</TableCell>
                   <TableCell>Status</TableCell>
+                  <TableCell>Offers</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {_bankingRecentTransitions.map((row) => (
+                {myCustomTours?.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box sx={{ position: 'relative' }}>
+                          {/* {renderAvatar(row.category, row.avatar)} */}
+                          {renderAvatar(row.profilePicture)}
+                          <Box
+                            sx={{
+                              right: 0,
+                              bottom: 0,
+                              width: 18,
+                              height: 18,
+                              display: 'flex',
+                              borderRadius: '50%',
+                              position: 'absolute',
+                              alignItems: 'center',
+                              color: 'common.white',
+                              bgcolor: 'error.main',
+                              justifyContent: 'center',
+                              ...(row.type === 'Income' && {
+                                bgcolor: 'success.main',
+                              }),
+                            }}
+                          >
+                            <Iconify
+                              icon={
+                                row.type === 'Income'
+                                  ? 'eva:diagonal-arrow-left-down-fill'
+                                  : 'eva:diagonal-arrow-right-up-fill'
+                              }
+                              width={16}
+                              height={16}
+                            />
+                          </Box>
+                        </Box>
+                        <Box sx={{ ml: 2 }}>
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            {row.description}
+                          </Typography>
+                          {/* <Typography variant="subtitle2"> {row.category}</Typography> */}
+                        </Box>
+                      </Box>
+                    </TableCell>
+
+                    <TableCell>
+                      <Typography variant="subtitle2">{format(new Date(row.startDate), 'dd MMM yyyy')}</Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {format(new Date(row.date), 'p')}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell>{fCurrency(row.maxBudget)}</TableCell>
+
+                    <TableCell>
+                      <Label
+                        variant={isLight ? 'ghost' : 'filled'}
+                        color={(row?.fulfilledBy === null && 'warning') || 'error'}
+                      >
+                        {sentenceCase(row?.fulfilledBy == null ? 'Pending' : row?.fulfilledBy)}
+                      </Label>
+                    </TableCell>
+
+                    <TableCell align="right">
+                      <MoreMenuButton />
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {/* {_bankingRecentTransitions.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -132,7 +206,7 @@ export default function BankingRecentTransitions() {
                       <MoreMenuButton />
                     </TableCell>
                   </TableRow>
-                ))}
+                ))} */}
               </TableBody>
             </Table>
           </TableContainer>
@@ -173,17 +247,26 @@ function AvatarIcon({ icon }) {
 
 // ----------------------------------------------------------------------
 
-function renderAvatar(category, avatar) {
-  if (category === 'Books') {
-    return <AvatarIcon icon={'eva:book-fill'} />;
-  }
-  if (category === 'Beauty & Health') {
-    return <AvatarIcon icon={'eva:heart-fill'} />;
-  }
-  return avatar ? (
-    <Avatar alt={category} src={avatar} sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }} />
-  ) : null;
+function renderAvatar(profilePicture) {
+  // if (category === 'Books') {
+  //   return <AvatarIcon icon={'eva:book-fill'} />;
+  // }
+  // if (category === 'Beauty & Health') {
+  //   return <AvatarIcon icon={'eva:heart-fill'} />;
+  // }
+  return <Avatar src={profilePicture} sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }} />;
 }
+// function renderAvatar(category, avatar) {
+//   if (category === 'Books') {
+//     return <AvatarIcon icon={'eva:book-fill'} />;
+//   }
+//   if (category === 'Beauty & Health') {
+//     return <AvatarIcon icon={'eva:heart-fill'} />;
+//   }
+//   return avatar ? (
+//     <Avatar alt={category} src={avatar} sx={{ width: 48, height: 48, boxShadow: (theme) => theme.customShadows.z8 }} />
+//   ) : null;
+// }
 
 // ----------------------------------------------------------------------
 
@@ -223,22 +306,22 @@ function MoreMenuButton() {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem>
+        {/* <MenuItem>
           <Iconify icon={'eva:download-fill'} sx={{ ...ICON }} />
           Download
-        </MenuItem>
+        </MenuItem> */}
 
-        <MenuItem>
+        {/* <MenuItem>
           <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
           Print
-        </MenuItem>
-
+        </MenuItem> */}
+        {/* 
         <MenuItem>
           <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
           Share
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
         <MenuItem sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />

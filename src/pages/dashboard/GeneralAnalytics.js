@@ -31,6 +31,7 @@ import { BookingDetails } from '../../sections/@dashboard/general/booking';
 import UserList from './UserList';
 
 import { EcommerceCurrentBalance, EcommerceWelcome } from '../../sections/@dashboard/general/e-commerce';
+import PendingApprovalTable from './PendingApprovalTable';
 // ----------------------------------------------------------------------
 
 export default function GeneralAnalytics() {
@@ -42,12 +43,14 @@ export default function GeneralAnalytics() {
   const [pendingreq, setPendingReq] = useState(null);
   const [deleteduser, setdeleted] = useState(null);
   const [allUsers, setAllUsers] = useState(null);
+  const [totalCredits, setTotalCredits] = useState(null);
+  const [totalNoOfTours, setTotalNoOfTours] = useState(null);
+  const [totalOngoingTours, setTotalOngoingTours] = useState(null);
 
   const Schema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
   });
-
-  useEffect(() => {
+  const fetchDashboard = () => {
     axios
       .get('http://tourbook-backend.herokuapp.com/admin/dashboard', {
         headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -55,15 +58,21 @@ export default function GeneralAnalytics() {
       .then((res) => {
         console.log(res);
         console.log(res.data.data.allUsers, res.data.data.totalNoOfUsers);
-        setAllUsers([...res.data.data.allUsers]);
-        
+        setAllUsers([...res.data.data.activeUsers]);
+
         console.log(allUsers);
         setTotalUser(res.data.data.totalNoOfUsers);
         setPendingReq(res.data.data.pendingVendorRequests);
         // console.log(totaluser);
         setActiveUser(res.data.data.totalNoOfActiveUsers);
+        setTotalCredits(res.data.data.totalCredits);
+        setTotalNoOfTours(res.data.data.totalNoOfTours);
+        setTotalOngoingTours(res.data.data.totalOngoingTours);
       });
-  }, [allUsers]);
+  };
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
   const methods = useForm({
     resolver: yupResolver(Schema),
   });
@@ -94,7 +103,7 @@ export default function GeneralAnalytics() {
           <Grid item xs={12} md={6}>
             <EcommerceWelcome />
           </Grid>
-          <Grid item xs={12} sm={8} md={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Card>
               <CardHeader title="Add An Admin " sx={{ mb: 1 }} />
               <Typography sx={{ color: 'text.secondary', ml: 3 }}>Enter Email to Add Admin</Typography>
@@ -114,12 +123,40 @@ export default function GeneralAnalytics() {
           </Grid>
         </Grid>
 
-        <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }}>
+        {/* <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }}>
           Pending Request
-        </Typography>
+        </Typography> */}
+
+        <Grid container spacing={3} style={{ marginTop: 20, marginBottom: 20 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary title="Total Credits" total={totalCredits} icon={'entypo:credit'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary title="All Users" total={totaluser} color="info" icon={'uil:user'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary
+              title="Total Tours Created"
+              total={totalNoOfTours}
+              color="warning"
+              icon={'eva:info-outline'}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary
+              title="Total Ongoing Tours"
+              total={totalOngoingTours}
+              color="info"
+              icon={'ant-design:dashboard-twotone'}
+            />
+          </Grid>
+        </Grid>
 
         <Grid container spacing={3}>
-          {pendingreq?.map((req) => {
+          {/* {pendingreq?.map((req) => {
             return (
               <Grid item xs={12} sp={6} md={3}>
                 <EcommerceCurrentBalance
@@ -131,7 +168,14 @@ export default function GeneralAnalytics() {
                 />
               </Grid>
             );
-          })}
+          })} */}
+          {pendingreq ? (
+            <Grid item xs={12}>
+              <PendingApprovalTable user={pendingreq} />
+            </Grid>
+          ) : (
+            <></>
+          )}
 
           {allUsers ? (
             <Grid item xs={12}>
@@ -146,13 +190,6 @@ export default function GeneralAnalytics() {
   );
 }
 
-
-
-
-
-
-
-
 // // @mui
 // import { Grid, Container, Typography, Card, CardHeader, Stack, Alert } from '@mui/material';
 // import * as Yup from 'yup';
@@ -165,8 +202,6 @@ export default function GeneralAnalytics() {
 // import axios from '../../utils/axios';
 // // components
 // import Page from '../../components/Page';
-
-
 
 // import useIsMountedRef from '../../hooks/useIsMountedRef';
 // import { FormProvider, RHFTextField, RHFCheckbox } from '../../components/hook-form';
@@ -189,7 +224,6 @@ export default function GeneralAnalytics() {
 
 // import UserList from './UserList';
 
-
 // import {
 //   EcommerceCurrentBalance,
 //   EcommerceWelcome
@@ -204,8 +238,6 @@ export default function GeneralAnalytics() {
 //   const[activeuser,setActiveUser]=useState(null);
 //   const[deleteduser,setdeleted] =useState(null);
 //   const[allUsers,setUsers] =useState(null);
-  
-
 
 //   const Schema = Yup.object().shape({
 //     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -215,9 +247,8 @@ export default function GeneralAnalytics() {
 //     resolver: yupResolver(Schema),
 //   });
 
-
 //   useEffect(() => {
-   
+
 //     axios.get("http://tourbook-backend.herokuapp.com/admin/dashboard", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
 //       console.log(res);
 //       console.log(res.data.data.allUsers,res.data.data.totalNoOfUsers);
@@ -248,8 +279,6 @@ export default function GeneralAnalytics() {
 //     }
 //   };
 
-
-
 //   return (
 //     <Page title="Admin: Dashboard">
 //       <Container maxWidth={themeStretch ? false : 'x1'}>
@@ -278,7 +307,6 @@ export default function GeneralAnalytics() {
 //               </Card>
 //         </Grid>
 //         </Grid>
-
 
 //         <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }} >
 //           Pending Request

@@ -45,7 +45,7 @@ export default function ShopProductCard({ tour }) {
               <Typography variant="subtitle2">{tour.name}</Typography>
             </Link>
             <Typography variant="caption" sx={{ color: 'text.disabled', mt: 0.5, display: 'block' }}>
-             Starting from {fDateTime(tour.addedOn)}
+              Starting from {fDateTime(tour.addedOn)}
             </Typography>
           </div>
         </Stack>

@@ -18,9 +18,10 @@ export default function Logo({ disabledLink = false, sx }) {
   const PRIMARY_DARK = theme.palette.primary.dark;
 
   const logo = (
-    <Box sx={{ width: 40, height: 40, ...sx }}>
+    <Box sx={{ width: 100, height: 100, ...sx }}>
       <img
-        src="https://res.cloudinary.com/snakecloud/image/upload/v1653481901/tb_logon_dtjjb7.png"
+        // src="https://res.cloudinary.com/snakecloud/image/upload/v1653481901/tb_logon_dtjjb7.png"
+       src = "https://res.cloudinary.com/snakecloud/image/upload/v1654357604/logo_ndwijg.png"
         alt="new"
       />
     </Box>
