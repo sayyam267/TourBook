@@ -211,8 +211,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [description,setDescription]=useState();
   const [price,setprice]=useState();
   const [seats,setSeats]=useState();
-  const [startdate, handleStartDate] = useState(new Date());
-  const [enddate, handleEndDate] = useState(new Date());
+  const [startdate, handleStartDate] = useState();
+  const [enddate, handleEndDate] = useState();
   const [food, setFood] = useState(currentProduct?.hasFood || false);
   const [guide, setGuide] = useState(currentProduct?.hasGuide || false);
   const [transport, setTransport] = useState(currentProduct?.hasTransport || false);
@@ -222,6 +222,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const handleSubmit1 = (e) => {
 
+
+    console.log(description, guide, food, transport, hotel, price, values.start, values.end, seats, source, destination, title, meetLocation, places);
     setLoading(true)
     console.log("meetlocation",JSON.stringify(meetLocation),"Places",places);
     e.preventDefault();
@@ -246,9 +248,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       });
     } else data.append('multiImages', files[0]);
     
-    console.log(description,guide,food,transport,hotel,price,enddate,seats,source,destination,title,meetLocation,places);
-    const mLocation = JSON.stringify(meetLocation);
-    const Place = JSON.stringify(places);
+    
 
     data.append('description', description);
     data.append('hasGuide', guide);
@@ -256,13 +256,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     data.append('hasTransport', transport);
     data.append('hasHotel', hotel);
     data.append('price', price);
-    data.append('validTill', enddate);
+    data.append('startDate', values.start);
+    data.append('validTill', values.end);
     data.append('seats', seats);
     data.append('source', source);
     data.append('destination', destination);
     data.append('name', title);
-    data.append('meetLocation', mLocation);
-    data.append('places', Place);
+    // data.append('meetLocation', meetLocation);
+    meetLocation.forEach(item=> data.append("meetLocation",item));
+    places.forEach(item=>
+      data.append("places",item))
+    // data.append('places', places);
 
 
     axios
@@ -278,7 +282,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       // navigate(PATH_DASHBOARD.user.profile);
 
       })
-      .catch((e) => console.log(e.data));
+      .catch((e) => { console.log(e); setLoading(false); } );
     
   };
   return (
@@ -382,9 +386,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       {...field}
                       id="startDate"
                       label="Start date"
-                      value={startdate}
+                      name="start"
                       inputFormat="dd/MM/yyyy hh:mm a"
-                      renderInput={(params) => <TextField {...params} fullWidth />}
+                      
+                      renderInput={(params) => <TextField {...params} fullWidth onChange={(e) => {handleStartDate(e.target.value);console.log(e.target.value)} }/>}
                     />
                   )}
                 />
@@ -397,15 +402,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     <MobileDateTimePicker
                       {...field}
                       label="End date"
+                      name="end"
                       inputFormat="dd/MM/yyyy hh:mm a"
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           id="endDate"
                           fullWidth
-                          value={enddate}
+                          // value={enddate}
                           error={!!isDateError}
                           helperText={isDateError && 'End date must be later than start date'}
+                          onChange={(e)=>handleEndDate(e.target.value)}
                         />
                       )}
                     />

@@ -6,7 +6,6 @@ import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // utils
-import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
