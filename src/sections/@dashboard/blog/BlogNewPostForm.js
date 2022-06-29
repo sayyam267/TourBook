@@ -24,19 +24,7 @@ import axios from '../../../utils/axios';
 // ----------------------------------------------------------------------
 
 const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
+  'Lahore',
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -57,9 +45,8 @@ export default function BlogNewPostForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [cities,setCities] = useState();
-
-  
- 
+  const [startDate,setstartDate] = useState(Date.now());
+  const [endDate,setendDate] = useState(Date.now());
 
   const handleOpenPreview = () => {
     setOpen(true);
@@ -78,8 +65,6 @@ export default function BlogNewPostForm() {
     place: Yup.array(),
     isHotel: Yup.boolean(),
     isGuide: Yup.boolean(),
-    start: Yup.date().required('Date is Required'),
-    end: Yup.date(),
   });
 
   const defaultValues = {
@@ -123,7 +108,7 @@ export default function BlogNewPostForm() {
 
   const onSubmit = async () => {
     
-    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places,values.start,values.end);
+    console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places);
     try {
       axios.post("http://tourbook-backend.herokuapp.com/customtour/create",{
         requirements:{
@@ -135,8 +120,8 @@ export default function BlogNewPostForm() {
           isHotel: values.isHotel,
           isGuide: values.isGuide,
           places:values.places,
-          startDate: values.start,
-          endDate:values.end,
+          startDate,
+          endDate,
 
           
         }
@@ -205,7 +190,7 @@ export default function BlogNewPostForm() {
 
                 <Stack spacing={3} mt={2}>
                   <Stack direction="row" spacing={3} mt={2}>
-                  <Controller
+                  {/* <Controller
                     name="start"
                     id="startDate"
                     control={control}
@@ -242,7 +227,9 @@ export default function BlogNewPostForm() {
                         )}
                       />
                     )}
-                  />
+                  /> */}
+                  <TextField label="Start Date" name="start" id="start" type='date' required value={startDate} onChange={(e)=>setstartDate(e.target.value)}/>
+                    <TextField label="End Date" name="end" id="end" type='date' required value={endDate} onChange={(e) => setendDate(e.target.value)}/>
                   </Stack>
                 </Stack>
                 <div>

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 // @mui
+import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -50,6 +51,7 @@ export default function BankingRecentTransitions() {
   const [offerAmount, setOfferAmount] = useState();
   const [description, setDescription] = useState();
   const [requestID, setreqID] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
   const handleDialogOpen = (id) => {
     setOpen(true);
     setreqID(id);
@@ -74,6 +76,9 @@ export default function BankingRecentTransitions() {
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((response) => {
+        handleDialogClose();
+
+        enqueueSnackbar('Offer sent!');
         console.log(response);
         // setCustomTour(response.data.data);
       });

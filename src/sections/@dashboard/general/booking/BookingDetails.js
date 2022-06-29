@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
-
+import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -76,6 +76,7 @@ export default function BookingDetails(props) {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ minWidth: 140 }}>Name</TableCell>
+                  <TableCell sx={{ minWidth: 140 }}>Email</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Verify</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Active</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>PhoneNo</TableCell>
@@ -87,11 +88,21 @@ export default function BookingDetails(props) {
               </TableHead>
               <TableBody>
                 {users?.map((user) => (
-                  <TableRow key={user._id}>
+                  <>
+                  {
+                    !user.isDeleted ? (<TableRow key={user._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography variant="subtitle2">
                           {user.fname} {user.lname}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
+
+                    <TableCell>
+                      <Stack direction="row" alignItems="center" spacing={2}>
+                        <Typography variant="subtitle2">
+                          {user.email}
                         </Typography>
                       </Stack>
                     </TableCell>
@@ -117,9 +128,11 @@ export default function BookingDetails(props) {
                     </TableCell>
                     <TableCell>{user.createdAt}</TableCell>
                     <TableCell align="right">
-                      <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} />
+                      <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} fetch={props.fetch} />
                     </TableCell>
-                  </TableRow>
+                  </TableRow>):<></>
+                  }
+                  </>
                 ))}
               </TableBody>
             </Table>
@@ -142,20 +155,25 @@ export default function BookingDetails(props) {
 
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
 
   const [block, setBlock] = useState(!props.isActive);
+  
   const handleBlock = () => {
+    console.log(props.id);
     axios
       .put(
         'http://tourbook-backend.herokuapp.com/admin/user/block',
-        { id: props._id },
+        { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        props.fetch();
+        enqueueSnackbar('User Blocked!');
         console.log(res.data);
       })
       .catch((e) => {
@@ -171,6 +189,8 @@ function MoreMenuButton(props) {
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        props.fetch();
+        enqueueSnackbar('User Deleted!');
         console.log(res.data);
       })
       .catch((e) => {
@@ -178,13 +198,16 @@ function MoreMenuButton(props) {
       });
   };
   const handleunblock = () => {
+    
     axios
       .put(
         'http://tourbook-backend.herokuapp.com/admin/user/unblock',
-        { id: props.id },
+        { userID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        props.fetch();
+        enqueueSnackbar('User UnBlocked!');
         console.log(res.data);
       })
       .catch((e) => {

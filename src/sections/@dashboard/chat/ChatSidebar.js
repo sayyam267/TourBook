@@ -156,14 +156,7 @@ export default function ChatSidebar() {
           )}
         </Stack>
 
-        {!isCollapse && (
-          <ChatContactSearch
-            query={searchQuery}
-            onFocus={handleSearchFocus}
-            onChange={handleChangeSearch}
-            onClickAway={handleClickAwaySearch}
-          />
-        )}
+       
       </Box>
 
       <Scrollbar>

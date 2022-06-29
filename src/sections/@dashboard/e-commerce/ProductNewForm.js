@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isBefore } from 'date-fns';
+import ReCAPTCHA from "react-google-recaptcha";
 
 // @mui
 
@@ -211,6 +212,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [hotel, setHotel] = useState(currentProduct?.hasHotel || false);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [verify,setVerify] = useState(false);
+
+  const reCaptchaOnChange = (val) =>{
+    console.log("val change",val);
+    setVerify(!verify);
+  }
 
   const handleSubmit1 = (e) => {
     console.log(
@@ -257,8 +264,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     data.append('hasTransport', transport);
     data.append('hasHotel', hotel);
     data.append('price', price);
-    data.append('startDate', new Date(startdate));
-    data.append('validTill', new Date(enddate));
+    data.append('startDate', startdate);
+    data.append('validTill', enddate);
     data.append('seats', seats);
     data.append('source', source);
     data.append('destination', destination);
@@ -311,6 +318,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     </InputLabel>
                     <label htmlFor="multiImages">
                       <input
+                      
                         accept="image/*"
                         id="multiImages"
                         multiple
@@ -506,7 +514,13 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </Stack>
               </Card>
 
-              <LoadingButton variant="contained" size="large" onClick={handleSubmit1} loading={loading}>
+             <div style={{paddingLeft:30}}> <ReCAPTCHA
+                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                onChange={reCaptchaOnChange}
+              />
+              </div>
+
+              <LoadingButton variant="contained" size="large" disabled={!verify} onClick={handleSubmit1} loading={loading}>
                 {!isEdit ? 'Create Tour' : 'Save Changes'}
               </LoadingButton>
             </Stack>

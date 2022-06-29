@@ -96,6 +96,11 @@ export default function ProductDetailsSummary({tour,booked}) {
           seats: quantity,
           amount: total,
         }, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res =>{
+
+          axios.get("http://tourbook-backend.herokuapp.com/user/balance", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
+            console.log(res.data.data.balance);
+            localStorage.setItem('balance', res.data.data.balance);
+        })
           console.log(res);
           booked();
         })
@@ -166,8 +171,8 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Typography>
 
           <div>
-            {tour ? <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              {/* {fDateTime(tour.addedOn)} */}{tour.addedOn}
+            {tour ? <Typography variant="caption" sx={{ mt: 0.5 }}>
+              {Date(tour.startDate)}
             </Typography>: <></>}
           </div>
         </Stack>
@@ -178,8 +183,8 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Typography>
 
           <div>
-            {tour ? <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              {/* {fDateTime(tour.validTill)} */}{tour.validTill}
+            {tour ? <Typography variant="caption" sx={{ mt: 0.5 }}>
+            {Date(tour.validTill)}
             </Typography> :<></>}
           </div>
         </Stack>

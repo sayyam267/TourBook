@@ -57,7 +57,8 @@ export default function BookTourMap({ Width, Height,location}) {
     const bounds = new window.google.maps.LatLngBounds();
     
     console.log("the markers",markers);
-    markers?.forEach(({ position }) => bounds.extend(position));
+    
+    location?.forEach(({ location }) => bounds.extend({lat:location.lat,lng:location.lon}));
     map.fitBounds(bounds);
     console.log(map);
     setMap(map);
@@ -86,7 +87,7 @@ export default function BookTourMap({ Width, Height,location}) {
           mapContainerStyle={{ width: Width, height: Height }}
         >
           {location?.map(({name, location }) => ( 
-            <Marker key={name} position={location} onClick={() => handleActiveMarker(name)}>
+            <Marker key={name} position={{lat:location.lat , lng: location.lon}} onClick={() => handleActiveMarker(name)}>
               {activeMarker === name ? (
                 <InfoWindow onCloseClick={() => setActiveMarker(null)}>
                   <div>{name}</div>

@@ -291,7 +291,7 @@ export default function UserProfile() {
                   >
                     <RHFTextField name="fname" label="First Name" />
                     <RHFTextField name="lname" label="Last Name" />
-                    <RHFTextField name="email" label="Email Address" />
+                    <RHFTextField name="email" label="Email Address" disabled={user?.source === 'google'} />
                     <RHFTextField name="phoneNumber" label="Phone Number" />
 
                     
@@ -303,11 +303,11 @@ export default function UserProfile() {
                     </RHFSelect>
 
                     <RHFSelect name="city" label="City" placeholder="City">
-                      <option value={user?.city._id}>{user?.city.name}</option>
+                      <option value={user?.city?._id}>{user?.city?.name}</option>
                       {cities?.map((city) => {
                         return (
-                          <option key={city._id} value={city._id}>
-                            {city.name}
+                          <option key={city?._id} value={city?._id}>
+                            {city?.name}
                           </option>
                         );
                       })}

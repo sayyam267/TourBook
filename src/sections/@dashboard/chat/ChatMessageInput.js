@@ -53,7 +53,7 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         contentType: 'text',
         attachments: [],
         createdAt: new Date(),
-        senderId: '8864c717-587d-472a-929a-8e5f298024da-0',
+        senderId: '',
       });
     }
     return setMessage('');
@@ -69,11 +69,6 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         onKeyUp={handleKeyUp}
         onChange={(event) => setMessage(event.target.value)}
         placeholder="Type a message"
-        startAdornment={
-          <InputAdornment position="start">
-            <EmojiPicker disabled={disabled} value={message} setValue={setMessage} />
-          </InputAdornment>
-        }
         endAdornment={
           <Stack direction="row" spacing={1} sx={{ flexShrink: 0, mr: 1.5 }}>
             <IconButton disabled={disabled} size="small" onClick={handleAttach}>
@@ -82,9 +77,7 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
             <IconButton disabled={disabled} size="small" onClick={handleAttach}>
               <Iconify icon="eva:attach-2-fill" width={22} height={22} />
             </IconButton>
-            <IconButton disabled={disabled} size="small">
-              <Iconify icon="eva:mic-fill" width={22} height={22} />
-            </IconButton>
+            
           </Stack>
         }
       />

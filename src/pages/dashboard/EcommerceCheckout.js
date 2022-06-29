@@ -154,6 +154,7 @@ export default function EcommerceCheckout() {
   const [value, setValue] = useState('1');
   const [booked,setBooked] =useState(false);
   const [meetLocation,setmeetLocaion] = useState();
+  const [places,setPlaces] = useState();
 
   const handleBook = () => {
     setBooked(true);
@@ -164,7 +165,8 @@ export default function EcommerceCheckout() {
     axios.get(`http://tourbook-backend.herokuapp.com/tour/get/${localStorage.getItem('tourId')}`).then(res => {console.log(res);
       console.log(res.data.data.tours); 
       setTour(res.data.data.tours);
-      setmeetLocaion(res.data.data.tours?.meetLocation.map(JSON.parse));
+      setmeetLocaion(res.data.data.tours?.meetLocation);
+      setPlaces(res.data.data.tours?.places);
       
 })
       
@@ -194,21 +196,26 @@ export default function EcommerceCheckout() {
             </Card>
 
             <Stack direction="row" spacing={2}>
-            <Grid md={8} sm={12}>
-            <Card container sx={{ p: 3, my: 3 }}>
+            <Grid container>
+                <Grid item md={6}>
+            <Card item sx={{ p: 3, m: 3 }}>
               <LabelStyle>Places of Attraction</LabelStyle>
-              <Stack spacing={3}>
-                <BookTourMap Width="47vw" Height="50vh" location={tour?.places}  />
+                    <Stack spacing={3}>
+                    {places ? <BookTourMap Width="25vw" Height="50vh" location={places} /> : <></>}
               </Stack>
             </Card>
-              </Grid>
-              <Grid md={4} sm={8}>
-            <Card container sx={{ p: 3, my: 3 }}>
+                </Grid>
+              {/* </Grid> */}
+              {/* </Grid>   */}
+              {/* <Grid md={4} sm={8}> */}
+              <Grid item md={6}>
+            <Card item sx={{ p: 3, my: 3 }}>
               <LabelStyle>Meet Location</LabelStyle>
               <Stack spacing={3}>
                    {meetLocation ? <BookTourMap Width="23vw" Height="50vh" location={meetLocation}  />:<></>}
               </Stack>
             </Card>
+                </Grid>
               </Grid>
             </Stack>
 

@@ -58,7 +58,7 @@ export default function GeneralAnalytics() {
       .then((res) => {
         console.log(res);
         console.log(res.data.data.allUsers, res.data.data.totalNoOfUsers);
-        setAllUsers([...res.data.data.activeUsers]);
+        setAllUsers([...res.data.data.allUsers]);
 
         console.log(allUsers);
         setTotalUser(res.data.data.totalNoOfUsers);
@@ -171,7 +171,7 @@ export default function GeneralAnalytics() {
           })} */}
           {pendingreq ? (
             <Grid item xs={12}>
-              <PendingApprovalTable user={pendingreq} />
+              <PendingApprovalTable user={pendingreq} fetch={fetchDashboard} />
             </Grid>
           ) : (
             <></>
@@ -179,7 +179,7 @@ export default function GeneralAnalytics() {
 
           {allUsers ? (
             <Grid item xs={12}>
-              <BookingDetails user={allUsers} />
+              <BookingDetails user={allUsers} fetch={fetchDashboard} />
             </Grid>
           ) : (
             <></>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { useSnackbar } from 'notistack';
@@ -21,23 +21,49 @@ import {
   Typography,
   TableContainer,
 } from '@mui/material';
-// _mock_
-import { _bookings } from '../../../../_mock';
-//
+
+
+import Dialog from '@mui/material/Dialog';
+import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Slide from '@mui/material/Slide';
+
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 import axios from '../../../../utils/axios';
 
+
+
+
 // ----------------------------------------------------------------------
+
+const ICON = {
+  mr: 2,
+  width: 20,
+  height: 20,
+};
 
 export default function TouristTourDetails(props) {
   const theme = useTheme();
 
   console.log(props.tours);
   const tour = props.tours;
-  // setTours(tours);
+ 
+
+  const [detailOpen, setDetailOpen] = useState(false);
+
+  const handleDetailsOpen = () => {
+    setDetailOpen(true);
+  };
+
+  const handleDetailsClose = () => {
+    setDetailOpen(false);
+  };
 
   const isLight = theme.palette.mode === 'light';
 
@@ -61,16 +87,16 @@ export default function TouristTourDetails(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tour?.map((tour) => (
-                  <TableRow key={tour.tourID._id}>
+                {tour?.length >0 ? tour?.map((tour) => (
+                  <TableRow   key={tour.tourID._id}>
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography variant="subtitle2">
-                          {tour.tourID.name} 
+                          {tour.tourID.name}
                         </Typography>
                       </Stack>
                     </TableCell>
-                    
+
                     <TableCell>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Typography variant="subtitle2">{tour.amount}</Typography>
@@ -91,7 +117,7 @@ export default function TouristTourDetails(props) {
 
                     <TableCell>
                       <Label variant={isLight ? 'ghost' : 'filled'} color={tour.isApproved ? 'success' : 'error'}>
-                        {sentenceCase(tour.isApproved ? 'Approved':'Pending' )}
+                        {sentenceCase(tour.isApproved ? 'Approved' : 'Pending')}
                       </Label>
                     </TableCell>
                     <TableCell>
@@ -100,14 +126,18 @@ export default function TouristTourDetails(props) {
                       </Label>
                     </TableCell>
 
-                    
-                    
+
+
 
                     <TableCell align="right">
-                      <MoreMenuButton id={tour._id}  />
+                      <MoreMenuButton id={tour._id} handleDetailsOpen={handleDetailsOpen} />
                     </TableCell>
+                    
                   </TableRow>
-                ))}
+                  
+                  
+                )) : <><TableRow><TableCell align="center" colSpan={6}> No Tour</TableCell></TableRow> </>}
+                
               </TableBody>
             </Table>
           </TableContainer>
@@ -121,6 +151,44 @@ export default function TouristTourDetails(props) {
           </Button>
         </Box>
       </Card>
+
+      <Dialog
+        fullScreen
+        open={detailOpen}
+        onClose={handleDetailsClose}
+      // TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleDetailsClose}
+              aria-label="close"
+            >
+              <Iconify icon={'ep:close-bold'} sx={{ ...ICON }} />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Tour Details
+            </Typography>
+            <Button autoFocus color="inherit" onClick={handleDetailsClose}>
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <ListItem button>
+            <ListItemText primary="Phone ringtone" secondary="Titania" />
+          </ListItem>
+          <Divider />
+          <ListItem button>
+            <ListItemText
+              primary="Default notification ringtone"
+              secondary="Tethys"
+            />
+          </ListItem>
+        </List>
+      </Dialog>
     </>
   );
 }
@@ -173,11 +241,7 @@ function MoreMenuButton(props) {
     setOpen(null);
   };
 
-  const ICON = {
-    mr: 2,
-    width: 20,
-    height: 20,
-  };
+ 
 
   return (
     <>
@@ -202,18 +266,13 @@ function MoreMenuButton(props) {
           <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
           Request Refund
         </MenuItem>
+      
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {/* <MenuItem>
-          <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
-          Print
+        <MenuItem onClick={props.handleDetailsOpen} >
+          <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
+          Details
         </MenuItem>
-
-        <MenuItem>
-          <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
-          Share
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed' }} /> */}
       </MenuPopover>
     </>
   );

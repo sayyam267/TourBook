@@ -92,6 +92,7 @@
     "react-geocode": "^0.2.3",
     "react-google-autocomplete": "^2.7.0",
     "react-google-login": "^5.2.2",
+    "react-google-recaptcha": "^2.1.0",
     "react-helmet-async": "^1.2.2",
     "react-hook-form": "^7.22.2",
     "react-i18next": "^11.15.1",

@@ -140,9 +140,9 @@ export default function RegisterForm() {
               <MenuItem key={2} value={'vendor'}>
                 {'Tour Provider / Vendor'}
               </MenuItem>
-              <MenuItem key={3} value={'admin'}>
+              {/* <MenuItem key={3} value={'admin'}>
                 {'Admin'}
-              </MenuItem>
+              </MenuItem> */}
             </FormInputField>
           </Stack>
           <FormInputField name="phoneNumber" label="Phone Number" required type="number"  />

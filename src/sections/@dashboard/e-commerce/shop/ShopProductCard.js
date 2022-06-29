@@ -29,7 +29,7 @@ export default function ShopProductCard({ tour }) {
 
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/checkout`;
   
-
+  // const date = `${Date(tour.addedOn).getDay()}  ${Date(tour.addedOn).getDate()} - ${Date(tour.addedOn).getMonth()} - ${Date(tour.addedOn).getYear()}`
 
   console.log(tour);
   return (
@@ -45,7 +45,13 @@ export default function ShopProductCard({ tour }) {
               <Typography variant="subtitle2">{tour.name}</Typography>
             </Link>
             <Typography variant="caption" sx={{ color: 'text.disabled', mt: 0.5, display: 'block' }}>
-              Starting from {fDateTime(tour.addedOn)}
+              {/* Starting from {fDateTime(tour.addedOn)} */}
+              {/* {`Startin from ${Date(tour.addedOn)}`} */}
+              
+              {`Starting From: ${Date(tour.startDate)}`}
+{/* `${Date(tour.startDate).getDay()}  ${Date(tour.startDate).getDate()} - ${Date(tour.startDate).getMonth()} - ${Date(tour.startDate).getYear()}` */}
+
+              {/* Starting from {`${ Date(tour.addedOn).getDay()}  ${ Date(tour.addedOn).getDate()} - ${ Date(tour.addedOn).getMonth()} - ${new Date(tour.addedOn).getYear()}`} */}
             </Typography>
           </div>
         </Stack>

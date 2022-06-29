@@ -40,6 +40,7 @@ const TouristNavConfig = [
                 ], },
             { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.profile },
             { title: 'Buy Credits', path: PATH_DASHBOARD.calendar, icon: ICONS.credits },
+            { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
         ],
     },
 

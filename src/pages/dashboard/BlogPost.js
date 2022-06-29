@@ -93,13 +93,13 @@ export default function ProfileFriends() {
                   <TableCell sx={{ minWidth: 120 }}>Email</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Seats</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Amount</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Date</TableCell>
+             
 
                   <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {refund ? <>{refund?.map(refund => { return <RefundRequestTable name={"abc"} amount={refund?.amount} email={"email"} seats={2} date={3} refund={"false"} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
+                {refund ? <>{refund?.map(refund => { return <RefundRequestTable name={refund.touristID.fname} amount={refund?.amount} email={refund?.touristID.email} seats={refund.seats} date={3} id={refund._id} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
               </TableBody>
             </Table>
           </TableContainer>

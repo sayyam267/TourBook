@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 
+import { useSnackbar } from 'notistack';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -24,6 +25,7 @@ import {
 } from '@mui/material';
 // _mock_
 import { _bookings } from '../../_mock';
+
 //
 import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
@@ -37,6 +39,7 @@ export default function PendingApprovalTable(props) {
   const theme = useTheme();
 
   console.log(props.user);
+  const { enqueueSnackbar } = useSnackbar();
   //   const users = props.user;
 
   const isLight = theme.palette.mode === 'light';
@@ -131,7 +134,7 @@ export default function PendingApprovalTable(props) {
                       </Stack>
                     </TableCell>
                     <TableCell align="right">
-                      <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} />
+                      <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} fetch={props.fetch} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -157,6 +160,9 @@ export default function PendingApprovalTable(props) {
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
 
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -172,6 +178,8 @@ function MoreMenuButton(props) {
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        props.fetch();
+        enqueueSnackbar('Request Accepted!');
         console.log(res.data);
       })
       .catch((e) => {
@@ -187,6 +195,8 @@ function MoreMenuButton(props) {
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
       .then((res) => {
+        props.fetch();
+        enqueueSnackbar('Request Rejected!');
         console.log(res.data);
       })
       .catch((e) => {
