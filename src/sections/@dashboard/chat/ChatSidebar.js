@@ -19,6 +19,7 @@ import ChatAccount from './ChatAccount';
 import ChatSearchResults from './ChatSearchResults';
 import ChatContactSearch from './ChatContactSearch';
 import ChatConversationList from './ChatConversationList';
+import { SkeletonConversationItem } from '../../../components/skeleton';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,7 @@ const ToggleButtonStyle = styled((props) => <IconButton disableRipple {...props}
 const SIDEBAR_WIDTH = 320;
 const SIDEBAR_COLLAPSE_WIDTH = 96;
 
-export default function ChatSidebar() {
+export default function ChatSidebar(props) {
   const theme = useTheme();
 
   const navigate = useNavigate();
@@ -58,7 +59,11 @@ export default function ChatSidebar() {
 
   const [isSearchFocused, setSearchFocused] = useState(false);
 
-  const { conversations, activeConversationId } = useSelector((state) => state.chat);
+  const [conversations, setConversations] = useState();
+
+
+
+
 
   const isDesktop = useResponsive('up', 'md');
 
@@ -67,19 +72,29 @@ export default function ChatSidebar() {
   const isCollapse = isDesktop && !openSidebar;
 
   useEffect(() => {
+
     if (!isDesktop) {
       return handleCloseSidebar();
     }
     return handleOpenSidebar();
   }, [isDesktop, pathname]);
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (!openSidebar) {
       return setSearchFocused(false);
     }
   }, [openSidebar]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    axios.get("http://localhost:4000/conversations/mine", {
+      headers: { "x-auth-token": token },
+    })
+      .then((res) => {
+        console.log("conversations", res.data.data);
+        setConversations([...res.data.data]);
+      });
+  }, []);
   const handleOpenSidebar = () => {
     setOpenSidebar(true);
   };
@@ -97,26 +112,9 @@ export default function ChatSidebar() {
     setSearchQuery('');
   };
 
-  const handleChangeSearch = async (event) => {
-    try {
-      const { value } = event.target;
-      setSearchQuery(value);
-      if (value) {
-        const response = await axios.get('/api/chat/search', {
-          params: { query: value },
-        });
-        setSearchResults(response.data.results);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
 
-  const handleSearchFocus = () => {
-    setSearchFocused(true);
-  };
+ 
 
   const handleSearchSelect = (username) => {
     setSearchFocused(false);
@@ -149,26 +147,23 @@ export default function ChatSidebar() {
             />
           </IconButton>
 
-          {!isCollapse && (
-            <IconButton onClick={() => navigate(PATH_DASHBOARD.chat.new)}>
-              <Iconify icon={'eva:edit-fill'} width={20} height={20} />
-            </IconButton>
-          )}
+         
         </Stack>
 
        
       </Box>
 
       <Scrollbar>
-        {!displayResults ? (
-          <ChatConversationList
+        {conversations == null ? (
+          [...Array(12)].map((index) =>
+          <SkeletonConversationItem key={index} />)
+        ) : (
+            <ChatConversationList
             conversations={conversations}
             isOpenSidebar={openSidebar}
-            activeConversationId={activeConversationId}
+            activeConversationId={props?.activeConversationId}
             sx={{ ...(isSearchFocused && { display: 'none' }) }}
           />
-        ) : (
-          <ChatSearchResults query={searchQuery} results={searchResults} onSelectContact={handleSelectContact} />
         )}
       </Scrollbar>
     </>

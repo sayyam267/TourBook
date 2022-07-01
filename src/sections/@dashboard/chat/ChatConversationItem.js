@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import {useState} from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -44,22 +45,33 @@ ChatConversationItem.propTypes = {
   conversation: PropTypes.object.isRequired,
   isOpenSidebar: PropTypes.bool,
   onSelectConversation: PropTypes.func,
+  receiver: PropTypes.object,
 };
 
-export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation }) {
-  const details = getDetails(conversation, '8864c717-587d-472a-929a-8e5f298024da-0');
+export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation,receiver }) {
 
-  const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
+  // const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
 
-  const isGroup = details.otherParticipants.length > 1;
-  const isUnread = conversation.unreadCount > 0;
-  const isOnlineGroup = isGroup && details.otherParticipants.map((item) => item.status).includes('online');
+  
+  const lastMessage = conversation?.lastMessage;
+  const [isSelect,setIsSelect] = useState(false);
+  const isGroup = false;
+  const people=conversation?.people;
+  const conversationId = conversation?._id;
+  console.log(lastMessage,conversationId, receiver);
+
+  const handleSelectConversation = () => {
+    console.log(receiver._id);
+    // setIsSelect(true);
+    onSelectConversation(receiver?._id);
+  }
+ 
 
   return (
     <RootStyle
-      onClick={onSelectConversation}
+      onClick={handleSelectConversation}
       sx={{
-        ...(isSelected && { bgcolor: 'action.selected' }),
+        ...(isSelect && { bgcolor: 'action.selected' }),
       }}
     >
       <ListItemAvatar>
@@ -86,32 +98,26 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
             }),
           }}
         >
-          {details.otherParticipants.slice(0, 2).map((participant) => (
-            <AvatarWrapperStyle className="avatarWrapper" key={participant.id}>
-              <Avatar alt={participant.name} src={participant.avatar} />
-              {!isGroup && (
-                <BadgeStatus status={participant.status} sx={{ right: 2, bottom: 2, position: 'absolute' }} />
-              )}
-            </AvatarWrapperStyle>
-          ))}
+          <AvatarWrapperStyle className="avatarWrapper" key={receiver?._id}>
+            <Avatar alt={receiver?.fname} src={receiver?.profilePicture} />
+          </AvatarWrapperStyle>
 
-          {isOnlineGroup && <BadgeStatus status="online" sx={{ right: 2, bottom: 2, position: 'absolute' }} />}
         </Box>
       </ListItemAvatar>
 
-      {isOpenSidebar && (
+      {isOpenSidebar &&  (
         <>
           <ListItemText
-            primary={details.displayNames}
+            primary={receiver?.fname}
             primaryTypographyProps={{
               noWrap: true,
               variant: 'subtitle2',
             }}
-            secondary={details.displayText}
+            secondary={lastMessage}
             secondaryTypographyProps={{
               noWrap: true,
-              variant: isUnread ? 'subtitle2' : 'body2',
-              color: isUnread ? 'textPrimary' : 'textSecondary',
+              variant: 'subtitle2',
+              color: 'textPrimary'
             }}
           />
 
@@ -133,14 +139,15 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
                 color: 'text.disabled',
               }}
             >
-              {formatDistanceToNowStrict(new Date(displayLastActivity), {
+              {formatDistanceToNowStrict(new Date(conversation.updatedAt), {
                 addSuffix: false,
               })}
             </Box>
-            {isUnread && <BadgeStatus status="unread" size="small" />}
+
           </Box>
         </>
       )}
     </RootStyle>
+    
   );
 }

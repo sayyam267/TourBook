@@ -29,18 +29,14 @@ const InfoStyle = styled(Typography)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-ChatMessageItem.propTypes = {
-  message: PropTypes.object.isRequired,
-  conversation: PropTypes.object.isRequired,
-  onOpenLightbox: PropTypes.func,
-};
 
-export default function ChatMessageItem({ message, conversation, onOpenLightbox }) {
-  const sender = conversation.participants.find((participant) => participant.id === message.senderId);
+
+export default function ChatMessageItem({ message, receiverID, onOpenLightbox }) {
+  console.log("receiverID",message?.receiver?._id,"receiverID",receiverID) 
   const senderDetails =
-    message.senderId === '8864c717-587d-472a-929a-8e5f298024da-0'
+    String(message.receiver?._id) === String(receiverID)
       ? { type: 'me' }
-      : { avatar: sender?.avatar, name: sender?.name };
+      : { avatar: message?.sender?.profilePicture, name: message?.sender?.fname };
 
   const isMe = senderDetails.type === 'me';
   const isImage = message.contentType === 'image';
@@ -82,12 +78,12 @@ export default function ChatMessageItem({ message, conversation, onOpenLightbox 
             {isImage ? (
               <Image
                 alt="attachment"
-                src={message.body}
-                onClick={() => onOpenLightbox(message.body)}
+                src={message?.message}
+                onClick={() => onOpenLightbox(message?.message)}
                 sx={{ borderRadius: 1, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
               />
             ) : (
-              <Typography variant="body2">{message.body}</Typography>
+              <Typography variant="body2">{message?.message}</Typography>
             )}
           </ContentStyle>
         </div>

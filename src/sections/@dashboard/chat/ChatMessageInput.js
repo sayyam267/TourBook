@@ -22,14 +22,14 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 ChatMessageInput.propTypes = {
-  disabled: PropTypes.bool,
   conversationId: PropTypes.string,
   onSend: PropTypes.func,
 };
 
-export default function ChatMessageInput({ disabled, conversationId, onSend }) {
+export default function ChatMessageInput({  conversationId, onSend }) {
   const fileInputRef = useRef(null);
   const [message, setMessage] = useState('');
+  const [disable,setDisable] = useState(false);
 
   const handleAttach = () => {
     fileInputRef.current?.click();
@@ -62,7 +62,7 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
   return (
     <RootStyle>
       <Input
-        disabled={disabled}
+        disabled={disable}
         fullWidth
         value={message}
         disableUnderline
@@ -71,10 +71,10 @@ export default function ChatMessageInput({ disabled, conversationId, onSend }) {
         placeholder="Type a message"
         endAdornment={
           <Stack direction="row" spacing={1} sx={{ flexShrink: 0, mr: 1.5 }}>
-            <IconButton disabled={disabled} size="small" onClick={handleAttach}>
+            <IconButton disabled={disable} size="small" onClick={handleAttach}>
               <Iconify icon="ic:round-add-photo-alternate" width={22} height={22} />
             </IconButton>
-            <IconButton disabled={disabled} size="small" onClick={handleAttach}>
+            <IconButton disabled={disable} size="small" onClick={handleAttach}>
               <Iconify icon="eva:attach-2-fill" width={22} height={22} />
             </IconButton>
             

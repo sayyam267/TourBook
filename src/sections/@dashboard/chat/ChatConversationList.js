@@ -12,7 +12,7 @@ import ChatConversationItem from './ChatConversationItem';
 // ----------------------------------------------------------------------
 
 ChatConversationList.propTypes = {
-  conversations: PropTypes.object,
+  conversations: PropTypes.array,
   isOpenSidebar: PropTypes.bool,
   activeConversationId: PropTypes.string,
   sx: PropTypes.object,
@@ -21,38 +21,28 @@ ChatConversationList.propTypes = {
 export default function ChatConversationList({ conversations, isOpenSidebar, activeConversationId, sx, ...other }) {
   const navigate = useNavigate();
 
-  const handleSelectConversation = (conversationId) => {
-    let conversationKey = '';
-    const conversation = conversations.byId[conversationId];
-    if (conversation.type === 'GROUP') {
-      conversationKey = conversation.id;
-    } else {
-      const otherParticipant = conversation.participants.find(
-        (participant) => participant.id !== '8864c717-587d-472a-929a-8e5f298024da-0'
-      );
-      if (otherParticipant?.username) {
-        conversationKey = otherParticipant?.username;
-      }
-    }
-    navigate(`${PATH_DASHBOARD.chat.root}/${conversationKey}`);
+  const handleSelectConversation = (ID) => {
+    
+    console.log(ID);
+    navigate(`${PATH_DASHBOARD.chat.root}/`,{state:{id:ID}});
   };
 
-  const loading = !conversations.allIds.length;
+  const loading = null;
+  console.log("this is list",conversations);
 
   return (
     <List disablePadding sx={sx} {...other}>
-      {(loading ? [...Array(12)] : conversations.allIds).map((conversationId, index) =>
-        conversationId ? (
+      {conversations?.map((conversation) =>
+        
           <ChatConversationItem
-            key={conversationId}
+            // key={conversationId}
+            conversation={conversation}
             isOpenSidebar={isOpenSidebar}
-            conversation={conversations.byId[conversationId]}
-            isSelected={activeConversationId === conversationId}
-            onSelectConversation={() => handleSelectConversation(conversationId)}
+            receiver = {conversation.people.find( r => r.email !== localStorage.getItem("email"))}
+            // conversation={conversations?.byId[conversationId]}
+            // isSelected={activeConversationId === conversationId}
+            onSelectConversation={handleSelectConversation}
           />
-        ) : (
-          <SkeletonConversationItem key={index} />
-        )
       )}
     </List>
   );

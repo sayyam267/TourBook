@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState} from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Box, Divider, Stack } from '@mui/material';
@@ -11,6 +11,7 @@ import {
   getParticipants,
   markConversationAsRead,
   resetActiveConversation,
+  getConversations,
 } from '../../../redux/slices/chat';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -20,6 +21,7 @@ import ChatMessageList from './ChatMessageList';
 import ChatHeaderDetail from './ChatHeaderDetail';
 import ChatMessageInput from './ChatMessageInput';
 import ChatHeaderCompose from './ChatHeaderCompose';
+import axios from '../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -42,79 +44,93 @@ const conversationSelector = (state) => {
 export default function ChatWindow() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const { conversationKey } = useParams();
+  const location = useLocation();
+  
   const { contacts, recipients, participants, activeConversationId } = useSelector((state) => state.chat);
-  const conversation = useSelector((state) => conversationSelector(state));
+  const [conversationID,setConversationID] = useState();
+  const params = useParams();
+  const [directChat,setdirectChat] = useState();
+  
 
-  const mode = conversationKey ? 'DETAIL' : 'COMPOSE';
-  const displayParticipants = participants.filter((item) => item.id !== '8864c717-587d-472a-929a-8e5f298024da-0');
+  const mode = null ? 'DETAIL' : 'COMPOSE';
 
-  useEffect(() => {
-    const getDetails = async () => {
-      dispatch(getParticipants(conversationKey));
-      try {
-        await dispatch(getConversation(conversationKey));
-      } catch (error) {
-        console.error(error);
-        navigate(PATH_DASHBOARD.chat.new);
-      }
-    };
-    if (conversationKey) {
-      getDetails();
-    } else if (activeConversationId) {
-      dispatch(resetActiveConversation());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationKey]);
+  
+  
 
   useEffect(() => {
-    if (activeConversationId) {
-      dispatch(markConversationAsRead(activeConversationId));
+    console.log("ID",location?.state?.id);
+    if (location?.state?.Id !== null) {
+      console.log("hello chat");
+      const token = localStorage.getItem("accessToken");
+      axios
+        .post(
+          "http://localhost:4000/conversations/init",
+          {
+            receiver: location?.state?.id,
+          },
+          { headers: { "x-auth-token": token } }
+        )
+        .then((res) => {
+          console.log("init conversation",res.data.data);
+          setConversationID(res.data.data);
+          setdirectChat(true);
+        })
+        .catch((e) => console.log(e));
     }
-  }, [dispatch, activeConversationId]);
+  }, []);
 
-  const handleAddRecipients = (recipients) => {
-    dispatch(addRecipients(recipients));
-  };
+
+
+
+
+
 
   const handleSendMessage = async (value) => {
-    try {
-      dispatch(onSendMessage(value));
-    } catch (error) {
-      console.error(error);
-    }
+    console.log("handlesendMessage", value.message);
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post(
+        "http://localhost:4000/messages/create",
+        {
+          roomID: conversationID._id,
+          receiver: location?.state?.id,
+          message: value?.message,
+        },
+        {
+          headers: { "x-auth-token": token },
+        }
+      )
+      .then((res) => {
+        console.log("Message Sent!!!!");
+        // console.log(res);
+      });
   };
 
   return (
     <Stack sx={{ flexGrow: 1, minWidth: '1px' }}>
-      {mode === 'DETAIL' ? (
+      {/* {mode === 'DETAIL' ? (
         <ChatHeaderDetail participants={displayParticipants} />
       ) : (
-        <ChatHeaderCompose
-          recipients={recipients}
-          contacts={Object.values(contacts.byId)}
-          onAddRecipients={handleAddRecipients}
-        />
-      )}
+        <></>
+      )} */}
 
       <Divider />
 
-      <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
+      {conversationID && directChat ? <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
         <Stack sx={{ flexGrow: 1 }}>
-          <ChatMessageList conversation={conversation} />
+          {conversationID ? <ChatMessageList conversationID={conversationID} receiverID={location?.state?.id} /> :<></>}
 
           <Divider />
 
-          <ChatMessageInput
-            conversationId={activeConversationId}
+        <ChatMessageInput
+            conversationId={conversationID}
             onSend={handleSendMessage}
-            disabled={pathname === PATH_DASHBOARD.chat.new}
+          
           />
         </Stack>
 
-        {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />}
-      </Box>
+        {/* {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />} */}
+      </Box>:<></>}
     </Stack>
   );
 }
