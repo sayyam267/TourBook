@@ -131,13 +131,13 @@ export default function Router() {
           ],
         },
         {
-          path: 'mail',
+          path: 'transaction',
           children: [
-            { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
+            { element: <Navigate to="/dashboard/transaction/my" replace />, index: true },
+            { path: 'label/:customLabel', element: <TransactionHistory /> },
+            { path: 'label/:customLabel/:mailId', element: <TransactionHistory /> },
+            { path: ':systemLabel', element: <TransactionHistory /> },
+            { path: ':systemLabel/:mailId', element: <TransactionHistory /> },
           ],
         },
         {
@@ -210,7 +210,7 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
+const TransactionHistory = Loadable(lazy(() => import('../pages/dashboard/TransactionHistory')));
 const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 const VendorAnalytics = Loadable(lazy(() => import('../pages/dashboard/VendorAnalytics')));

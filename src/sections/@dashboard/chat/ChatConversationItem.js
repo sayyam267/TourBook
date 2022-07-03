@@ -50,7 +50,7 @@ ChatConversationItem.propTypes = {
 
 export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation,receiver }) {
 
-  // const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
+  
 
   
   const lastMessage = conversation?.lastMessage;

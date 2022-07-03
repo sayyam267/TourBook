@@ -77,7 +77,7 @@ export default function ChatWindow() {
         })
         .catch((e) => console.log(e));
     }
-  }, []);
+  }, [location?.state?.Id]);
 
 
 
@@ -129,7 +129,7 @@ export default function ChatWindow() {
           />
         </Stack>
 
-        {/* {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />} */}
+        
       </Box>:<></>}
     </Stack>
   );

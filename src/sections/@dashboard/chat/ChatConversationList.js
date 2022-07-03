@@ -39,8 +39,6 @@ export default function ChatConversationList({ conversations, isOpenSidebar, act
             conversation={conversation}
             isOpenSidebar={isOpenSidebar}
             receiver = {conversation.people.find( r => r.email !== localStorage.getItem("email"))}
-            // conversation={conversations?.byId[conversationId]}
-            // isSelected={activeConversationId === conversationId}
             onSelectConversation={handleSelectConversation}
           />
       )}

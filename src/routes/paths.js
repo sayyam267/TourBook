@@ -44,7 +44,7 @@ export const PATH_DASHBOARD = {
     adminanalytics: path(ROOTS_DASHBOARD, '/adminanalytics'),
   },
   mail: {
-    root: path(ROOTS_DASHBOARD, '/mail'),
+    root: path(ROOTS_DASHBOARD, '/transaction'),
     all: path(ROOTS_DASHBOARD, '/mail/all')
   },
   chat: {

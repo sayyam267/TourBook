@@ -39,6 +39,13 @@ const TouristNavConfig = [
                     { title: 'My Custom Tour', path: PATH_DASHBOARD.user.account },
                 ], },
             { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.profile },
+            {
+                title: 'TB Credits', path: PATH_DASHBOARD.mail.root, icon: ICONS.credits,  children: [
+                    { title: 'Buy Credits', path:PATH_DASHBOARD.calendar },
+                    { title: 'Transaction History', path: PATH_DASHBOARD.mail.root },
+                ],
+            },
+            
             { title: 'Buy Credits', path: PATH_DASHBOARD.calendar, icon: ICONS.credits },
             { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
         ],

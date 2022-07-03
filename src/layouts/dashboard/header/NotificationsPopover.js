@@ -31,9 +31,11 @@ import axios from '../../../utils/axios';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
+  // const [notifications, setNotifications] = useState();
+  const [readNotifications, setReadNotifications] = useState();
+  const [unReadnotifications, setUnReadNotifications] = useState();
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  const [totalUnRead,setTotalUnRead] = useState();
 
   const [open, setOpen] = useState(null);
 
@@ -46,24 +48,26 @@ export default function NotificationsPopover() {
   };
 
   const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
+    setUnReadNotifications(
+      unReadnotifications.map((notification) => ({
         ...notification,
         isUnRead: false,
       }))
     );
   };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("accessToken");
-  //   axios.get("notification link", {
-  //     headers: { "x-auth-token": token },
-  //   })
-  //     .then((res) => {
-  //       console.log("conversations", res.data.data);
-  //       setNotifications([...res.data.data]);
-  //     });
-  // }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    axios.get(process.env.REACT_APP_NOTIFICATION, {
+      headers: { "x-auth-token": token },
+    })
+      .then((res) => {
+        console.log("notifications", res.data.data);
+        setReadNotifications(res?.data?.data?.filter((item) => item.isRead === true));
+        setUnReadNotifications(res?.data?.data?.filter((item) => item.isRead === false));
+        setTotalUnRead(res?.data?.data?.filter((item) => item.isRead === false)?.length);
+      });
+  }, []);
 
   return (
     <>
@@ -98,7 +102,7 @@ export default function NotificationsPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        <Scrollbar sx={{ minHeight: 250, overflow: '75%' }}>
           <List
             disablePadding
             subheader={
@@ -107,11 +111,11 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications?.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+            {unReadnotifications?.map((notification) => (
+              <NotificationItem key={notification._id} notification={notification} />
             ))}
           </List>
-
+          
           <List
             disablePadding
             subheader={
@@ -120,7 +124,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications?.slice(2, 5).map((notification) => (
+            {readNotifications?.map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
@@ -161,10 +165,11 @@ function NotificationItem({ notification }) {
         py: 1.5,
         px: 2.5,
         mt: '1px',
-        ...(notification.isUnRead && {
+        ...(!notification.isRead && {
           bgcolor: 'action.selected',
         }),
       }}
+      // {!notification.isRead ? onClick={}:}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
@@ -195,18 +200,18 @@ function NotificationItem({ notification }) {
 function renderContent(notification) {
   const title = (
     <Typography variant="subtitle2">
-      {notification.title}
+      {notification?.type}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
+        &nbsp; {noCase(notification?.text)}
       </Typography>
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
+  if (notification.type === 'transaction') {
     return {
       avatar: (
         <img
-          alt={notification.title}
+          alt={notification?.type}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_package.svg"
         />
       ),
@@ -217,7 +222,7 @@ function renderContent(notification) {
     return {
       avatar: (
         <img
-          alt={notification.title}
+          alt={notification?.type}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
         />
       ),
@@ -228,7 +233,7 @@ function renderContent(notification) {
     return {
       avatar: (
         <img
-          alt={notification.title}
+          alt={notification?.type}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_mail.svg"
         />
       ),
@@ -239,7 +244,7 @@ function renderContent(notification) {
     return {
       avatar: (
         <img
-          alt={notification.title}
+          alt={notification?.type}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_chat.svg"
         />
       ),
@@ -247,7 +252,7 @@ function renderContent(notification) {
     };
   }
   return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
+    avatar: notification?.avatar ? <img alt={notification?.title} src={notification?.avatar} /> : null,
     title,
   };
 }
