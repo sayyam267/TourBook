@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Button, Box, Link, Container, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD,PATH_PAGE } from '../../routes/paths';
 // components
 import Image from '../../components/Image';
 import Iconify from '../../components/Iconify';
@@ -105,7 +105,7 @@ export default function HomeHero() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.root}
+                to={localStorage.getItem("accessToken") ? PATH_DASHBOARD.root : PATH_PAGE.comingSoon}
                 startIcon={<Iconify icon={'eva:flash-fill'} width={20} height={20} />}
               >
                 Explore

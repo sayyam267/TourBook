@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
 // routes
-import { PATH_DASHBOARD,PATH_PAGE } from '../../../../routes/paths';
+import { PATH_DASHBOARD,PATH_PAGE, PATH_AUTH} from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -60,20 +60,8 @@ export default function ProductDetailsSummary({tour,booked}) {
   const [quantity,setquantity] = useState(0);
 
 
-  
-
-  // const alreadyProduct = cart.map((item) => item.id).includes(id);
-
-  // const isMaxQuantity = cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
-    // id,
-    // name,
-    // cover,
-    // available,
-    // price,
-    // color: colors[0],
-    // size: sizes[4],
     quantity: tour.seats < 1 ? 0 : 1,
   };
 
@@ -104,7 +92,7 @@ export default function ProductDetailsSummary({tour,booked}) {
           console.log(res);
           booked();
         })
-        // navigate(PATH_DASHBOARD.general.user.profile);
+        
       }
       else{
         console.log("hello");
@@ -123,6 +111,8 @@ export default function ProductDetailsSummary({tour,booked}) {
   useEffect(() => {
     axios.get("").then(res => console.log(res))
   }, [])
+
+  
    
 
   return (
@@ -240,7 +230,7 @@ export default function ProductDetailsSummary({tour,booked}) {
         </Stack>
 
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-          <Button
+          {localStorage.getItem('accessToken') ?<Button
             fullWidth
             // disabled={isMaxQuantity}
             size="large"
@@ -252,7 +242,19 @@ export default function ProductDetailsSummary({tour,booked}) {
             disabled={quantity <= 0}
           >
             Book tour
-          </Button>
+          </Button>: 
+          <Button
+            fullWidth
+            // disabled={isMaxQuantity}
+            size="large"
+            color="primary"
+            variant="contained"
+            // startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+            onClick = {() => navigate(PATH_AUTH.login)}
+            sx={{ whiteSpace: 'nowrap' }}
+          >
+            Login To Continue
+          </Button>}
         
         </Stack>
 
@@ -264,13 +266,13 @@ export default function ProductDetailsSummary({tour,booked}) {
           Buy Credits Now
         </Button>
         </Stack>:<></>}
+
+
         <Typography variant="caption" component="div" sx={{ mt: 1, textAlign: 'right', color: 'text.secondary' }}>
           TourId: {tour?._id}
         </Typography>
 
-        {/* <Stack alignItems="center" sx={{ mt: 3 }}>
-          <SocialsButton initialColor />
-        </Stack> */}
+       
       </FormProvider>
     </RootStyle>
   );

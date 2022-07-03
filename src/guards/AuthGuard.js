@@ -16,8 +16,10 @@ AuthGuard.propTypes = {
 
 const isSession = () => {
   if (localStorage.getItem('accessToken')) {
+    console.log("hello true");
     return true;
   }
+  console.log("hello false");
   return false;
 };
 

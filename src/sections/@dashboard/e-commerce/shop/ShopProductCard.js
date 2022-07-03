@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD,PATH_PAGE } from '../../../../routes/paths';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -29,6 +29,7 @@ export default function ShopProductCard({ tour }) {
 
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/checkout`;
   
+  
   // const date = `${Date(tour.addedOn).getDay()}  ${Date(tour.addedOn).getDate()} - ${Date(tour.addedOn).getMonth()} - ${Date(tour.addedOn).getYear()}`
 
   console.log(tour);
@@ -41,7 +42,7 @@ export default function ShopProductCard({ tour }) {
       <Stack spacing={2.5} sx={{ p: 3, pb: 2.5 }}>
         <Stack direction="row" alignItems="center" spacing={1}>
           <div>
-            <Link to={linkTo} color="inherit" onClick={() => localStorage.setItem('tourId', tour._id)} component={RouterLink}>
+            <Link to={localStorage.getItem('accessToken') ? linkTo : PATH_PAGE.details} color="inherit" onClick={() => localStorage.setItem('tourId', tour._id)} component={RouterLink}>
               <Typography variant="subtitle2">{tour.name}</Typography>
             </Link>
             <Typography variant="caption" sx={{ color: 'text.disabled', mt: 0.5, display: 'block' }}>

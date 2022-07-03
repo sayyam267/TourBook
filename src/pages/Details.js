@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import { Container } from '@mui/material';
 // components
 import Page from '../components/Page';
-// sections
-import { ComponentHero, ComponentOther, ComponentFoundation, ComponentMUI } from '../sections/overview';
+import TourDetails from './dashboard/EcommerceCheckout';
+
 
 // ----------------------------------------------------------------------
 
@@ -18,16 +18,11 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function ComponentsOverview() {
+export default function Details() {
   return (
-    <Page title="Components Overview">
+    <Page title="Details">
       <RootStyle>
-        <ComponentHero />
-        <Container>
-          <ComponentFoundation />
-          <ComponentMUI />
-          <ComponentOther />
-        </Container>
+        <TourDetails />
       </RootStyle>
     </Page>
   );

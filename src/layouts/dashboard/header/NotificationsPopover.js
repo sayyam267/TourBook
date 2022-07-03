@@ -56,18 +56,35 @@ export default function NotificationsPopover() {
     );
   };
 
-  useEffect(() => {
+  const getNotification = () => {
     const token = localStorage.getItem("accessToken");
     axios.get(process.env.REACT_APP_NOTIFICATION, {
       headers: { "x-auth-token": token },
     })
       .then((res) => {
-        console.log("notifications", res.data.data);
+        // console.log("notifications", res.data.data);
         setReadNotifications(res?.data?.data?.filter((item) => item.isRead === true));
         setUnReadNotifications(res?.data?.data?.filter((item) => item.isRead === false));
         setTotalUnRead(res?.data?.data?.filter((item) => item.isRead === false)?.length);
+        
       });
+  }
+
+  useEffect(() => {
+    getNotification();
   }, []);
+
+  const handleRead = (id) =>{
+    const token = localStorage.getItem("accessToken");
+    axios.put(process.env.REACT_APP_NOTIFICATION_READ,{notificationID:id}, {
+      headers: { "x-auth-token": token },
+    })
+      .then((res) => {
+        console.log("notifications read", res.data);
+        getNotification();
+
+      });
+  }
 
   return (
     <>
@@ -102,7 +119,7 @@ export default function NotificationsPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Scrollbar sx={{ minHeight: 250, overflow: '75%' }}>
+        <Scrollbar sx={{ height: 240}}>
           <List
             disablePadding
             subheader={
@@ -112,7 +129,7 @@ export default function NotificationsPopover() {
             }
           >
             {unReadnotifications?.map((notification) => (
-              <NotificationItem key={notification._id} notification={notification} />
+              <NotificationItem key={notification._id} notification={notification} handleRead={handleRead} />
             ))}
           </List>
           
@@ -125,7 +142,7 @@ export default function NotificationsPopover() {
             }
           >
             {readNotifications?.map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification.id} notification={notification} handleRead={handleRead}  />
             ))}
           </List>
         </Scrollbar>
@@ -156,8 +173,9 @@ NotificationItem.propTypes = {
   }),
 };
 
-function NotificationItem({ notification }) {
+function NotificationItem({ notification, handleRead }) {
   const { avatar, title } = renderContent(notification);
+
 
   return (
     <ListItemButton
@@ -169,7 +187,7 @@ function NotificationItem({ notification }) {
           bgcolor: 'action.selected',
         }),
       }}
-      // {!notification.isRead ? onClick={}:}
+      onClick={!notification.isRead ? () => handleRead(notification._id) : () => console.log("hello")}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>

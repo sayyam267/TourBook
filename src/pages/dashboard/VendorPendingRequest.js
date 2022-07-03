@@ -30,8 +30,8 @@ export default function VendorPendingRequest() {
       }
     }).then(res => {
       console.log(res);
-      console.log(res.data.data.allTours);
-      setAllTours(res.data.data.myTours);
+      console.log(res?.data?.data?.allTours);
+      setAllTours(res?.data?.data?.myTours);
     })
   }, [])
 

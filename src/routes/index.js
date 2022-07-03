@@ -88,7 +88,8 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
+        {
+          path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
@@ -158,7 +159,7 @@ export default function Router() {
       path: '*',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'coming-soon', element: <ComingSoon /> },
+        
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
@@ -175,6 +176,8 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'coming-soon', element: <ComingSoon /> },
+        { path: 'details', element: <Details /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -223,6 +226,7 @@ const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
+const Details = Loadable(lazy(() => import('../pages/Details')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));

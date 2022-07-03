@@ -22,13 +22,12 @@ const ICONS = {
 };
 
 const navConfig = [
-    // GENERAL
-    // ----------------------------------------------------------------------
+   
     {
         subheader: 'general',
         items: [
             { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-            { title: 'Analytics', path: PATH_DASHBOARD.general.adminanalytics, icon: ICONS.dashboard },
+            // { title: 'Analytics', path: PATH_DASHBOARD.general.adminanalytics, icon: ICONS.dashboard },
             { title: 'AdminPanel', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
             { title: 'Profile', path: PATH_DASHBOARD.general.banking, icon: ICONS.profile },
             

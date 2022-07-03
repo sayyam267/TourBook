@@ -29,7 +29,7 @@ export const PATH_PAGE = {
   faqs: '/faqs',
   page404: '/404',
   page500: '/500',
-  components: '/components'
+  details: '/details'
 };
 
 export const PATH_DASHBOARD = {
