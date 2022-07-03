@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import { useEffect, useState } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -48,24 +48,30 @@ ChatConversationItem.propTypes = {
   receiver: PropTypes.object,
 };
 
-export default function ChatConversationItem({ isSelected, conversation, isOpenSidebar, onSelectConversation,receiver }) {
+export default function ChatConversationItem({
+  isSelected,
+  conversation,
+  isOpenSidebar,
+  onSelectConversation,
+  receiver,
+}) {
+  // const displayLastActivity = conversation.messages[conversation.messages.length - 1].createdAt;
 
-  
-
-  
   const lastMessage = conversation?.lastMessage;
-  const [isSelect,setIsSelect] = useState(false);
+  const [isSelect, setIsSelect] = useState(false);
   const isGroup = false;
-  const people=conversation?.people;
+  const people = conversation?.people;
   const conversationId = conversation?._id;
-  console.log(lastMessage,conversationId, receiver);
-
+  console.log(lastMessage, conversationId, receiver);
+  useEffect(() => {
+    console.log(conversation);
+  });
   const handleSelectConversation = () => {
-    console.log(receiver._id);
+    console.log('ReceiverID IN ITEM', receiver._id);
     // setIsSelect(true);
     onSelectConversation(receiver?._id);
-  }
- 
+    // onSelectConversation(conversationId);
+  };
 
   return (
     <RootStyle
@@ -101,23 +107,22 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
           <AvatarWrapperStyle className="avatarWrapper" key={receiver?._id}>
             <Avatar alt={receiver?.fname} src={receiver?.profilePicture} />
           </AvatarWrapperStyle>
-
         </Box>
       </ListItemAvatar>
 
-      {isOpenSidebar &&  (
+      {isOpenSidebar && (
         <>
           <ListItemText
-            primary={receiver?.fname}
+            primary={`${receiver?.fname} ${receiver?.lname}`}
             primaryTypographyProps={{
               noWrap: true,
               variant: 'subtitle2',
             }}
-            secondary={lastMessage}
+            secondary={lastMessage?.message ? `${lastMessage?.message}` : ''}
             secondaryTypographyProps={{
               noWrap: true,
               variant: 'subtitle2',
-              color: 'textPrimary'
+              color: 'textPrimary',
             }}
           />
 
@@ -143,11 +148,9 @@ export default function ChatConversationItem({ isSelected, conversation, isOpenS
                 addSuffix: false,
               })}
             </Box>
-
           </Box>
         </>
       )}
     </RootStyle>
-    
   );
 }

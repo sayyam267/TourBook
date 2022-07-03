@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Box, Divider, Stack } from '@mui/material';
@@ -45,49 +45,43 @@ export default function ChatWindow() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const { contacts, recipients, participants, activeConversationId } = useSelector((state) => state.chat);
-  const [conversationID,setConversationID] = useState();
+  const [activeChatID, setactiveChatID] = useState(null);
+  const [conversationID, setConversationID] = useState(null);
+  const [receiverID, setReceiverID] = useState(null);
   const params = useParams();
-  const [directChat,setdirectChat] = useState();
-  
+  const [directChat, setdirectChat] = useState();
 
   const mode = null ? 'DETAIL' : 'COMPOSE';
 
-  
-  
-
   useEffect(() => {
-    console.log("ID",location?.state?.id);
-    if (location?.state?.Id !== null) {
-      console.log("hello chat");
-      const token = localStorage.getItem("accessToken");
+    console.log('ID IN CHAT WINDOW', location?.state?.id);
+    if (location?.state?.id !== null) {
+      setReceiverID(location?.state?.id);
+
+      console.log('hello chat', location?.state?.id);
+      const token = localStorage.getItem('accessToken');
       axios
         .post(
           process.env.REACT_APP_INITCONVERSATION,
           {
             receiver: location?.state?.id,
           },
-          { headers: { "x-auth-token": token } }
+          { headers: { 'x-auth-token': token } }
         )
         .then((res) => {
-          console.log("init conversation",res.data.data);
+          console.log('init conversation', res.data.data);
           setConversationID(res.data.data);
           setdirectChat(true);
         })
         .catch((e) => console.log(e));
     }
-  }, [location?.state?.Id]);
-
-
-
-
-
-
+  }, [location?.state?.id]);
 
   const handleSendMessage = async (value) => {
-    console.log("handlesendMessage", value.message);
-    const token = localStorage.getItem("accessToken");
+    console.log('handlesendMessage', value.message);
+    const token = localStorage.getItem('accessToken');
     axios
       .post(
         process.env.REACT_APP_CREATEMESSAGES,
@@ -97,11 +91,11 @@ export default function ChatWindow() {
           message: value?.message,
         },
         {
-          headers: { "x-auth-token": token },
+          headers: { 'x-auth-token': token },
         }
       )
       .then((res) => {
-        console.log("Message Sent!!!!");
+        console.log('Message Sent!!!!');
         // console.log(res);
       });
   };
@@ -116,21 +110,26 @@ export default function ChatWindow() {
 
       <Divider />
 
-      {conversationID && directChat ? <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
-        <Stack sx={{ flexGrow: 1 }}>
-          {conversationID ? <ChatMessageList conversationID={conversationID} receiverID={location?.state?.id} /> :<></>}
+      {conversationID && directChat ? (
+        <Box sx={{ flexGrow: 1, display: 'flex', overflow: 'hidden' }}>
+          <Stack sx={{ flexGrow: 1 }}>
+            {conversationID ? (
+              // <ChatMessageList conversationID={conversationID} receiverID={location?.state?.id} />
+              <ChatMessageList conversationID={conversationID} receiverID={receiverID} />
+            ) : (
+              <></>
+            )}
 
-          <Divider />
+            <Divider />
 
-        <ChatMessageInput
-            conversationId={conversationID}
-            onSend={handleSendMessage}
-          
-          />
-        </Stack>
+            <ChatMessageInput conversationId={conversationID} onSend={handleSendMessage} />
+          </Stack>
 
-        
-      </Box>:<></>}
+          {/* {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />} */}
+        </Box>
+      ) : (
+        <></>
+      )}
     </Stack>
   );
 }

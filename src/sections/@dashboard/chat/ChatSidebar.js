@@ -112,9 +112,9 @@ export default function ChatSidebar(props) {
     setSearchQuery('');
   };
 
-  
 
- 
+
+
 
   const handleSearchSelect = (username) => {
     setSearchFocused(false);
@@ -147,18 +147,18 @@ export default function ChatSidebar(props) {
             />
           </IconButton>
 
-         
+
         </Stack>
 
-       
+
       </Box>
 
       <Scrollbar>
         {conversations == null ? (
           [...Array(12)].map((index) =>
-          <SkeletonConversationItem key={index} />)
+            <SkeletonConversationItem key={index} />)
         ) : (
-            <ChatConversationList
+          <ChatConversationList
             conversations={conversations}
             isOpenSidebar={openSidebar}
             activeConversationId={props?.activeConversationId}

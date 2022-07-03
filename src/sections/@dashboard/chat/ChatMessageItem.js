@@ -29,14 +29,12 @@ const InfoStyle = styled(Typography)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-
-
 export default function ChatMessageItem({ message, receiverID, onOpenLightbox }) {
-  console.log("receiverID",message?.receiver?._id,"receiverID",receiverID) 
+  console.log('receiverID', message?.receiver?._id, 'receiverID', receiverID);
   const senderDetails =
     String(message.receiver?._id) === String(receiverID)
       ? { type: 'me' }
-      : { avatar: message?.sender?.profilePicture, name: message?.sender?.fname };
+      : { avatar: message?.sender?.profilePicture, name: `${message?.sender?.fname} ${message?.sender?.lname}` };
 
   const isMe = senderDetails.type === 'me';
   const isImage = message.contentType === 'image';
@@ -55,7 +53,6 @@ export default function ChatMessageItem({ message, receiverID, onOpenLightbox })
         {senderDetails.type !== 'me' && (
           <Avatar alt={senderDetails.name} src={senderDetails.avatar} sx={{ width: 32, height: 32, mr: 2 }} />
         )}
-
         <div>
           <InfoStyle
             variant="caption"
