@@ -80,12 +80,7 @@ export default function HomeHero() {
         
         <Container>
           <ContentStyle>
-            {/* <m.div variants={varFade().inRight}>
-            <Searchbar />
-              <Typography sx={{ color: 'common.white' }}>
-                Search Bar
-              </Typography>
-            </m.div> */}
+           
 
             <Stack spacing={2.5} alignItems="center" direction={{ xs: 'column', md: 'row' }}>
               <m.div variants={varFade().inRight}>
@@ -102,28 +97,7 @@ export default function HomeHero() {
                 </Typography>
               </m.div>
 
-              {/* <m.div variants={varFade().inRight}>
-                <TextIconLabel
-                  icon={
-                    <Image
-                      alt="sketch icon"
-                      src="https://minimal-assets-api.vercel.app/assets/images/home/ic_figma_small.svg"
-                      sx={{ width: 20, height: 20, mr: 1 }}
-                    />
-                  }
-                  value={
-                    <Link
-                      href="https://www.figma.com/file/x7earqGD0VGFjFdk5v2DgZ/%5BPreview%5D-Minimal-Web?node-id=866%3A55474"
-                      target="_blank"
-                      rel="noopener"
-                      color="common.white"
-                      sx={{ typography: 'body2' }}
-                    >
-                      Preview Figma
-                    </Link>
-                  }
-                />
-              </m.div> */}
+           
             </Stack>
 
             <m.div variants={varFade().inRight}>
@@ -137,25 +111,6 @@ export default function HomeHero() {
                 Explore
               </Button>
             </m.div>
-
-            {/* <Stack spacing={2.5}>
-              <m.div variants={varFade().inRight}>
-                <Typography variant="overline" sx={{ color: 'primary.light' }}>
-                  Available For
-                </Typography>
-              </m.div>
-              
-
-              <Stack direction="row" spacing={1.5} justifyContent={{ xs: 'center', md: 'flex-start' }}>
-                {['ic_sketch', 'ic_figma', 'ic_js', 'ic_ts', 'ic_nextjs'].map((resource) => (
-                  <m.img
-                    key={resource}
-                    variants={varFade().inRight}
-                    src={`https://minimal-assets-api.vercel.app/assets/images/home/${resource}.svg`}
-                  />
-                ))}
-              </Stack>
-            </Stack> */}
           </ContentStyle>
         </Container>
       </RootStyle>

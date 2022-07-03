@@ -33,7 +33,7 @@ export default function ChatMessageList({conversationID, receiverID}) {
     const token = localStorage.getItem("accessToken");
     if (conversationID) {
       axios
-        .get(`http://localhost:4000/messages/conversation/${conversationID._id}`, {
+        .get(`${process.env.REACT_APP_MESSAGESLIST}${conversationID._id}`, {
           headers: { "x-auth-token": token },
         })
         .then((res) => {

@@ -172,7 +172,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [places, setPlaces] = useState();
 
   useEffect(() => {
-    axios.get('http://tourbook-backend.herokuapp.com/city/all').then((res) => {
+    axios.get(process.env.REACT_APP_GETCITIES).then((res) => {
       console.log(res);
       console.log(res.data.data);
       setCities(res.data.data);
@@ -256,6 +256,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         return data.append('multiImages', file);
       });
     } else data.append('multiImages', files[0]);
+
+    
     console.log('sT', startdate);
     console.log('end', enddate);
     data.append('description', description);
@@ -276,7 +278,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     data.append('places', JSON.stringify(places));
 
     axios
-      .post('http://tourbook-backend.herokuapp.com/tour/create', data, {
+      .post(process.env.REACT_APP_CREATETOUR, data, {
         headers: {
           'x-auth-token': localStorage.getItem('accessToken'),
         },

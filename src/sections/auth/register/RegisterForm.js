@@ -80,7 +80,7 @@ export default function RegisterForm() {
 
   const getCities = async () => {
     await axios
-      .get('http://tourbook-backend.herokuapp.com/city/all')
+      .get(process.env.REACT_APP_GETCITIES)
       .then((res) => {
         setCities(res.data.data);
       })

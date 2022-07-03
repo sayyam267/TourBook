@@ -23,7 +23,7 @@ ProfileFriends.propTypes = {
 
 export default function ProfileFriends() {
   useEffect(() => {
-    axios.get('http://tourbook-backend.herokuapp.com/order/mine').then((response) => console.log(response));
+    axios.get(process.env.REACT_APP_MYORDER).then((response) => console.log(response));
   }, []);
 
   return (

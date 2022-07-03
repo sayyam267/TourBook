@@ -65,8 +65,7 @@ export default function BankingRecentTransitions() {
     console.log(offerAmount, description, requestID);
     axios
       .post(
-        // 'http://tourbook-backend.herokuapp.com/customtour/all',
-        'http://tourbook-backend.herokuapp.com/customtour/offer/give',
+        process.env.REACT_APP_CUSTOMTOUR_GIVEOFFER,
         {
           requestID,
           amount:offerAmount,
@@ -86,7 +85,7 @@ export default function BankingRecentTransitions() {
 
   useEffect(() => {
     axios
-      .get('http://tourbook-backend.herokuapp.com/customtour/all', { headers: { 'x-auth-token': localStorage.getItem('accessToken') } })
+      .get(process.env.REACT_APP_GETALLCUSTOMTOUR, { headers: { 'x-auth-token': localStorage.getItem('accessToken') } })
       .then((response) => {
         console.log(response.data.data);
         setCustomTour(response.data.data);
@@ -133,31 +132,20 @@ export default function BankingRecentTransitions() {
                         <Typography variant="subtitle2">{ct?.by.phoneNumber}</Typography>
                       </TableCell>
 
-                      <TableCell>{ct?.requirements.maxBudget}RS</TableCell>
-                      <TableCell>{ct?.requirements.seats}</TableCell>
+                      <TableCell>{ct?.requirements?.maxBudget}RS</TableCell>
+                      <TableCell>{ct?.requirements?.seats}</TableCell>
 
                       <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                        {ct?.requirements.description}
+                        {ct?.requirements?.description}
                       </TableCell>
 
-                      <TableCell>{ct?.requirements.source.name}</TableCell>
+                      <TableCell>{ct?.requirements?.source?.name}</TableCell>
                       <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                         {ct?.requirements.places}
                       </TableCell>
-                      <TableCell>{ct?.requirements.destination.name}</TableCell>
+                      <TableCell>{ct?.requirements?.destination?.name}</TableCell>
 
-                      {/* <TableCell>
-                      <Label
-                        variant={isLight ? 'ghost' : 'filled'}
-                        color={
-                          (ct?.status === 'completed' && 'success') ||
-                          (ct?.status === 'in_progress' && 'warning') ||
-                          'error'
-                        }
-                      >
-                        {sentenceCase(ct?.status)}
-                      </Label>
-                    </TableCell> */}
+                      
 
                       <TableCell align="right">
                         <MoreMenuButton handleDialog={handleDialogOpen} id={ct._id} />

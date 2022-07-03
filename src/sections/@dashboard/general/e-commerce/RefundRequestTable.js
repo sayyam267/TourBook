@@ -30,7 +30,7 @@ export default function RefundRequestTable({ name, email, seats, amount, id,  fe
   const handleReject = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/accept/',
+        process.env.REACT_APP_ORDERACCEPT,
         // { id: _id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -44,7 +44,7 @@ export default function RefundRequestTable({ name, email, seats, amount, id,  fe
   const handleApprove = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/reject/',
+        process.env.REACT_APP_ORDERREJECT,
         // { id: _id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -110,7 +110,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/vendor/refund/accept',
+        process.env.REACT_APP_VENDORACCEPTREFUND,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -127,7 +127,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/vendor/refend/reject',
+        process.env.REACT_APP_VENDORREJECTREFUND,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )

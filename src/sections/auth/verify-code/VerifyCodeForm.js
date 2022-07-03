@@ -64,7 +64,7 @@ export default function VerifyCodeForm() {
       const verifyCode = Object.values(data).join('');
       await new Promise((resolve) => setTimeout(resolve, 500));
       console.log('code:', Object.values(data).join(''));
-      await axios.put("http://tourbook-backend.herokuapp.com/user/verify/otp",{email:localStorage.getItem("verifyEmail"), code:verifyCode }).then(res =>{
+      await axios.put(process.env.REACT_APP_VERIFYOTP,{email:localStorage.getItem("verifyEmail"), code:verifyCode }).then(res =>{
         if (res.data.data) {
           enqueueSnackbar('Verify success!');
           navigate('/auth/new-password', { replace: true });

@@ -40,7 +40,7 @@ export default function PaymentBillingAddress({ onGetSuccess }) {
     try {
       await axios
         .post(
-          'http://tourbook-backend.herokuapp.com/transaction/buy',
+          process.env.REACT_APP_TRANSACTION_BUY,
           {
             payment: {
               CardNumber: cn,

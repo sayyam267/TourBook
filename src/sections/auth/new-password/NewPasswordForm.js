@@ -46,23 +46,13 @@ export default function NewPasswordForm({ onSent, onGetEmail }) {
       .min(8, 'Password must be atleast 8 characters')
       .required('Password is required'),
   });
-  //   const methods = useForm({
-  //     resolver: yupResolver(NewPasswordSchema),
-  //     defaultValues: { password: 'pass1234', confirmPassword: 'pass1234' },
-  //   });
 
-  //   const {
-  //     reset,
-  //     setError,
-  //     handleSubmit,
-  //     formState: { errors, isSubmitting },
-  //   } = methods;
+ 
   const onSubmit = async (data) => {
     try {
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // if (isMountedRef.current && data.password === data.confirmPassword) {
+      
       const response = await axios
-        .put('http://tourbook-backend.herokuapp.com/user/update/password', {
+        .put(process.env.REACT_APP_UPDATE_PASSWORD, {
           email: localStorage.getItem('verifyEmail'),
           password: data.password,
         })
@@ -90,34 +80,7 @@ export default function NewPasswordForm({ onSent, onGetEmail }) {
     validationSchema: validationschema,
     onSubmit,
   });
-  //   const onSubmit = async (data) => {
-  //     try {
-  //       await new Promise((resolve) => setTimeout(resolve, 500));
-  //       if (isMountedRef.current && data.password === data.confirmPassword) {
-  //         const response = await axios
-  //           .put('http://tourbook-backend.herokuapp.com/user/update/password', {
-  //             email: localStorage.getItem('verifyEmail'),
-  //             password: data.password,
-  //           })
-  //           .then((res) => {
-  //             onSent();
-  //             onGetEmail(data.email);
-  //             console.log(res);
-  //             localStorage.removeItem('verifyEmail');
-  //             localStorage.removeItem('code');
-  //           });
-  //       } else {
-  //         reset();
-  //         console.error('password not matched');
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       reset();
-  //       if (isMountedRef.current) {
-  //         setError('afterSubmit', error);
-  //       }
-  //     }
-  //   };
+  
 
   return (
     <form onSubmit={formik.handleSubmit}>

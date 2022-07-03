@@ -23,7 +23,7 @@ export default function ProfileFriends() {
 
 
   useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+    axios.get(process.env.REACT_APP_GETVENDORDASHBOARD, {
       headers: {
         'x-auth-token': localStorage.getItem('accessToken'),
       }}).then(res =>{
@@ -34,7 +34,7 @@ export default function ProfileFriends() {
   },[]);
 
   const fetchRequest = () =>{
-    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+    axios.get(process.env.REACT_APP_GETVENDORDASHBOARD, {
       headers: {
         'x-auth-token': localStorage.getItem('accessToken'),
       }

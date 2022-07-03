@@ -173,7 +173,7 @@ function MoreMenuButton(props) {
 
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/accept/',
+        process.env.REACT_APP_ADMINACCEPT,
         { vendorID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -190,7 +190,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/reject/',
+        process.env.REACT_APP_ADMINREJECT,
         { vendorID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )

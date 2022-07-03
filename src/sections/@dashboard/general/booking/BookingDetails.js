@@ -167,7 +167,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/block',
+        process.env.REACT_APP_BLOCKUSER,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -184,7 +184,7 @@ function MoreMenuButton(props) {
     // console.log(props._id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/delete',
+        process.env.REACT_APP_DELETEUSER,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -201,7 +201,7 @@ function MoreMenuButton(props) {
     
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/unblock',
+        process.env.REACT_APP_UNBLOCKUSER,
         { userID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )

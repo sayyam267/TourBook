@@ -112,8 +112,8 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    // process.env.REACT_APP_LOGIN_API
-    const response = await axios.post("http://tourbook-backend.herokuapp.com/user/login", {
+    
+    const response = await axios.post(process.env.REACT_APP_LOGIN, {
       email,
       password,
     })
@@ -137,7 +137,7 @@ function AuthProvider({ children }) {
   };
 
   const register = async(Email, Password, FirstName, LastName, City, Country, Role, Gender, Cnic) => {
-    const response = await axios.post("http://tourbook-backend.herokuapp.com/user/signup", {
+    const response = await axios.post(process.env.REACT_APP_SIGNUP, {
       email: Email,
       password:Password,
       phoneNumber:FirstName,

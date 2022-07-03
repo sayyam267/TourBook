@@ -74,7 +74,7 @@ export default function EcommerceShop() {
   
 
   useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
+    axios.get(process.env.REACT_APP_GetTOUR, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
       console.log(res);
       setAllTours(res.data.data);
     })

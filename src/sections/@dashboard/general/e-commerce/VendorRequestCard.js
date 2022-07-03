@@ -30,7 +30,7 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
   const handleReject = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/accept/',
+        process.env.REACT_APP_ORDERACCEPT,
         { id: _id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -44,7 +44,7 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
   const handleApprove = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/reject/',
+        process.env.REACT_APP_ORDERREJECT,
         { id: _id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -113,7 +113,7 @@ function MoreMenuButton(props) {
   const handleAccept = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/accept/',
+        process.env.REACT_APP_ORDERACCEPT,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -131,7 +131,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/reject/',
+        process.env.REACT_APP_ORDERREJECT,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )

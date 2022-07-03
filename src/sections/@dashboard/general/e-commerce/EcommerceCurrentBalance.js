@@ -20,7 +20,7 @@ export default function EcommerceCurrentBalance({ name, data, phoneNumber, email
   const handleReject = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/accept/',
+        process.env.REACT_APP_ADMINACCEPT,
         { vendorID: id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },
@@ -33,7 +33,7 @@ export default function EcommerceCurrentBalance({ name, data, phoneNumber, email
   const handleApprove = () => {
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/admin/user/reject/',
+        process.env.REACT_APP_ADMINREJECT,
         { vendorID: id },
         {
           headers: { 'x-auth-token': localStorage.getItem('accessToken') },

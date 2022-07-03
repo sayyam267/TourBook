@@ -214,7 +214,7 @@ export function getProducts() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get("http://tourbook-backend.herokuapp.com/tour/all", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
+      const response = await axios.get(process.env.REACT_APP_GetTOUR, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
         console.log(res);
       dispatch(slice.actions.getProductsSuccess(response.data.products));
       })

@@ -16,7 +16,7 @@ import Label from '../../components/Label';
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
-import { PATH_AUTH, PATH_DOCS, PATH_PAGE } from '../../routes/paths';
+import { PATH_AUTH} from '../../routes/paths';
 import AccountPopover from '../dashboard/header/AccountPopover';
 // ----------------------------------------------------------------------
 
@@ -59,6 +59,8 @@ export default function MainHeader() {
 
   const navigate = useNavigate();
 
+  console.log(pathname);
+
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
@@ -78,11 +80,9 @@ export default function MainHeader() {
           }}
         >
           <Logo sx={{pt:1.3}} />
-          <Typography variant="h4" sx={{ml:1,pt:1.3}}> TOURBOOK</Typography>
+          {pathname === '/' ? <Typography variant="h4" sx={{ ml: 1, pt: 1.3 }}> TOURBOOK</Typography> : <Typography color='primary' variant="h4" sx={{ ml: 1, pt: 1.3 }}> TOURBOOK</Typography> }
 
-          {/* <Label color="info" sx={{ ml: 1 }}>
-            T
-          </Label> */}
+          
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}

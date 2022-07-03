@@ -64,7 +64,7 @@ export default function ChatWindow() {
       const token = localStorage.getItem("accessToken");
       axios
         .post(
-          "http://localhost:4000/conversations/init",
+          process.env.REACT_APP_INITCONVERSATION,
           {
             receiver: location?.state?.id,
           },
@@ -90,7 +90,7 @@ export default function ChatWindow() {
     const token = localStorage.getItem("accessToken");
     axios
       .post(
-        "http://localhost:4000/messages/create",
+        process.env.REACT_APP_CREATEMESSAGES,
         {
           roomID: conversationID._id,
           receiver: location?.state?.id,

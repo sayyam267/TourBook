@@ -20,7 +20,7 @@ export default function ProfileFriends() {
   const [tour,setTour] = useState();
   useEffect(async () => {
     await axios
-      .get('http://tourbook-backend.herokuapp.com/order/mine', {
+      .get(process.env.REACT_APP_MYORDER, {
         headers: { 'x-auth-token': localStorage.getItem('accessToken') },
       })
       .then((response) => { console.log(response.data); setTour(response.data);  });

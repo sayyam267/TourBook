@@ -22,7 +22,7 @@ export default function ProfileFollowers({ followers }) {
  
   // get all tours of vendor to show in my listings
   useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+    axios.get(process.env.REACT_APP_GETVENDORDASHBOARD, {
       headers: {
         'x-auth-token': localStorage.getItem('accessToken'),
       }}).then(res => {

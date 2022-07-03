@@ -97,7 +97,7 @@ export default function BlogNewPostForm() {
   const isDateError = isBefore(new Date(values.end), new Date(values.start));
 
   useEffect(() => {
-    axios.get('http://tourbook-backend.herokuapp.com/city/all').then((res) => {
+    axios.get(process.env.REACT_APP_GETCITIES).then((res) => {
       console.log(res);
       console.log(res.data.data);
       setCities(res.data.data);
@@ -110,7 +110,7 @@ export default function BlogNewPostForm() {
     
     console.log(values.description,values.maxBudget,values.isGuide,values.isHotel,values.seats,values.source,values.destination,values.places);
     try {
-      axios.post("http://tourbook-backend.herokuapp.com/customtour/create",{
+      axios.post(process.env.REACT_APP_CUSTOMTOUR_CREATE,{
         requirements:{
           maxBudget: Number(values.maxBudget),
           seats: Number(values.seats),

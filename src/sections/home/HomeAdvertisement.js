@@ -1,4 +1,5 @@
 import { m } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Button, Box, Container, Typography } from '@mui/material';
@@ -6,6 +7,7 @@ import { Button, Box, Container, Typography } from '@mui/material';
 import Image from '../../components/Image';
 import { MotionInView, varFade } from '../../components/animate';
 import InfoCard from '../@dashboard/general/analytics/InfoCard';
+import { PATH_AUTH } from '../../routes/paths';
 // ----------------------------------------------------------------------
 
 const ContentStyle = styled('div')(({ theme }) => ({
@@ -44,6 +46,7 @@ const ContentStyleGuide = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function HomeAdvertisement() {
+  const navigate = useNavigate();
   return (
     <div>
       <Container sx={{
@@ -62,19 +65,19 @@ export default function HomeAdvertisement() {
         >
           <MotionInView variants={varFade().inDown} sx={{ color: 'common.white', mb: 5 }}>
             <Typography variant="h2">
-              Become A Tour Guide
+              Book your Tour
             </Typography>
             <Typography variant="h4">
-              Help the world rediscover <br /> Pakistan
+              Discover <br /> Pakistan
             </Typography>
           </MotionInView>
           <MotionInView variants={varFade().inDown}>
             <Button
               size="large"
               variant="contained"
-              target="_blank"
+              // target="_blank"
+                onClick={() => { navigate(PATH_AUTH.login) }}
               rel="noopener"
-              href="https://material-ui.com/store/items/minimal-dashboard/"
               sx={{
                 whiteSpace: 'nowrap',
                 boxShadow: (theme) => theme.customShadows.z8,
@@ -129,9 +132,9 @@ export default function HomeAdvertisement() {
               <Button
                 size="large"
                 variant="contained"
-                target="_blank"
+                onClick={() => { navigate(PATH_AUTH.login) }}
                 rel="noopener"
-                href="https://material-ui.com/store/items/minimal-dashboard/"
+                
                 sx={{
                   whiteSpace: 'nowrap',
                   boxShadow: (theme) => theme.customShadows.z8,

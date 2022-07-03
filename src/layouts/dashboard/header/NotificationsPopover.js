@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 // @mui
 import {
   Box,
@@ -25,6 +25,8 @@ import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import axios from '../../../utils/axios';
+
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +53,17 @@ export default function NotificationsPopover() {
       }))
     );
   };
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("accessToken");
+  //   axios.get("notification link", {
+  //     headers: { "x-auth-token": token },
+  //   })
+  //     .then((res) => {
+  //       console.log("conversations", res.data.data);
+  //       setNotifications([...res.data.data]);
+  //     });
+  // }, []);
 
   return (
     <>
@@ -94,7 +107,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {notifications?.slice(0, 2).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
@@ -107,7 +120,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(2, 5).map((notification) => (
+            {notifications?.slice(2, 5).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>

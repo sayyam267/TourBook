@@ -122,7 +122,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <Label color={isCredit() ? "success":"error"} >
             Credits : {credits}.0 Rs
           </Label> 
-          {/* <NotificationsPopover /> */}
+          <NotificationsPopover />
           <Button color="error" size="small" variant="contained" onClick={handleLogout} endIcon={<Iconify icon={'websymbol:logout'} />}>
             Logout
           </Button>

@@ -91,13 +91,13 @@ export default function ProductDetailsSummary({tour,booked}) {
     try {
       if (balance > total) {
         console.log(tour?._id,quantity,total);
-        axios.post("http://tourbook-backend.herokuapp.com/order/create", {
+        axios.post(process.env.REACT_APP_CREATEORDER, {
           tourID: tour?._id,
           seats: quantity,
           amount: total,
         }, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res =>{
 
-          axios.get("http://tourbook-backend.herokuapp.com/user/balance", { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
+          axios.get(process.env.REACT_APP_GETBALANCE, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
             console.log(res.data.data.balance);
             localStorage.setItem('balance', res.data.data.balance);
         })

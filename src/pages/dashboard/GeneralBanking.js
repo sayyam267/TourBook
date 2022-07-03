@@ -169,18 +169,15 @@ export default function UserProfile() {
   const values = watch();
 
   useEffect(() => {
-    // console.log(process.env.REACT_APP_GETUSERBYEMAIL);
-    // const Email = localStorage.getItem('email');
-    // axios.get("http://tourbook-backend.herokuapp.com/user/mydetails", { params: { email: Email } }).then((response) => {
 
     axios
-      .get('http://tourbook-backend.herokuapp.com/city/all')
+      .get(process.env.REACT_APP_GETCITIES)
       .then((res) => {
         setCities(res.data.data);
       })
       .catch((err) => console.log(err));
     axios
-      .get('http://tourbook-backend.herokuapp.com/user/mydetails', {
+      .get(process.env.REACT_APP_GETUSERDETAIL, {
         headers: { 'x-auth-token': localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -204,7 +201,7 @@ export default function UserProfile() {
     try {
       console.log(values.fname, values.lname, values.country, values.city, values.phoneNumber, values.email);
      
-      axios.put("http://tourbook-backend.herokuapp.com/user/update/profile", {
+      axios.put(process.env.REACT_APP_UPDATEPROFILE, {
         fname: values.fname,
         lname: values.lname,
         email: values.email,

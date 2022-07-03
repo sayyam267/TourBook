@@ -42,7 +42,7 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
     try {
       const email = data.email;
       console.log(email);
-      const response = await axios.post("http://tourbook-backend.herokuapp.com/user/forgot", { email }).then(res => {
+      const response = await axios.post(process.env.REACT_APP_FORGETPASS, { email }).then(res => {
         console.log(res);
       });
       await new Promise((resolve) => setTimeout(resolve, 500));

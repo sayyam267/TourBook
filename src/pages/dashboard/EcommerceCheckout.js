@@ -162,7 +162,7 @@ export default function EcommerceCheckout() {
   }
 
   useEffect(() => {
-    axios.get(`http://tourbook-backend.herokuapp.com/tour/get/${localStorage.getItem('tourId')}`).then(res => {console.log(res);
+    axios.get(`${process.env.REACT_APP_GetTOURBYID}/${localStorage.getItem('tourId')}`).then(res => {console.log(res);
       console.log(res.data.data.tours); 
       setTour(res.data.data.tours);
       setmeetLocaion(res.data.data.tours?.meetLocation);

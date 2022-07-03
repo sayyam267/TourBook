@@ -207,7 +207,7 @@ function MoreMenuButton(props) {
   const handleBlock = () => {
     axios
       .put(
-        'http://localhost:4000/admin/user/block',
+        process.env.REACT_APP_BLOCKUSER,
         { id: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -223,7 +223,7 @@ function MoreMenuButton(props) {
     console.log(props.id);
     axios
       .put(
-        'http://tourbook-backend.herokuapp.com/order/request/refund/',
+        process.env.REACT_APP_ORDERREFUND,
         { orderID: props.id },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )

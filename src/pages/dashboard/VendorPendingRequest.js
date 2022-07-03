@@ -24,7 +24,7 @@ export default function VendorPendingRequest() {
   const [allTours, setAllTours] = useState([]);
 
   useEffect(() => {
-    axios.get("http://tourbook-backend.herokuapp.com/vendor/dashboard", {
+    axios.get(process.env.REACT_APP_GETVENDORDASHBOARD, {
       headers: {
         'x-auth-token': localStorage.getItem('accessToken'),
       }

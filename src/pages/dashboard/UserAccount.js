@@ -139,7 +139,7 @@ export default function BankingRecentTransitions() {
     
     axios
       .post(
-        'http://tourbook-backend.herokuapp.com/customtour/offer/accept/',
+        process.env.REACT_APP_CUSTOMTOUR_ACCEPTOFFER,
         { requestID:reqId,vendorID:vendorId},
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -159,7 +159,7 @@ export default function BankingRecentTransitions() {
 
     axios
       .post(
-        'http://tourbook-backend.herokuapp.com/customtour/offer/reject/',
+        process.env.REACT_APP_CUSTOMTOUR_REJECTOFFER,
         { reqId, vendorId },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
       )
@@ -175,8 +175,8 @@ export default function BankingRecentTransitions() {
 
   useEffect(() => {
     axios
-      // .get('http://tourbook-backend.herokuapp.com/customtour/mine', {
-      .get('http://tourbook-backend.herokuapp.com/customtour/mine', {
+     
+      .get(process.env.REACT_APP_MYCUSTOMTOUR, {
         headers: { 'x-auth-token': localStorage.getItem('accessToken') },
       })
       .then((response) => {

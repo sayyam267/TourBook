@@ -24,7 +24,7 @@ export default function Chat() {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    axios.get("http://localhost:4000/conversations/mine", {
+    axios.get(process.env.REACT_APP_MYCONVERSATION, {
       headers: { "x-auth-token": token },
     })
       .then((res) => {
