@@ -179,7 +179,7 @@ export default function GeneralAnalytics() {
 
           {allUsers ? (
             <Grid item xs={12}>
-              <BookingDetails user={allUsers} fetch={fetchDashboard} />
+              <BookingDetails user={allUsers?.filter((user) => user?.userType !== 'admin')} fetch={fetchDashboard} />
             </Grid>
           ) : (
             <></>

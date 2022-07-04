@@ -80,6 +80,13 @@ export const PATH_DASHBOARD = {
     post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
     postById: path(ROOTS_DASHBOARD, '/blog/post/'),
     newPost: path(ROOTS_DASHBOARD, '/blog/new-post')
+  },
+  details: {
+    root: path(ROOTS_DASHBOARD, '/details'),
+    customtour: path(ROOTS_DASHBOARD, '/details/customtour'),
+    reservedtour: path(ROOTS_DASHBOARD, '/details/reservedtour'),
+    vcustomtour: path(ROOTS_DASHBOARD, '/details/vcustomtour'),
+    tourrequest: path(ROOTS_DASHBOARD, '/details/tourrequest')
   }
 };
 

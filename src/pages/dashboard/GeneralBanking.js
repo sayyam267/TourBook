@@ -1,75 +1,3 @@
-// // @mui
-// import { Grid, Container, Stack } from '@mui/material';
-// // hooks
-// import useSettings from '../../hooks/useSettings';
-// // components
-// import Page from '../../components/Page';
-// // sections
-// import {
-//   BankingContacts,
-//   BankingWidgetSummary,
-//   BankingInviteFriends,
-//   BankingQuickTransfer,
-//   BankingCurrentBalance,
-//   BankingBalanceStatistics,
-//   BankingRecentTransitions,
-//   BankingExpensesCategories,
-// } from '../../sections/@dashboard/general/banking';
-
-// // ----------------------------------------------------------------------
-
-// export default function GeneralBanking() {
-//   const { themeStretch } = useSettings();
-
-//   return (
-//     <Page title="General: Banking">
-//       <Container maxWidth={themeStretch ? false : 'xl'}>
-//         <Grid container spacing={3}>
-//           <Grid item xs={12} md={7}>
-//             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
-//               <BankingWidgetSummary
-//                 title="Income"
-//                 icon={'eva:diagonal-arrow-left-down-fill'}
-//                 percent={2.6}
-//                 total={18765}
-//                 chartData={[111, 136, 76, 108, 74, 54, 57, 84]}
-//               />
-//               <BankingWidgetSummary
-//                 title="Expenses"
-//                 color="warning"
-//                 icon={'eva:diagonal-arrow-right-up-fill'}
-//                 percent={-0.5}
-//                 total={8938}
-//                 chartData={[111, 136, 76, 108, 74, 54, 57, 84]}
-//               />
-//             </Stack>
-//           </Grid>
-
-//           <Grid item xs={12} md={5}>
-//             <BankingCurrentBalance />
-//           </Grid>
-
-//           <Grid item xs={12} md={8}>
-//             <Stack spacing={3}>
-//               <BankingBalanceStatistics />
-//               <BankingExpensesCategories />
-//               <BankingRecentTransitions />
-//             </Stack>
-//           </Grid>
-
-//           <Grid item xs={12} md={4}>
-//             <Stack spacing={3}>
-//               <BankingQuickTransfer />
-//               <BankingContacts />
-//               <BankingInviteFriends />
-//             </Stack>
-//           </Grid>
-//         </Grid>
-//       </Container>
-//     </Page>
-//   );
-// }
-
 import { useState, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
@@ -91,11 +19,8 @@ import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 // sections
 import {
-  Profile,
+  
   ProfileCover,
-  ProfileFriends,
-  ProfileGallery,
-  ProfileFollowers,
 } from '../../sections/@dashboard/user/profile';
 
 import { fData } from '../../utils/formatNumber';
@@ -127,7 +52,6 @@ const TabsWrapperStyle = styled('div')(({ theme }) => ({
 
 export default function UserProfile() {
   const { themeStretch } = useSettings();
-  // const { user } = useAuth();
   const _userAbout = { cover: '' };
   const [user, setUser] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -184,7 +108,7 @@ export default function UserProfile() {
         console.log(response.data.data);
         const user = response.data.data;
         setUser(response.data.data);
-        // setValue('fname', 'Bob')
+        
         reset({
           fname: user?.fname,
           photoURL: user?.profilePicture,
@@ -291,9 +215,6 @@ export default function UserProfile() {
                     <RHFTextField name="email" label="Email Address" disabled={user?.source === 'google'} />
                     <RHFTextField name="phoneNumber" label="Phone Number" />
 
-                    
-                    
-
                     <RHFSelect name="country" label="Country" placeholder="Country">
                       <option value="Pakistan">Pakistan</option>
                       
@@ -311,36 +232,11 @@ export default function UserProfile() {
 
                     </RHFSelect>
 
-                    {/* <RHFTextField name="city" label="City" /> */}
-                    {/* <TextField name="city" select value={city} label="City" onChange={(e) => setCity(e.target.value)}>
-                      {cities?.map((city) => {
-                        return (
-                          <MenuItem key={city._id} value={city._id}>
-                            {city.name}
-                          </MenuItem>
-                        );
-                      })}
-                      <Select
-                        helperText="City"
-                        labelId="city"
-                        id="city"
-                        value={city}
-                        label="Age"
-                        onChange={(e) => setCity(e.target.value)}
-                      >
-                        {cities?.map((city) => {
-                          return (
-                            <MenuItem key={city._id} value={city._id}>
-                              {city.name}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </TextField> */}
+                   
                   </Box>
 
                   <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                    {/* <RHFTextField name="about" multiline rows={4} label="About" /> */}
+                   
 
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                       Save Changes

@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // form
-
+import * as nsfwjs from "nsfwjs";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isBefore } from 'date-fns';
@@ -213,13 +213,32 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [verify,setVerify] = useState(false);
-
+  // const [isNsfw,setIsNsfw] = useState(false);
+  // const image = document.getElementById("output");
   const reCaptchaOnChange = (val) =>{
     console.log("val change",val);
     setVerify(!verify);
   }
 
+  // const classifyImage = async () => {
+  //   const fileslist = files[0];
+  //   const model = await nsfwjs.load();
+  //   console.log(fileslist);
+  //   // eslint-disable-next-line no-plusplus
+  //   for (let i = 0; i < fileslist.length; i++) {
+  //     const file = fileslist[i];
+  //     image.src = URL.createObjectURL(file);
+  //     // eslint-disable-next-line no-undef
+  //     // eslint-disable-next-line no-await-in-loop
+  //     const predictions = await model.classify(image);
+  //     console.log("Predictions: ", predictions);
+  //   }
+  // };
+
   const handleSubmit1 = (e) => {
+
+
+
     console.log(
       description,
       guide,
@@ -241,11 +260,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     e.preventDefault();
     const data = new FormData();
 
-    // console.log(e.target);
-
-    // console.log(files[0]);
-
-    // const files1 = [...e.target.multiImages.files];
 
     console.log(files[0]);
     const fi = files[0];
@@ -525,12 +539,21 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
               <LoadingButton variant="contained" size="large" disabled={!verify} onClick={handleSubmit1} loading={loading}>
                 {!isEdit ? 'Create Tour' : 'Save Changes'}
               </LoadingButton>
+              {/* <button onClick={classifyImage} >Classify Image</button> */}
             </Stack>
           </Grid>
         </Grid>
 
         {/* </FormProvider> */}
       </form>
+      <img
+        id="output"
+        src={""}
+        // style={{display:'none'}}
+        alt={"output"}
+        width={299}
+        height={299}
+      />
     </>
   );
 }

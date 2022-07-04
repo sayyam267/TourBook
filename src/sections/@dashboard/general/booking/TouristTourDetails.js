@@ -1,4 +1,5 @@
 import {useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { useSnackbar } from 'notistack';
@@ -20,8 +21,15 @@ import {
   CardHeader,
   Typography,
   TableContainer,
+  TextField,
+  Rating,
+  TextareaAutosize,
 } from '@mui/material';
 
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -36,6 +44,8 @@ import Iconify from '../../../../components/Iconify';
 import Scrollbar from '../../../../components/Scrollbar';
 import MenuPopover from '../../../../components/MenuPopover';
 import axios from '../../../../utils/axios';
+import { RHFTextField,} from '../../../../components/hook-form';
+import { PATH_DASHBOARD, PATH_AUTH } from '../../../../routes/paths';
 
 
 
@@ -54,7 +64,9 @@ export default function TouristTourDetails(props) {
   console.log(props.tours);
   const tour = props.tours;
  
+  
 
+  
   const [detailOpen, setDetailOpen] = useState(false);
 
   const handleDetailsOpen = () => {
@@ -78,7 +90,7 @@ export default function TouristTourDetails(props) {
                 <TableRow>
                   <TableCell sx={{ minWidth: 240 }}>Tour Name</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Amount</TableCell>
-                  <TableCell sx={{ minWidth: 120 }}>Seats</TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>Seats Booked</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Date</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Status</TableCell>
                   <TableCell sx={{ minWidth: 120 }}>Refund</TableCell>
@@ -130,9 +142,8 @@ export default function TouristTourDetails(props) {
 
 
                     <TableCell align="right">
-                      <MoreMenuButton id={tour._id} handleDetailsOpen={handleDetailsOpen} />
+                      <MoreMenuButton id={tour._id} tour={tour} handleDetailsOpen={handleDetailsOpen} />
                     </TableCell>
-                    
                   </TableRow>
                   
                   
@@ -151,7 +162,7 @@ export default function TouristTourDetails(props) {
           </Button>
         </Box>
       </Card>
-
+      
       <Dialog
         fullScreen
         open={detailOpen}
@@ -197,6 +208,10 @@ export default function TouristTourDetails(props) {
 
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
+  const navigate = useNavigate();
+  const [openFeedBack, setOpenFeedBack] = useState(false);
+  const [feedback, setFeedBack] = useState("");
+  const [rating, setRating] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -204,21 +219,15 @@ function MoreMenuButton(props) {
     setOpen(event.currentTarget);
   };
 
-  const handleBlock = () => {
-    axios
-      .put(
-        process.env.REACT_APP_BLOCKUSER,
-        { id: props.id },
-        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
-      )
-      .then((res) => {
-        
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  const handleCloseFeedBack = () => {
+    setOpenFeedBack(false);
   };
+
+  const handleSendFeedBack = () =>{
+    console.log(feedback,rating);
+  }
+
+ 
   const handleRequest = () => {
     console.log(props.id);
     axios
@@ -241,8 +250,6 @@ function MoreMenuButton(props) {
     setOpen(null);
   };
 
- 
-
   return (
     <>
       <IconButton size="large" onClick={handleOpen}>
@@ -258,7 +265,7 @@ function MoreMenuButton(props) {
         arrow="right-top"
         sx={{
           mt: -0.5,
-          width: 160,
+          width: 200,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
@@ -269,11 +276,52 @@ function MoreMenuButton(props) {
       
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={props.handleDetailsOpen} >
+        <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.reservedtour, { state: { tour: props.tour } })} >
           <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
           Details
         </MenuItem>
+
+        <MenuItem onClick={() => setOpenFeedBack(true)} >
+          <Iconify icon={'topcoat:feedback'} sx={{ ...ICON }} />
+          Give FeedBack
+        </MenuItem>
+
       </MenuPopover>
+
+      <div>
+        <Dialog open={openFeedBack} onClose={handleClose}>
+          <DialogTitle>FeedBack</DialogTitle>
+          <DialogContent>
+            <DialogContentText >
+             Please give feedBack for this tour
+            </DialogContentText>
+            <br />
+              
+            <TextareaAutosize
+            autoFocus
+              aria-label="minimum height"
+              minRows={6}
+              placeholder="Enter FeedBack"
+              style={{ width: 500}}
+              value={feedback}
+              onChange={(e) => setFeedBack(e.target.value)}
+            />
+          </DialogContent>
+          <DialogTitle>Rating</DialogTitle>
+          <DialogContent>
+            <DialogContentText >
+              Please give rating for this tour
+            </DialogContentText>
+          </DialogContent>
+          <div style={{margin:'auto'}}><Rating name="rating" value={rating} onChange={(e) => setRating(e.target.value)} /></div>
+          <DialogActions>
+            <Button onClick={handleCloseFeedBack}>Cancel</Button>
+            <Button onClick={handleSendFeedBack}>Send</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 }
+
+

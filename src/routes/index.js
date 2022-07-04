@@ -110,6 +110,18 @@ export default function Router() {
             { path: 'invoice', element: <EcommerceInvoice /> },
           ],
         },
+
+        {
+          path: 'details',
+          children: [
+            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
+            { path: 'customtour', element:  <TouristCustomTourDetails /> },
+            { path: 'reservedtour', element: <TouristReservedTourDetails /> },
+            { path: 'vcustomtour', element: <VendorCustomTourDetails /> },
+            { path: 'tourrequest', element: <VendorRequestTourDetails /> },
+          ],
+        },
+
         {
           path: 'user',
           children: [
@@ -230,3 +242,7 @@ const Details = Loadable(lazy(() => import('../pages/Details')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const VendorCustomTourDetails = Loadable(lazy(() => import('../pages/VendorCustomTourDetails')));
+const TouristCustomTourDetails = Loadable(lazy(() => import('../pages/TouristCustomTourDetails')));
+const TouristReservedTourDetails = Loadable(lazy(() => import('../pages/TouristReservedTourDetails')));
+const VendorRequestTourDetails = Loadable(lazy(() => import('../pages/VendorRequestTourDetails')));

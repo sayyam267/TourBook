@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 import { useSnackbar } from 'notistack';
+
 
 
 // @mui
@@ -44,7 +46,7 @@ import Slide from '@mui/material/Slide';
 import { fDateTime } from '../../utils/formatTime';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
-
+import { PATH_DASHBOARD, PATH_AUTH } from '../../routes/paths';
 // _mock
 // components
 import Label from '../../components/Label';
@@ -206,16 +208,15 @@ export default function BankingRecentTransitions() {
                 {myCustomTours ? ( myCustomTours?.map((row) => (
                   <TableRow key={row?.id}>
                     <TableCell>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      
                         {row.requirements.description}
-                      </Typography>
+                      
                     </TableCell>
                     {/* {format(new Date(row.startDate), 'dd MMM yyyy')} */}
                     <TableCell>
-                      {/* <Typography variant="subtitle2">{row?.date}</Typography> */}
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      
                         {fDateTime(row?.createdAt)} 
-                      </Typography>
+                      
                     </TableCell>
 
                     <TableCell>{row.requirements.maxBudget}RS</TableCell>
@@ -283,15 +284,12 @@ export default function BankingRecentTransitions() {
                   <Button onClick={()=> handleAcceptOffer(reqId,offer.vendorID,offer.amount)} autoFocus>
                     Agree
                   </Button>
-                
               </>
             ))}
-            
           </Grid>
           
         </Dialog>
       </div>
-
       <Dialog
         fullScreen
         open={detailOpen}
@@ -397,6 +395,8 @@ function AvatarIcon({ icon }) {
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -428,7 +428,7 @@ function MoreMenuButton(props) {
         
 
       
-        <MenuItem onClick={() => props.handleDetailsOpen(props.tour)} >
+        <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.customtour, { state: { tour: props.tour } })} >
           <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
           Details
         </MenuItem>
