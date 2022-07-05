@@ -1,6 +1,6 @@
 import sum from 'lodash/sum';
 // @mui
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
     Box,
@@ -18,6 +18,7 @@ import {
     Button,
 } from '@mui/material';
 // routes
+import { AdapterDateFns } from '@mui/lab/AdapterDateFns';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
 // utils
 import { fCurrency } from '../utils/formatNumber';
@@ -35,6 +36,7 @@ import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
 import Iconify from '../components/Iconify';
 import { InvoiceToolbar } from '../sections/@dashboard/e-commerce/invoice';
 
+
 // ----------------------------------------------------------------------
 
 const RowResultStyle = styled(TableRow)(({ theme }) => ({
@@ -49,17 +51,23 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 export default function EcommerceInvoice() {
     const { themeStretch } = useSettings();
 
-    const subTotal = sum(_invoice.items.map((item) => item.price * item.qty));
+    const location = useLocation();
+    const navigate = useNavigate();
+    const data = location?.state?.tour;
+    console.log(location?.state?.tour);
 
-    const total = subTotal - _invoice.discount + _invoice.taxes;
+    const handleChat = () => {
+        
+        navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: data?.touristID?._id } });
+    }
 
     return (
-        <Page title="Ecommerce: Invoice">
+        <Page title="Request : Details">
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <Button
                     size="small"
                     component={RouterLink}
-                    to={PATH_AUTH.login}
+                    to={PATH_DASHBOARD.user.list}
                     startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} width={20} height={20} />}
                     sx={{ mb: 3 }}
                 >
@@ -70,40 +78,41 @@ export default function EcommerceInvoice() {
                 <Card sx={{ pt: 5, px: 5 }}>
                     <Grid container>
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                            <Typography variant="h6">Details</Typography>
+                            <Typography variant="h6">{data?.touristID?.fname} Refund Request Details</Typography>
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Box sx={{ textAlign: { sm: 'right' } }}>
-                                <Button color="primary" size="medium" variant="contained" startIcon={<Iconify icon={'bi:chat-fill'} />}>
-                                    Chat
+                                <Button color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                                    Chat with {data?.touristID?.fname}
                                 </Button>
-                                {/* <Typography variant="h6">INV-{_invoice.id}</Typography> */}
+
                             </Box>
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-                                Invoice from
+                                Tourist Info
                             </Typography>
-                            <Typography variant="body2">{_invoice.invoiceFrom.name}</Typography>
-                            <Typography variant="body2">{_invoice.invoiceFrom.address}</Typography>
-                            <Typography variant="body2">Phone: {_invoice.invoiceFrom.phone}</Typography>
+                            <Typography variant="body2">{data?.touristID?.fname} {data?.touristID?.lname}</Typography>
+                            <Typography variant="body2">{data?.touristID?.email}</Typography>
+
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-                                Invoice to
+                                Dates
                             </Typography>
-                            <Typography variant="body2">{_invoice.invoiceTo.name}</Typography>
-                            <Typography variant="body2">{_invoice.invoiceTo.address}</Typography>
-                            <Typography variant="body2">Phone: {_invoice.invoiceTo.phone}</Typography>
+                            <Typography variant="body2">Start Date: {data?.createdAt}</Typography>
+                            <Typography variant="body2">End Date: {data?.date}</Typography>
+
                         </Grid>
                     </Grid>
 
                     <Scrollbar>
                         <TableContainer sx={{ minWidth: 960 }}>
                             <Table>
+                                
                                 <TableHead
                                     sx={{
                                         borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
@@ -118,87 +127,126 @@ export default function EcommerceInvoice() {
                                         <TableCell align="right">Total</TableCell>
                                     </TableRow>
                                 </TableHead>
-
                                 <TableBody>
-                                    {_invoice.items.map((row, index) => (
+
+                                    <TableRow
+
+                                        sx={{
+                                            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        }}
+                                    >
+                                        <TableCell>.</TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 560 }}>
+                                                <Typography variant="subtitle2">Seats Reserved </Typography>
+
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="left">{data?.seats}</TableCell>
+                                        <TableCell align="right">{data?.amount / data?.seats} RS</TableCell>
+                                        <TableCell align="right">{data?.amount} RS</TableCell>
+                                    </TableRow>
+
+                                </TableBody>
+
+
+                                <TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Tour Aprroval Status</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow
+                                        sx={{
+                                            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        }}
+                                    >
+                                        <TableCell>.</TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                {data?.isApproved ? <Typography variant="subtitle2">Your did not approve the request yet </Typography> : <Typography variant="subtitle2">You Approved the tour </Typography>}
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+
+
+                                </TableBody>
+
+
+                                {data?.isRefunded ? (<><TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Tour Canceled</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                    <TableBody>
                                         <TableRow
-                                            key={index}
                                             sx={{
                                                 borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
                                             }}
                                         >
-                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>.</TableCell>
                                             <TableCell align="left">
-                                                <Box sx={{ maxWidth: 560 }}>
-                                                    <Typography variant="subtitle2">{row.title}</Typography>
-                                                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                                                        {row.description}
-                                                    </Typography>
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">You Accepted Refund Request of {data?.touristID?.fname} {data?.touristID?.lname} </Typography>
                                                 </Box>
                                             </TableCell>
-                                            <TableCell align="left">{row.qty}</TableCell>
-                                            <TableCell align="right">{fCurrency(row.price)}</TableCell>
-                                            <TableCell align="right">{fCurrency(row.price * row.qty)}</TableCell>
                                         </TableRow>
-                                    ))}
 
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Box sx={{ mt: 2 }} />
-                                            <Typography>Subtotal</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Box sx={{ mt: 2 }} />
-                                            <Typography>{fCurrency(subTotal)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography>Discount</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Typography sx={{ color: 'error.main' }}>{fCurrency(-_invoice.discount)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography>Taxes</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Typography>{fCurrency(_invoice.taxes)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography variant="h6">Total</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={140}>
-                                            <Typography variant="h6">{fCurrency(total)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                </TableBody>
+
+
+                                    </TableBody></>) : (<></>)}
+
+
+                                {!data?.isRefunded && data?.requestRefund ? (<><TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Request Refund</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                    <TableBody>
+                                        <TableRow
+                                            sx={{
+                                                borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                            }}
+                                        >
+                                            <TableCell>.</TableCell>
+                                            <TableCell align="left">
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">You Requested for tour Refund</Typography>
+                                                </Box>
+                                            </TableCell>
+                                        </TableRow>
+
+
+
+                                    </TableBody></>) : (<></>)}
                             </Table>
                         </TableContainer>
                     </Scrollbar>
 
                     <Divider sx={{ mt: 5 }} />
 
-                    {/* <Grid container>
-                        <Grid item xs={12} md={9} sx={{ py: 3 }}>
-                            <Typography variant="subtitle2">NOTES</Typography>
-                            <Typography variant="body2">
-                                We appreciate your business. Should you need us to add VAT or extra notes let us know!
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
-                            <Typography variant="subtitle2">Have a Question?</Typography>
-                            <Typography variant="body2">support@minimals.cc</Typography>
-                        </Grid>
-                    </Grid> */}
+
                 </Card>
             </Container>
         </Page>

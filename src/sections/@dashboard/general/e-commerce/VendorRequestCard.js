@@ -1,6 +1,7 @@
 // @mui
 import { styled,useTheme } from '@mui/material/styles';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, Typography, Stack,CardHeader,TableHead,TableBody,Table,Box,IconButton,TableContainer,Divider,TableRow,TableCell,MenuItem} from '@mui/material';
 // utils
 import { useSnackbar } from 'notistack';
@@ -13,6 +14,9 @@ import MenuPopover from '../../../../components/MenuPopover';
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 
+import { PATH_DASHBOARD, PATH_AUTH } from '../../../../routes/paths';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +27,7 @@ const RowStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-export default function VendorRequestCard({ name, email, seats, tourid, amount, _id, date, fetchRequest}) {
+export default function VendorRequestCard({tour, name, email, seats, tourid, amount, _id, date, fetchRequest}) {
   // const RequestTitle = title;
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
@@ -91,7 +95,7 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
         </TableCell>
 
                     <TableCell align="right">
-                      <MoreMenuButton id={_id} fetch={fetchRequest} />
+                      <MoreMenuButton tour={tour} id={_id} fetch={fetchRequest} />
                     </TableCell>
                   </TableRow>
 
@@ -105,9 +109,11 @@ export default function VendorRequestCard({ name, email, seats, tourid, amount, 
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
+  
   };
 
   const handleAccept = () => {
@@ -170,20 +176,27 @@ function MoreMenuButton(props) {
         arrow="right-top"
         sx={{
           mt: -0.5,
-          width: 160,
+          width: 200,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
         <MenuItem onClick={handleAccept}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+          <Iconify icon={'charm:circle-tick'} sx={{ ...ICON }} />
           Accept Request
         </MenuItem>
+        
 
         <MenuItem onClick={handleReject}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+          <Iconify icon={'charm:circle-cross'} sx={{ ...ICON }} />
           Reject Request
         </MenuItem>
+        <MenuItem onClick={() => navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: props } })} >
+          <Iconify icon={'bi:chat-fill'} sx={{ ...ICON }} />
+          Chat with {props?.tour?.name}
+        </MenuItem>
       </MenuPopover>
+      
+   
     </>
   );
 }

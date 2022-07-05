@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 // @mui
 import {useState,useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar,Button } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -70,6 +71,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
   const isDesktop = useResponsive('up', 'lg');
 
   const [credits,setCredits] = useState(!localStorage.getItem('balance') ?0:localStorage.getItem('balance'));
+
+  // const {balance} = useSelector((state) => state.balance);
+  const balance = useSelector((state) => state.balance.balance);
   const navigate = useNavigate();
 
   const { user, logout } = useAuth();
@@ -122,6 +126,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
           <Label color={isCredit() ? "success":"error"} >
             Credits : {credits}.0 Rs
           </Label> 
+          {/* <Label color={isCredit() ? "success":"error"} >
+            Credits : {balance}.0 Rs
+          </Label> */}
           <NotificationsPopover />
           <Button color="error" size="small" variant="contained" onClick={handleLogout} endIcon={<Iconify icon={'websymbol:logout'} />}>
             Logout

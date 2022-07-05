@@ -86,7 +86,8 @@ export const PATH_DASHBOARD = {
     customtour: path(ROOTS_DASHBOARD, '/details/customtour'),
     reservedtour: path(ROOTS_DASHBOARD, '/details/reservedtour'),
     vcustomtour: path(ROOTS_DASHBOARD, '/details/vcustomtour'),
-    tourrequest: path(ROOTS_DASHBOARD, '/details/tourrequest')
+    tourrequest: path(ROOTS_DASHBOARD, '/details/tourrequest'),
+    vendor: path(ROOTS_DASHBOARD, '/details/vendor')
   }
 };
 

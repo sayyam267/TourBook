@@ -1,6 +1,6 @@
 import sum from 'lodash/sum';
 // @mui
-import { Link as RouterLink,useLocation } from 'react-router-dom';
+import { Link as RouterLink,useLocation,useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
     Box,
@@ -52,12 +52,14 @@ export default function EcommerceInvoice() {
     const { themeStretch } = useSettings();
 
     const location = useLocation();
+    const navigate = useNavigate();
     const data = location?.state?.tour;
     console.log(location?.state?.tour);
 
-    const subTotal = sum(_invoice.items.map((item) => item.price * item.qty));
-
-    const total = subTotal - _invoice.discount + _invoice.taxes;
+    const handleChat = () =>{
+        
+        navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: data?.tourID?.vendorID?._id } });
+    }
 
     return (
         <Page title="Ecommerce: Invoice">
@@ -81,8 +83,8 @@ export default function EcommerceInvoice() {
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Box sx={{ textAlign: { sm: 'right' } }}>
-                                <Button color="primary" size="medium" variant="contained" startIcon={<Iconify icon={'bi:chat-fill'} />}>
-                                    Chat
+                                <Button color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                                    Chat with {data?.tourID?.vendorID?.fname}
                                 </Button>
                                 
                             </Box>
@@ -92,8 +94,8 @@ export default function EcommerceInvoice() {
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
                                  Tour Hosted By
                             </Typography>
-                            <Typography variant="body2">Vendor Name</Typography>
-                            <Typography variant="body2">Phone Number</Typography>
+                            <Typography variant="body2">{data?.tourID?.vendorID?.fname} {data?.tourID?.vendorID?.lname}</Typography>
+                            <Typography variant="body2">{data?.tourID?.vendorID?.email}</Typography>
                             
                         </Grid>
 

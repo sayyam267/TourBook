@@ -19,7 +19,9 @@ import {
 } from '@mui/material';
 // routes
 import { AdapterDateFns } from '@mui/lab/AdapterDateFns';
+import { useSnackbar } from 'notistack';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
+
 // utils
 import { fCurrency } from '../utils/formatNumber';
 // _mock_
@@ -35,6 +37,7 @@ import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
 // sections
 import Iconify from '../components/Iconify';
 import { InvoiceToolbar } from '../sections/@dashboard/e-commerce/invoice';
+import axios from '../utils/axios';
 
 
 // ----------------------------------------------------------------------
@@ -48,13 +51,14 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceInvoice() {
+export default function ToursitCustomTourDetails() {
     const { themeStretch } = useSettings();
 
     const location = useLocation();
     const navigate = useNavigate();
     const data = location?.state?.tour;
     console.log(location?.state?.tour);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleChat = () => {
         
@@ -65,6 +69,47 @@ export default function EcommerceInvoice() {
         console.log(ID);
         navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: ID } });
     }
+
+    const handleAcceptOffer = (reqId, vendorId) => {
+
+        console.log(reqId, vendorId,);
+
+        axios
+            .post(
+                process.env.REACT_APP_CUSTOMTOUR_ACCEPTOFFER,
+                { requestID: reqId, vendorID: vendorId },
+                { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+            )
+            .then((res) => {
+                console.log(res.data);
+                enqueueSnackbar('Offer Accepted!');
+                navigate(PATH_DASHBOARD.user.account);
+                
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+    const handleRejectOffer = (reqId, vendorId) => {
+
+        console.log(reqId, vendorId);
+
+        axios
+            .post(
+                process.env.REACT_APP_CUSTOMTOUR_REJECTOFFER,
+                { reqId, vendorId },
+                { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+            )
+            .then((res) => {
+                console.log(res.data);
+                enqueueSnackbar('Offer Reject!');
+                navigate(PATH_DASHBOARD.user.account);
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+    
 
 
     return (
@@ -293,6 +338,9 @@ export default function EcommerceInvoice() {
                                         <TableCell align="left">.</TableCell>
                                         <TableCell align="left">Offer Description</TableCell>
                                         <TableCell align="left">Offer Amount</TableCell>
+                                        <TableCell align="left">Accept Offer</TableCell>
+                                        <TableCell align="left">Reject Offer</TableCell>
+                                        <TableCell align="left">Chat with Vendor</TableCell>
 
                                     </TableRow>
                                 </TableHead>
@@ -318,8 +366,22 @@ export default function EcommerceInvoice() {
                                         </TableCell>
                                         <TableCell align="left">
                                             <Box sx={{ maxWidth: 800 }}>
+                                                <Button color="warning" size="medium" variant="contained" onClick={() => handleAcceptOffer(data?._id, offer?.vendorID)} startIcon={<Iconify icon={'charm:circle-tick'} />}>
+                                                    Accept
+                                                </Button>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                <Button color="error" size="medium" variant="contained" onClick={() => handleRejectOffer(data?._id, offer?.vendorID)} startIcon={<Iconify icon={'charm:circle-cross'} />}>
+                                                    Reject
+                                                </Button>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Box sx={{ maxWidth: 800 }}>
                                                 <Button color="primary" size="medium" variant="contained" onClick={() => handleOfferChat(offer?.vendorID)} startIcon={<Iconify icon={'bi:chat-fill'} />}>
-                                                    Chat with Vendor
+                                                    Chat 
                                                 </Button>
                                             </Box>
                                         </TableCell>

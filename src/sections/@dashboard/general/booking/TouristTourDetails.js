@@ -221,10 +221,32 @@ function MoreMenuButton(props) {
 
   const handleCloseFeedBack = () => {
     setOpenFeedBack(false);
+    
   };
 
   const handleSendFeedBack = () =>{
     console.log(feedback,rating);
+    const r = rating
+    axios
+      .post(
+        process.env.REACT_APP_ADD_RATING,
+        {
+          tourID: props?.tour?.tourID?.vendorID?._id,
+          message: feedback,
+          rating: r
+        },
+        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+      )
+      .then((res) => {
+        console.log(res.data);
+        enqueueSnackbar('Thanks for giving feedback!');
+        handleCloseFeedBack();
+
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    
   }
 
  
@@ -269,10 +291,10 @@ function MoreMenuButton(props) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={handleRequest}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+        {props?.tour?.isApproved ?<MenuItem onClick={handleRequest}>
+          <Iconify icon={'gridicons:refund'} sx={{ ...ICON }} />
           Request Refund
-        </MenuItem>
+        </MenuItem>:<></>}
       
         <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -281,10 +303,10 @@ function MoreMenuButton(props) {
           Details
         </MenuItem>
 
-        <MenuItem onClick={() => setOpenFeedBack(true)} >
+       {!props.tour?.tourID?.isCompleted ?<MenuItem onClick={() => setOpenFeedBack(true)} >
           <Iconify icon={'topcoat:feedback'} sx={{ ...ICON }} />
           Give FeedBack
-        </MenuItem>
+        </MenuItem>:<></>}
 
       </MenuPopover>
 

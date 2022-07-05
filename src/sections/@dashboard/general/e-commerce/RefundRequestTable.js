@@ -4,6 +4,8 @@ import {useState} from 'react';
 import { Button, Card, Typography, Stack,CardHeader,TableHead,TableBody,Table,Box,IconButton,TableContainer,Divider,TableRow,TableCell,MenuItem} from '@mui/material';
 // utils
 
+
+import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { sentenceCase } from 'change-case';
 import { fCurrency } from '../../../../utils/formatNumber';
@@ -13,7 +15,7 @@ import MenuPopover from '../../../../components/MenuPopover';
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 
-
+import { PATH_DASHBOARD, PATH_AUTH } from '../../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const RowStyle = styled('div')({
@@ -23,7 +25,7 @@ const RowStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-export default function RefundRequestTable({ name, email, seats, amount, id,  fetchRequest}) {
+export default function RefundRequestTable({ data, name, email, seats, amount, id,  fetchRequest}) {
   // const RequestTitle = title;
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
@@ -87,7 +89,7 @@ export default function RefundRequestTable({ name, email, seats, amount, id,  fe
         
 
                     <TableCell align="right">
-                      <MoreMenuButton id={id} />
+                      <MoreMenuButton tour={data} id={id} />
                     </TableCell>
                   </TableRow>
 
@@ -101,6 +103,8 @@ export default function RefundRequestTable({ name, email, seats, amount, id,  fe
 function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
+
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -166,31 +170,24 @@ function MoreMenuButton(props) {
         arrow="right-top"
         sx={{
           mt: -0.5,
-          width: 160,
+          width: 200,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
         <MenuItem onClick={handleRefund}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+          <Iconify icon={'charm:circle-tick'} sx={{ ...ICON }} />
           Accept Refund
         </MenuItem>
 
         <MenuItem onClick={handleNotRefund}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
+          <Iconify icon={'charm:circle-cross'} sx={{ ...ICON }} />
           Reject Refund
         </MenuItem>
-
-        {/* <MenuItem>
-          <Iconify icon={'eva:printer-fill'} sx={{ ...ICON }} />
-          Print
+        <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.tourrequest, { state: { tour: props.tour } })} >
+          <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
+          Details
         </MenuItem>
 
-        <MenuItem>
-          <Iconify icon={'eva:share-fill'} sx={{ ...ICON }} />
-          Share
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: 'dashed' }} /> */}
       </MenuPopover>
     </>
   );

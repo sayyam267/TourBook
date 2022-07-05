@@ -56,6 +56,8 @@ export default function ProductDetailsSummary({tour,booked}) {
 
   const navigate = useNavigate();
 
+  console.log("tourData",tour.vendorID);
+
 
   const [quantity,setquantity] = useState(0);
 
@@ -130,6 +132,18 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Box>
         </Typography>
         <Divider sx={{ borderStyle: 'dashed' }} />
+        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+            Hosted By
+          </Typography>
+
+          <div>
+            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+              
+              <Button onClick={() => navigate(PATH_DASHBOARD.details.vendor, { state: { id: tour?.vendorID  }})}>see Vendor Profile</Button>
+            </Typography>
+          </div>
+        </Stack>
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

@@ -72,7 +72,7 @@ export default function ProfileFriends() {
                 </TableRow>
               </TableHead>
               <TableBody>
-               {order ? <>{order?.map(order => { return <VendorRequestCard name={order.name} email={order.email} amount={order.amount} seats={order.seats} _id={order._id} date={order.date} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
+               {order ? <>{order?.map(order => { return <VendorRequestCard tour={order} name={order.name} email={order.email} amount={order.amount} seats={order.seats} _id={order._id} date={order.date} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
                 
               </TableBody>
               </Table>
@@ -99,7 +99,7 @@ export default function ProfileFriends() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {refund ? <>{refund?.map(refund => { return <RefundRequestTable name={refund.touristID.fname} amount={refund?.amount} email={refund?.touristID.email} seats={refund.seats} date={3} id={refund._id} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
+                {refund ? <>{refund?.map(refund => { return <RefundRequestTable data={refund} name={refund.touristID.fname} amount={refund?.amount} email={refund?.touristID.email} seats={refund.seats} date={3} id={refund._id} fetchRequest={fetchRequest} /> })}</> : <SkeletonProductItem />}
               </TableBody>
             </Table>
           </TableContainer>

@@ -1,6 +1,7 @@
 import sum from 'lodash/sum';
 // @mui
-import { Link as RouterLink } from 'react-router-dom';
+import {useState} from 'react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import {
     Box,
@@ -15,9 +16,16 @@ import {
     TableCell,
     Typography,
     TableContainer,
-    Button,
+    Button,TextField,
 } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 // routes
+import { AdapterDateFns } from '@mui/lab/AdapterDateFns';
+import { useSnackbar } from 'notistack';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
 // utils
 import { fCurrency } from '../utils/formatNumber';
@@ -28,12 +36,15 @@ import useSettings from '../hooks/useSettings';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
+
 import Image from '../components/Image';
 import Scrollbar from '../components/Scrollbar';
 import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
+
 // sections
 import Iconify from '../components/Iconify';
 import { InvoiceToolbar } from '../sections/@dashboard/e-commerce/invoice';
+import axios from '../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -46,20 +57,63 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceInvoice() {
+export default function VendorCustomTourDetails() {
     const { themeStretch } = useSettings();
 
-    const subTotal = sum(_invoice.items.map((item) => item.price * item.qty));
+    const location = useLocation();
+    const navigate = useNavigate();
+    const data = location?.state?.tour;
+    console.log(location?.state?.tour);
 
-    const total = subTotal - _invoice.discount + _invoice.taxes;
+    const [open, setOpen] = useState(false);
+    const [chk, setChk] = useState(false);
+    const [offerAmount, setOfferAmount] = useState();
+    const [description, setDescription] = useState();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const handleChat = () => {
+        console.log(data?.by?._id);
+        navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: data?.by?._id } });
+    }
+
+    const handleOfferChat = (ID) => {
+        console.log(ID);
+        navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: ID } });
+    }
+    const handleDialogClose = () => {
+        setOpen(false);
+    };
+
+    const handleSendOffer = () => {
+        console.log(offerAmount, description, data?._id);
+        axios
+            .post(
+                process.env.REACT_APP_CUSTOMTOUR_GIVEOFFER,
+                {
+                    requestID:data?._id,
+                    amount: offerAmount,
+                    description
+                },
+                // { requestID, amount: offerAmount, description },
+                { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+            )
+            .then((response) => {
+                handleDialogClose();
+                setChk(true);
+                enqueueSnackbar('Offer sent!');
+                console.log(response);
+                // setCustomTour(response.data.data);
+            });
+    };
+
 
     return (
-        <Page title="Ecommerce: Invoice">
+        <Page title="Custom Tour ">
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <Button
                     size="small"
                     component={RouterLink}
-                    to={PATH_AUTH.login}
+                    to={PATH_DASHBOARD.kanban}
                     startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} width={20} height={20} />}
                     sx={{ mb: 3 }}
                 >
@@ -70,34 +124,38 @@ export default function EcommerceInvoice() {
                 <Card sx={{ pt: 5, px: 5 }}>
                     <Grid container>
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                            <Typography variant="h6">Details</Typography>
+                            <Typography variant="h6">{data?.by?.fname} Custom tour Details</Typography>
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-                            <Box sx={{ textAlign: { sm: 'right' } }}>
-                                <Button color="primary" size="medium" variant="contained" startIcon={<Iconify icon={'bi:chat-fill'} />}>
-                                    Chat
+                            <Box sx={{ textAlign: { sm: 'right' }}}>
+                                {!data?.fulfilledBy ? <Button color="warning" size="medium" disabled={chk} variant="contained" onClick={() => setOpen(true)} startIcon={<Iconify icon={'mdi:offer'} />}>
+                                    {!chk ?'Send Offer':'Offer Sent'} to {data?.by?.fname}
+                                </Button>:<></>}
+                                <Button sx={{ml:2}} color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                                    Chat with {data?.by?.fname}
                                 </Button>
-                                {/* <Typography variant="h6">INV-{_invoice.id}</Typography> */}
+                                
+
                             </Box>
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-                                Invoice from
+                                Tour Request From
                             </Typography>
-                            <Typography variant="body2">{_invoice.invoiceFrom.name}</Typography>
-                            <Typography variant="body2">{_invoice.invoiceFrom.address}</Typography>
-                            <Typography variant="body2">Phone: {_invoice.invoiceFrom.phone}</Typography>
+                            <Typography variant="body2">{data?.by.fname} {data?.by.fname}</Typography>
+                            <Typography variant="body2">{data?.by.email}</Typography>
+
                         </Grid>
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-                                Invoice to
+                                Expected Dates
                             </Typography>
-                            <Typography variant="body2">{_invoice.invoiceTo.name}</Typography>
-                            <Typography variant="body2">{_invoice.invoiceTo.address}</Typography>
-                            <Typography variant="body2">Phone: {_invoice.invoiceTo.phone}</Typography>
+                            <Typography variant="body2">Start Date: {data?.createdAt}</Typography>
+                            <Typography variant="body2">End Date: {data?.requirements?.endDate}</Typography>
+
                         </Grid>
                     </Grid>
 
@@ -113,81 +171,251 @@ export default function EcommerceInvoice() {
                                     <TableRow>
                                         <TableCell width={40}>#</TableCell>
                                         <TableCell align="left">Description</TableCell>
-                                        <TableCell align="left">Qty</TableCell>
-                                        <TableCell align="right">Unit price</TableCell>
-                                        <TableCell align="right">Total</TableCell>
+
                                     </TableRow>
                                 </TableHead>
-
                                 <TableBody>
-                                    {_invoice.items.map((row, index) => (
+                                    <TableRow
+                                        sx={{
+                                            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        }}
+                                    >
+                                        <TableCell>.</TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                <Typography variant="subtitle2">{data?.requirements?.description} </Typography>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+
+
+                                </TableBody>
+
+                                <TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Max Budget</TableCell>
+                                        <TableCell align="left">Seats Qty</TableCell>
+                                        <TableCell align="left">Request for Guide</TableCell>
+                                        <TableCell align="left">Request for Hotel</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+
+                                    <TableRow
+
+                                        sx={{
+                                            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        }}
+                                    >
+                                        <TableCell>.</TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 560 }}>
+                                                <Typography variant="subtitle2">{data?.requirements?.maxBudget} RS</Typography>
+
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="left">{data?.requirements?.seats}</TableCell>
+                                        <TableCell align="left">{data?.requirements?.isGuide ? <Typography color="primary" variant="subtitle1">yes</Typography> : <Typography color="error" variant="subtitle1">no</Typography>}</TableCell>
+                                        <TableCell align="center">{data?.requirements?.isHotel ? <Typography color="primary" variant="subtitle1">yes</Typography> : <Typography color="error" variant="subtitle1">no</Typography>}</TableCell>
+
+                                    </TableRow>
+
+                                </TableBody>
+
+                                <TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Start Location</TableCell>
+                                        <TableCell align="left">End Location Location</TableCell>
+                                        <TableCell align="left">Stops or Places to visit</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow
+                                        sx={{
+                                            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        }}
+                                    >
+                                        <TableCell>.</TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                <Typography variant="subtitle2">{data?.requirements?.source?.name} </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                <Typography variant="subtitle2">{data?.requirements?.destination?.name} </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            <Box sx={{ maxWidth: 800 }}>
+                                                {data?.requirements?.places?.map((place) => {
+                                                    return <span style={{ marginLeft: 3 }}><Label>{place}</Label></span>
+                                                })}
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+
+
+                                </TableBody>
+
+                                {data?.fulfilledBy ? (<><TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell align="left">Tour Accepted</TableCell>
+                                        <TableCell align="left">Name</TableCell>
+                                        <TableCell align="left">Email</TableCell>
+                                        <TableCell align="left">Agreed Amount</TableCell>
+
+
+                                    </TableRow>
+                                </TableHead>
+                                    <TableBody>
                                         <TableRow
-                                            key={index}
                                             sx={{
                                                 borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
                                             }}
                                         >
-                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>.</TableCell>
                                             <TableCell align="left">
-                                                <Box sx={{ maxWidth: 560 }}>
-                                                    <Typography variant="subtitle2">{row.title}</Typography>
-                                                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                                                        {row.description}
-                                                    </Typography>
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">Your tour has Accepted</Typography>
                                                 </Box>
                                             </TableCell>
-                                            <TableCell align="left">{row.qty}</TableCell>
-                                            <TableCell align="right">{fCurrency(row.price)}</TableCell>
-                                            <TableCell align="right">{fCurrency(row.price * row.qty)}</TableCell>
+                                            <TableCell align="left">
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">{data?.fulfilledBy?.fname} {data?.fulfilledBy?.lname}</Typography>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">{data?.fulfilledBy?.email}</Typography>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Box sx={{ maxWidth: 800 }}>
+                                                    <Typography variant="subtitle2">{data?.agreedAmount} RS</Typography>
+                                                </Box>
+                                            </TableCell>
                                         </TableRow>
-                                    ))}
 
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Box sx={{ mt: 2 }} />
-                                            <Typography>Subtotal</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Box sx={{ mt: 2 }} />
-                                            <Typography>{fCurrency(subTotal)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography>Discount</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Typography sx={{ color: 'error.main' }}>{fCurrency(-_invoice.discount)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography>Taxes</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={120}>
-                                            <Typography>{fCurrency(_invoice.taxes)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                    <RowResultStyle>
-                                        <TableCell colSpan={3} />
-                                        <TableCell align="right">
-                                            <Typography variant="h6">Total</Typography>
-                                        </TableCell>
-                                        <TableCell align="right" width={140}>
-                                            <Typography variant="h6">{fCurrency(total)}</Typography>
-                                        </TableCell>
-                                    </RowResultStyle>
-                                </TableBody>
+
+
+                                    </TableBody></>) : (<></>)}
+{/* 
+                                {data.offers.length >= 1 ? <><TableHead
+                                    sx={{
+                                        borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                        '& th': { backgroundColor: 'transparent' },
+                                    }}
+                                >
+                                    <TableRow>
+                                        <TableCell width={40}>#</TableCell>
+                                        <TableCell width={300} align="left">Offers</TableCell>
+
+
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell align="left">.</TableCell>
+                                        <TableCell align="left">Offer Description</TableCell>
+                                        <TableCell align="left">Offer Amount</TableCell>
+
+                                    </TableRow>
+                                </TableHead>
+                                    <TableBody>
+                                        {data?.offers?.map((offer) => (
+                                            <><TableRow
+                                                sx={{
+                                                    borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                }}
+                                            >
+                                                <TableCell align="left">
+                                                    .
+                                                </TableCell>
+                                                <TableCell align="left">
+                                                    <Box sx={{ maxWidth: 800 }}>
+                                                        <Typography variant="subtitle2">{offer?.description} </Typography>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell align="left">
+                                                    <Box sx={{ maxWidth: 800 }}>
+                                                        <Typography variant="subtitle2">{offer?.amount}</Typography>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell align="left">
+                                                    <Box sx={{ maxWidth: 800 }}>
+                                                        <Button color="primary" size="medium" variant="contained" onClick={() => handleOfferChat(offer?.vendorID)} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                                                            Chat with Vendor
+                                                        </Button>
+                                                    </Box>
+                                                </TableCell>
+                                            </TableRow></>
+                                        ))}
+
+                                    </TableBody></> : <></>} */}
+
+
+
+
+
+                                <div>
+                                    <Dialog open={open} onClose={handleDialogClose}>
+                                        <DialogTitle>Send Custom Tour Offer to </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>Please enter your offer amount with detail description.</DialogContentText>
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                id="amount"
+                                                label="Offer Amount"
+                                                type="number"
+                                                fullWidth
+                                                variant="standard"
+                                                value={offerAmount}
+                                                onChange={(e) => setOfferAmount(e.target.value)}
+                                            />
+                                            <TextField
+                                                margin="dense"
+                                                id="Description"
+                                                label="description"
+                                                type="text"
+                                                fullWidth
+                                                variant="standard"
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
+                                            />
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleDialogClose}>Cancel</Button>
+                                            <Button onClick={handleSendOffer}>Send Offer</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </div>
                             </Table>
                         </TableContainer>
                     </Scrollbar>
 
                     <Divider sx={{ mt: 5 }} />
 
-                   
+
                 </Card>
             </Container>
         </Page>

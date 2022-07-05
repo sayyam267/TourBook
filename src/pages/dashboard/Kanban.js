@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useNavigate} from 'react-router-dom';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 // @mui
@@ -38,6 +39,7 @@ import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import MenuPopover from '../../components/MenuPopover';
 import axios from '../../utils/axios';
+import { PATH_DASHBOARD, PATH_AUTH } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +52,7 @@ export default function BankingRecentTransitions() {
   const [open, setOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState();
   const [description, setDescription] = useState();
+  const [approvedTour,setApprovedTour] = useState();
   const [requestID, setreqID] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const handleDialogOpen = (id) => {
@@ -89,6 +92,12 @@ export default function BankingRecentTransitions() {
       .then((response) => {
         console.log(response.data.data);
         setCustomTour(response.data.data);
+      });
+    axios
+      .get(process.env.REACT_APP_GETVENDORDASHBOARD, { headers: { 'x-auth-token': localStorage.getItem('accessToken') } })
+      .then((response) => {
+        console.log(response.data.data?.myApprovedCustomTours);
+        setApprovedTour(response.data.data?.myApprovedCustomTours);
       });
   }, []);
   return (
@@ -148,7 +157,7 @@ export default function BankingRecentTransitions() {
                       
 
                       <TableCell align="right">
-                        <MoreMenuButton handleDialog={handleDialogOpen} id={ct._id} />
+                        <MoreMenuButton handleDialog={handleDialogOpen} tour={ct} id={ct._id} />
                       </TableCell>
                     </TableRow>
                   ))
@@ -167,6 +176,92 @@ export default function BankingRecentTransitions() {
           </Button>
         </Box>
       </Card>
+
+
+      <Card>
+        <CardHeader title="Approved Custom Tour" sx={{ mb: 3 }} />
+        <Scrollbar>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Tourist Name</TableCell>
+                  <TableCell>Phone no</TableCell>
+                  <TableCell>Agreed Budget</TableCell>
+                  <TableCell>seats</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Starting from</TableCell>
+                  <TableCell>Destination</TableCell>
+                  <TableCell>Places</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {approvedTour ? (
+                  approvedTour.map((ct) => (
+                    <TableRow key={ct?.id}>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box sx={{ position: 'relative' }}>{renderAvatar(ct?.category, ct?.avatar)}</Box>
+                          <Box sx={{ ml: 2 }}>
+                            <Typography variant="subtitle2">{ct?.by?.fname}</Typography>
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {' '}
+                              {ct?.by?.email}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="subtitle2">{ct?.by?.phoneNumber}</Typography>
+                      </TableCell>
+
+                      <TableCell>{ct?.agreedAmount}RS</TableCell>
+                      <TableCell>{ct?.requirements?.seats}</TableCell>
+
+                      <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                        {ct?.requirements?.description}
+                      </TableCell>
+
+                      <TableCell>{ct?.requirements?.startDate}</TableCell>
+                      <TableCell>{ct?.requirements?.endDate}</TableCell>
+                      <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                        {ct?.requirements.places}
+                      </TableCell>
+                     
+                      <TableCell align="right">
+                        <MoreMenuButton1  tour={ct} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <></>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Scrollbar>
+        <Divider />
+
+        <Box sx={{ p: 2, textAlign: 'right' }}>
+          <Button size="small" color="inherit" endIcon={<Iconify icon={'eva:arrow-ios-forward-fill'} />}>
+            View All
+          </Button>
+        </Box>
+      </Card>
+
+
+
+
+
+
+
+
+
+
+
+
       <div>
         <Dialog open={open} onClose={handleDialogClose}>
           <DialogTitle>Send Custom Tour Offer to </DialogTitle>
@@ -241,8 +336,9 @@ function renderAvatar(category, avatar) {
 
 // ----------------------------------------------------------------------
 
-function MoreMenuButton({ handleDialog, id }) {
+function MoreMenuButton(props) {
   const [open, setOpen] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -253,8 +349,8 @@ function MoreMenuButton({ handleDialog, id }) {
   };
 
   const openDialog = () => {
-    console.log('hello', id);
-    handleDialog(id);
+    console.log('hello', props.id);
+    props.handleDialog(props.id);
   };
   const ICON = {
     mr: 2,
@@ -287,7 +383,10 @@ function MoreMenuButton({ handleDialog, id }) {
           <Iconify icon={'mdi:send'} rotate={3} sx={{ ...ICON }} />
           Send Offer
         </MenuItem>
-
+        <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.vcustomtour, { state: { tour: props.tour } })}>
+          <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
+          Details
+        </MenuItem>
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem sx={{ color: 'error.main' }} onClick={handleDelete}>
@@ -298,3 +397,55 @@ function MoreMenuButton({ handleDialog, id }) {
     </>
   );
 }
+
+function MoreMenuButton1(props) {
+  const [open, setOpen] = useState(null);
+  const navigate = useNavigate();
+
+  const handleOpen = (event) => {
+    setOpen(event.currentTarget);
+    console.log(props.tour)
+  };
+
+  const handleClose = () => {
+    setOpen(null);
+  };
+
+  
+  const ICON = {
+    mr: 2,
+    width: 20,
+    height: 20,
+  };
+  
+  return (
+    <>
+      <IconButton size="large" onClick={handleOpen}>
+        <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
+      </IconButton>
+
+      <MenuPopover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        arrow="right-top"
+        sx={{
+          mt: -0.5,
+          width: 160,
+          '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
+        }}
+      >
+        <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.vcustomtour, { state: { tour: props.tour } })}>
+          <Iconify icon={'clarity:details-line'}  sx={{ ...ICON }} />
+          Details
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+      </MenuPopover>
+    </>
+  );
+}
+

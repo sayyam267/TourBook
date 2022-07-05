@@ -2,9 +2,13 @@ import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, Navigate } from 'react-router-dom';
 // utils
+
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import { PATH_AUTH } from '../routes/paths';
+import {SETBALANCE} from '../redux/slices/balance';
+import { useDispatch as Dispatch } from '../redux/store';
+
 
 
 // ----------------------------------------------------------------------
@@ -65,6 +69,12 @@ const AuthContext = createContext({
 AuthProvider.propTypes = {
   children: PropTypes.node,
 };
+
+const SaveBalance = (bal) => {
+  const dispatch = Dispatch();
+  dispatch(SETBALANCE(bal));
+
+}
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -128,6 +138,7 @@ function AuthProvider({ children }) {
       console.log(response.data, "login success..", response.data.data.token);
       setSession(response.data.data.token);
       window.localStorage.setItem('accessToken', response.data.data.token);
+    // SaveBalance(response.data.data.balance);
       dispatch({
         type: 'LOGIN',
         payload: {

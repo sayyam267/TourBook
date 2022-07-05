@@ -168,36 +168,8 @@ function MoreMenuButton(props) {
     setOpen(event.currentTarget);
   };
 
-  const handleBlock = () => {
-    axios
-      .put(
-        process.env.REACT_APP_BLOCKUSER,
-        { id: props.id },
-        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  const handleRequest = () => {
-    console.log(props.id);
-    axios
-      .put(
-        process.env.REACT_APP_ORDERREFUND,
-        { orderID: props.id },
-        { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
-      )
-      .then((res) => {
-        setOpen(false);
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+ 
+
 
   const handleClose = () => {
     setOpen(null);
@@ -222,11 +194,6 @@ function MoreMenuButton(props) {
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={handleRequest}>
-          <Iconify icon={'eva:unlock-outline'} sx={{ ...ICON }} />
-          Request Refund
-        </MenuItem>
-
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={props.handleDetailsOpen}>
