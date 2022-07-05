@@ -4,6 +4,7 @@ import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
 // form
 import { Controller, useForm } from 'react-hook-form';
+import Avatar from "@material-ui/core/Avatar";
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } from '@mui/material';
@@ -11,6 +12,7 @@ import { Box, Link, Stack, Button, Rating, Divider, IconButton, Typography } fro
 import { PATH_DASHBOARD,PATH_PAGE, PATH_AUTH} from '../../../../routes/paths';
 // utils
 import { fShortenNumber, fCurrency } from '../../../../utils/formatNumber';
+
 // components
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -131,19 +133,31 @@ export default function ProductDetailsSummary({tour,booked}) {
            {/* {tour?.description} abc */}
           </Box>
         </Typography>
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed',mb:3 }} />
         {localStorage.getItem('accessToken') ?<><Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+          <Typography variant="subtitle1" sx={{ mt: 1.5 }}>
             Hosted By
           </Typography>
 
           <div>
-            <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-              
-              <Button onClick={() => navigate(PATH_DASHBOARD.details.vendor, { state: { id: tour?.vendorID  }})}>see Vendor Profile</Button>
-            </Typography>
+              <Button
+                variant="outlined"
+                color="warning"
+                size="small"
+                startIcon={
+                  <Avatar
+                    src={
+                      tour?.vendorID?.profilePicture
+                    }
+                  />
+                }
+              onClick={() => { localStorage.setItem("VendorID", tour?.vendorID?._id); navigate(PATH_DASHBOARD.details.vendor) }}>see {tour?.vendorID?.fname} Profile
+              </Button>
+            
           </div>
         </Stack></>:<></>}
+
+        <Divider sx={{ borderStyle: 'dashed', mb: 3 }} />
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
@@ -157,6 +171,8 @@ export default function ProductDetailsSummary({tour,booked}) {
           </div>
         </Stack>
 
+      
+
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Destination Location
@@ -168,7 +184,7 @@ export default function ProductDetailsSummary({tour,booked}) {
             </Typography>
           </div>
         </Stack>
-
+        <Divider sx={{ borderStyle: 'dashed', mb: 3 }} />
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Start date
@@ -192,7 +208,7 @@ export default function ProductDetailsSummary({tour,booked}) {
             </Typography> :<></>}
           </div>
         </Stack>
-
+        <Divider sx={{ borderStyle: 'dashed', mb: 3 }} />
         
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>

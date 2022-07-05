@@ -216,7 +216,7 @@ function MoreMenuButton(props) {
         arrow="right-top"
         sx={{
           mt: -0.5,
-          width: 160,
+          width: 200,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >

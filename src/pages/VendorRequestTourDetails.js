@@ -67,7 +67,7 @@ export default function EcommerceInvoice() {
                 <Button
                     size="small"
                     component={RouterLink}
-                    to={PATH_DASHBOARD.blog.post}
+                    to={PATH_DASHBOARD.blog.postById}
                     startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} width={20} height={20} />}
                     sx={{ mb: 3 }}
                 >

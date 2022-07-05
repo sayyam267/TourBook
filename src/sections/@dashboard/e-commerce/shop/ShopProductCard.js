@@ -36,7 +36,7 @@ export default function ShopProductCard({ tour }) {
   return (
     <Card sx={{ borderRadius: 2, bgcolor: 'background.neutral'}}>
       <Box sx={{ position: 'relative', px: 1, pt: 1  }}>
-        <Image alt={"img"} src={tour.tourpics[0]} ratio="1/1" />
+        <Image alt={"img"} src={tour.tourpics[1]} ratio="1/1" />
       </Box>
 
       <Stack spacing={2.5} sx={{ p: 3, pb: 2.5 }}>

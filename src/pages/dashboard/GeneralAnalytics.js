@@ -100,10 +100,10 @@ export default function GeneralAnalytics() {
     <Page title="Admin: Dashboard">
       <Container maxWidth={themeStretch ? false : 'x1'}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12}>
             <EcommerceWelcome />
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+          {/* <Grid item xs={12} sm={12} md={6}>
             <Card>
               <CardHeader title="Add An Admin " sx={{ mb: 1 }} />
               <Typography sx={{ color: 'text.secondary', ml: 3 }}>Enter Email to Add Admin</Typography>
@@ -120,7 +120,7 @@ export default function GeneralAnalytics() {
                 </Stack>
               </FormProvider>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         {/* <Typography variant="h4" sx={{ mb: 2, mt: 5 }} md={{ mb: 2, mt: 5 }}>

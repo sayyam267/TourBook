@@ -125,7 +125,6 @@ export default function ChatWindow() {
             <ChatMessageInput conversationId={conversationID} onSend={handleSendMessage} />
           </Stack>
 
-          {/* {mode === 'DETAIL' && <ChatRoom conversation={conversation} participants={displayParticipants} />} */}
         </Box>
       ) : (
         <></>

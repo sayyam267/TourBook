@@ -7,6 +7,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 
@@ -91,7 +92,7 @@ export default function Router() {
         {
           path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'analytics', element: <GeneralAnalytics /> },
+        { path: 'analytics', element: <RoleBasedGuard accessibleRoles={['admin']} > <GeneralAnalytics /></RoleBasedGuard> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
         { path: 'vendoranalytics', element: <VendorAnalytics /> },

@@ -195,29 +195,26 @@ export default function EcommerceCheckout() {
               </Grid>
             </Card>
 
-            <Stack direction="row" spacing={2}>
-            <Grid container>
-                <Grid item md={6}>
-            <Card item sx={{ p: 3, m: 3 }}>
+           
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                <Card item sx={{ p: 3, my: 3 }}>
               <LabelStyle>Places of Attraction</LabelStyle>
-                    <Stack spacing={3}>
-                    {places ? <BookTourMap Width="25vw" Height="50vh" location={places} /> : <></>}
+                  <Stack direction="row" spacing={3}>
+                    {places ? <BookTourMap Width="40vw" Height="50vh" location={places} /> : <></>}
               </Stack>
             </Card>
                 </Grid>
-              {/* </Grid> */}
-              {/* </Grid>   */}
-              {/* <Grid md={4} sm={8}> */}
-              <Grid item md={6}>
+              
+              <Grid item xs={12} md={6}>
             <Card item sx={{ p: 3, my: 3 }}>
               <LabelStyle>Meet Location</LabelStyle>
-              <Stack spacing={3}>
-                   {meetLocation ? <BookTourMap Width="23vw" Height="50vh" location={meetLocation}  />:<></>}
+                  <Stack direction="row" spacing={3}>
+                   {meetLocation ? <BookTourMap Width="100%" Height="50vh" location={meetLocation}  />:<></>}
               </Stack>
             </Card>
                 </Grid>
               </Grid>
-            </Stack>
 
           <Typography variant="h4" gutterBottom sx={{mt:4}}>
             What's Included

@@ -134,9 +134,17 @@ export default function ToursitCustomTourDetails() {
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Box sx={{ textAlign: { sm: 'right' } }}>
-                                {data?.fulfilledBy ? <Button color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                               
+                                {data?.fulfilledBy ?<> <Button
+                                    variant="contained"
+                                    color="warning"
+                                    size="medium"
+                                    onClick={() => { localStorage.setItem("VendorID", data?.fulfilledBy?._id); navigate(PATH_DASHBOARD.details.vendor) }}
+                                    startIcon={<Iconify icon={'icomoon-free:profile'} />}
+                                >see {data?.fulfilledBy?.fname} Profile
+                                </Button><Button sx={{ml:3}}color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
                                     Chat with {data?.fulfilledBy?.fname}
-                                </Button>:<></>}
+                                    </Button></> :<></>}
 
                             </Box>
                         </Grid>

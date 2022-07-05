@@ -29,6 +29,8 @@ const RowStyle = styled('div')({
 
 export default function VendorRequestCard({tour, name, email, seats, tourid, amount, _id, date, fetchRequest}) {
   // const RequestTitle = title;
+
+  console.log(tour);
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
   const handleReject = () => {

@@ -17,6 +17,7 @@ import {
     TableContainer,
     Button,
 } from '@mui/material';
+import Avatar from "@material-ui/core/Avatar";
 // routes
 import { AdapterDateFns } from '@mui/lab/AdapterDateFns';
 import { PATH_DASHBOARD, PATH_AUTH } from '../routes/paths';
@@ -83,7 +84,15 @@ export default function EcommerceInvoice() {
 
                         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                             <Box sx={{ textAlign: { sm: 'right' } }}>
-                                <Button color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
+                                <Button
+                                    variant="contained"
+                                    color="warning"
+                                    size="medium"
+                                    onClick={() => { localStorage.setItem("VendorID", data?.tourID?.vendorID?._id); navigate(PATH_DASHBOARD.details.vendor) }}
+                                    startIcon={<Iconify icon={'icomoon-free:profile'} />}
+                                   >see {data?.tourID?.vendorID?.fname} Profile
+                                </Button>
+                                <Button sx={{ml:3}} color="primary" size="medium" variant="contained" onClick={handleChat} startIcon={<Iconify icon={'bi:chat-fill'} />}>
                                     Chat with {data?.tourID?.vendorID?.fname}
                                 </Button>
                                 

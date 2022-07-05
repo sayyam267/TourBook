@@ -227,7 +227,6 @@ export default function UserProfile() {
     const [vendor,setVendor] = useState();
     const [tour,setTour] = useState();
     const location = useLocation();
-    console.log(location?.state?.id);
 
     const [currentTab, setCurrentTab] = useState('profile');
     const [findFriends, setFindFriends] = useState('');
@@ -241,14 +240,14 @@ export default function UserProfile() {
     };
 
     useEffect(() => {
-        if(location?.state?.id){
-            getVendor()
+        if(localStorage.getItem("VendorID")){
+            getVendor();
         }
     }, [location?.state?.id])
 
     const getVendor = () => { 
         axios
-            .get(`https://tourbook-backend.herokuapp.com/api/vendor/get/${location?.state?.id}`,
+            .get(`https://tourbook-backend.herokuapp.com/api/vendor/get/${localStorage.getItem("VendorID")}`,
                 { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
             )
             .then((res) => {
@@ -260,6 +259,8 @@ export default function UserProfile() {
             .catch((e) => {
                 console.log(e);
             });
+        
+       
     }
 
     const PROFILE_TABS = [

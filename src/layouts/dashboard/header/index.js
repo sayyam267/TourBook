@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 // @mui
 import {useState,useEffect} from 'react';
 import {useSelector} from 'react-redux';
+import PusherJs from 'pusher-js';
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar,Button } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -18,6 +19,7 @@ import Logo from '../../../components/Logo';
 import Iconify from '../../../components/Iconify';
 import { IconButtonAnimate } from '../../../components/animate';
 import { PATH_DASHBOARD, PATH_AUTH, PATH_PAGE } from '../../../routes/paths';
+
 //
 import TBLabel from './TBLabel';
 import AccountPopover from './AccountPopover';
@@ -27,6 +29,7 @@ import NotificationsPopover from './NotificationsPopover';
 import Label from '../../../components/Label';
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
+
 
 // ----------------------------------------------------------------------
 
@@ -92,6 +95,26 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
     setCredits(localStorage.getItem('balance'));
   }, [localStorage.getItem('balance')]);
 
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem('accessToken');
+
+  //     const pusher = new PusherJs('8446967bdc196e48bfbc', {
+  //       cluster: 'ap2',
+  //       encrypted: true,
+  //     });
+
+  //   const channel = pusher.subscribe();
+  //   channel.bind("notifications", (data) => {
+  //     console.log(data, "pusher server");
+
+  //       console.log('pusher', data);
+  //     });
+  //     return () => {
+  //       pusher.unsubscribe();
+  //     };
+  // }, []);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -125,9 +148,9 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <Label color={isCredit() ? "success":"error"} >
+          {localStorage.getItem('role') === 'admin' ?<></>: <Label color={isCredit() ? "success" : "error"} >
             Credits : {credits}.0 Rs
-          </Label> 
+          </Label>}
           {/* <Label color={isCredit() ? "success":"error"} >
             Credits : {balance}.0 Rs
           </Label> */}

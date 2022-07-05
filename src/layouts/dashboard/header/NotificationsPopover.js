@@ -48,12 +48,15 @@ export default function NotificationsPopover() {
   };
 
   const handleMarkAllAsRead = () => {
-    setUnReadNotifications(
-      unReadnotifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
-    );
+    const token = localStorage.getItem("accessToken");
+    axios.put(process.env.REACT_APP_NOTIFICATION_READALL,{
+      headers: { "x-auth-token": token },
+    })
+      .then((res) => {
+        console.log("all notifications read", res.data);
+        getNotification();
+
+      });
   };
 
   const getNotification = () => {
