@@ -132,7 +132,7 @@ export default function ProductDetailsSummary({tour,booked}) {
           </Box>
         </Typography>
         <Divider sx={{ borderStyle: 'dashed' }} />
-        <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
+        {localStorage.getItem('accessToken') ?<><Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
             Hosted By
           </Typography>
@@ -143,7 +143,7 @@ export default function ProductDetailsSummary({tour,booked}) {
               <Button onClick={() => navigate(PATH_DASHBOARD.details.vendor, { state: { id: tour?.vendorID  }})}>see Vendor Profile</Button>
             </Typography>
           </div>
-        </Stack>
+        </Stack></>:<></>}
 
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography variant="subtitle1" sx={{ mt: 0.5 }}>

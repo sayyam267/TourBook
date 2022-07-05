@@ -118,8 +118,10 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
             <Iconify icon="eva:menu-2-fill" />
           </IconButtonAnimate>
         )}
-
-        <TBLabel />
+        {isDesktop && (
+          <TBLabel />
+        )}
+        
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
