@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
 import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // form
 // import * as nsfwjs from "nsfwjs";
@@ -101,6 +101,10 @@ function TaskItem({ task, checked, onChange }) {
 }
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
+
+  const location = useLocation();
+  const tour = location?.state?.t;
+  console.log("state data",location?.state?.t);
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -123,7 +127,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
+      name: tour?.name || '',
       description: currentProduct?.description || '',
       startLocation: currentProduct?.description || '',
       endLocation: currentProduct?.description || '',
@@ -200,16 +204,16 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     setValue('images', []);
   };
 
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
-  const [price, setprice] = useState();
-  const [seats, setSeats] = useState();
-  const [startdate, handleStartDate] = useState();
-  const [enddate, handleEndDate] = useState();
-  const [food, setFood] = useState(currentProduct?.hasFood || false);
-  const [guide, setGuide] = useState(currentProduct?.hasGuide || false);
-  const [transport, setTransport] = useState(currentProduct?.hasTransport || false);
-  const [hotel, setHotel] = useState(currentProduct?.hasHotel || false);
+  const [title, setTitle] = useState(tour?.name || "");
+  const [description, setDescription] = useState(tour?.description || "");
+  const [price, setprice] = useState(tour?.price || '');
+  const [seats, setSeats] = useState(tour?.seats || '');
+  const [startdate, handleStartDate] = useState(tour?.startDate || '');
+  const [enddate, handleEndDate] = useState(tour?.endDate || '');
+  const [food, setFood] = useState(tour?.hasFood || false);
+  const [guide, setGuide] = useState(tour?.hasGuide || false);
+  const [transport, setTransport] = useState(tour?.hasTransport || false);
+  const [hotel, setHotel] = useState(tour?.hasHotel || false);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [verify, setVerify] = useState(false);
@@ -260,12 +264,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     console.log(files[0]);
     const fi = files[0];
 
-    if (files[0].length !== 0) {
-      [...fi].forEach((file) => {
-        console.log('this', file);
-        return data.append('multiImages', file);
-      });
-    } else data.append('multiImages', files[0]);
+    if(files[0] != null){
+      if (files[0]?.length !== 0) {
+        [...fi]?.forEach((file) => {
+          console.log('this', file);
+          return data.append('multiImages', file);
+        });
+      } else data.append('multiImages', files[0]);
+    }
+    
 
     console.log('sT', startdate);
     console.log('end', enddate);
@@ -296,15 +303,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         console.log(r);
         enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
         setLoading(false);
-        // navigate(PATH_DASHBOARD.user.profile);
+        navigate(PATH_DASHBOARD.user.cards);
       })
       .catch((e) => {
+        enqueueSnackbar(e?.message, { variant: 'error' });
         console.log(e);
         setLoading(false);
       });
   };
   return (
     <>
+      {tour ?<h1>Update Tour</h1>:<h1>Create a new Tour</h1>}
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
@@ -312,7 +321,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
               <Stack spacing={3}>
                 <FormGroup>
                   <InputLabel htmlFor="name">Enter Tour Title</InputLabel>
-                  <Input id="name" aria-describedby="Enter Tour Title" onChange={(e) => setTitle(e.target.value)} />
+                  <Input name="name" id="name" aria-describedby="Enter Tour Title" onChange={(e) => setTitle(e.target.value)} />
                 </FormGroup>
                 <FormGroup>
                   <InputLabel htmlFor="desription">Enter Tour Description</InputLabel>
@@ -536,7 +545,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 onClick={handleSubmit1}
                 loading={loading}
               >
-                {!isEdit ? 'Create Tour' : 'Save Changes'}
+                {tour ? 'Save Changes' : 'Create Tour'}
               </LoadingButton>
               {/* <button onClick={classifyImage} >Classify Image</button> */}
             </Stack>

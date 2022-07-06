@@ -33,8 +33,6 @@ export default function EcommerceProductCreate() {
   return (
     <Page title="TourBook: Create a new Tour">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <h1>Create a new Tour</h1>
-
         <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />
       </Container>
     </Page>

@@ -104,7 +104,9 @@ export default function VendorRequestCard({ tour, name, email, seats, tourid, am
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography variant="subtitle2">{date}</Typography>
+            <Typography variant="subtitle2">{`${new Date(date).getDay()} - ${new Date(date).getMonth() + 1} - ${new Date(
+              tour?.date
+            ).getFullYear()}`}</Typography>
           </Stack>
         </TableCell>
 

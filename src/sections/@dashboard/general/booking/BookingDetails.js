@@ -102,7 +102,9 @@ export default function BookingDetails(props) {
                         </Typography>
                       </Stack>
                     </TableCell>
-                    <TableCell>{user.createdAt}</TableCell>
+                        <TableCell>{`${new Date(user.createdAt).getDay()} - ${new Date(user.createdAt).getMonth() + 1} - ${new Date(
+                          user.createdAt
+                        ).getFullYear()}`}</TableCell>
                     <TableCell align="right">
                       <MoreMenuButton key={user._id} id={user._id} isActive={user.isActive} fetch={props.fetch} />
                     </TableCell>

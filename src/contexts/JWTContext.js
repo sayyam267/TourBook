@@ -129,8 +129,9 @@ function AuthProvider({ children }) {
     })
       localStorage.setItem('role',response.data.data.role);
       localStorage.setItem('pic',response.data.data.profilePicture);
-      console.log(response.data.data.role);
+      console.log(response.data.data?.id);
       console.log(localStorage.getItem('role'));
+    localStorage.setItem("NetworkID", response.data.data?.id);
       localStorage.setItem('balance',response.data.data.balance);
       localStorage.setItem('name',response.data.data.name);
       localStorage.setItem('email',response.data.data.email);

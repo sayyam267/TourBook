@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 // @mui
 import {useState,useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import PusherJs from 'pusher-js';
+
 import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar,Button } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -96,24 +96,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
   }, [localStorage.getItem('balance')]);
 
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('accessToken');
-
-  //     const pusher = new PusherJs('8446967bdc196e48bfbc', {
-  //       cluster: 'ap2',
-  //       encrypted: true,
-  //     });
-
-  //   const channel = pusher.subscribe();
-  //   channel.bind("notifications", (data) => {
-  //     console.log(data, "pusher server");
-
-  //       console.log('pusher', data);
-  //     });
-  //     return () => {
-  //       pusher.unsubscribe();
-  //     };
-  // }, []);
+  
 
   const handleLogout = async () => {
     try {

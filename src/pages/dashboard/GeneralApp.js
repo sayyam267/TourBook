@@ -71,12 +71,15 @@ export default function EcommerceShop() {
 
   
   const [allTours, setAllTours] = useState(null);
+  const [carousal, setCarousal] = useState(null);
   
 
   useEffect(() => {
     axios.get(process.env.REACT_APP_GetTOUR, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then((res) => {
-      console.log(res);
-      setAllTours(res.data.data);
+      console.log("bb",res.data.data.carousal);
+      setAllTours(res.data.data.tours);
+      setCarousal(res.data.data.carousal);
+
     })
   }, []);
 
@@ -108,13 +111,27 @@ export default function EcommerceShop() {
   };
 
   const handleSort = (value) =>{
-    const sortedTours = sortTour(allTours,value);
-    // console.log(sortedTours);
-    setAllTours([...sortedTours]);
-    console.log(allTours);
-
+    if(value){
+      const sortedTours = sortTour(allTours, value);
+      setAllTours([...sortedTours]);
+      console.log(allTours);
+    }
   }
 
+  // const handleFilter = () => {
+  //   if (filters.priceRange) {
+  //   products = products.filter((product) => {
+  //     if (filters.priceRange === 'below') {
+  //       return product.price < 25;
+  //     }
+  //     if (filters.priceRange === 'between') {
+  //       return product.price >= 25 && product.price <= 75;
+  //     }
+  //     return product.price > 75;
+  //   });
+  // }
+  // }
+ 
 
 
   
@@ -127,7 +144,8 @@ export default function EcommerceShop() {
 
         <Stack sx={{mb:2}}>
         <Grid Grid item xs={12} md={12}>
-          <EcommerceNewProducts />
+            {carousal ? <EcommerceNewProducts tour={carousal} /> : <></>}
+          
         </Grid>
         </Stack>
 
@@ -154,7 +172,7 @@ export default function EcommerceShop() {
           </Stack>
         </Stack>
 
-        {allTours ? <ShopProductList tours={allTours} />: <></>}
+        {allTours ? <ShopProductList tours={allTours} sortBy={sortBy} />: <></>}
       </Container>
     </Page>
   );
@@ -165,11 +183,13 @@ export default function EcommerceShop() {
 function sortTour(allTours, sortBy, filters) {
   // SORT BY
   if (sortBy === 'newest') {
+    console.log(sortBy);
     allTours.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     console.log(allTours);
     return allTours;
   }
   if (sortBy === 'priceAsc') {
+    console.log(sortBy);
     allTours?.sort((a, b) => (a.price > b.price ? 1 : -1))
     console.log(allTours);
     console.log("price low to high")
@@ -177,23 +197,14 @@ function sortTour(allTours, sortBy, filters) {
 
   }
   if (sortBy === 'priceDesc') {
+    console.log(sortBy);
     allTours?.sort((a, b) => (a.price > b.price ? -1 : 1))
     console.log("price high to low")
     console.log(allTours);
     return allTours;
 
   }
-  // if (filters.priceRange) {
-  //   products = products.filter((product) => {
-  //     if (filters.priceRange === 'below') {
-  //       return product.price < 25;
-  //     }
-  //     if (filters.priceRange === 'between') {
-  //       return product.price >= 25 && product.price <= 75;
-  //     }
-  //     return product.price > 75;
-  //   });
-  // }
-  return allTours;
+  
+  return null;
 }
 

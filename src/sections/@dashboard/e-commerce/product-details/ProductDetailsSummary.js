@@ -85,6 +85,7 @@ export default function ProductDetailsSummary({ tour, booked }) {
             process.env.REACT_APP_CREATEORDER,
             {
               tourID: tour?._id,
+              touristID: localStorage.getItem('NetworkID'),
               seats: quantity,
               amount: total,
             },
@@ -190,7 +191,7 @@ export default function ProductDetailsSummary({ tour, booked }) {
 
           <div>
             {tour ? (
-              <Typography variant="caption" sx={{ mt: 0.5 }}>
+              <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
                 {`${new Date(tour.startDate).getDay()} - ${new Date(tour.startDate).getMonth() + 1} - ${new Date(
                   tour.startDate
                 ).getFullYear()}`}
@@ -208,7 +209,7 @@ export default function ProductDetailsSummary({ tour, booked }) {
 
           <div>
             {tour ? (
-              <Typography variant="caption" sx={{ mt: 0.5 }}>
+              <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
                 {`${new Date(tour.validTill).getDay()} - ${new Date(tour.validTill).getMonth() + 1} - ${new Date(
                   tour.validTill
                 ).getFullYear()}`}

@@ -3,7 +3,9 @@ import Slider from 'react-slick';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, Card, Button, CardContent, Typography } from '@mui/material';
+
+import { Box, Card, Button, CardContent, Typography,Link } from '@mui/material';
+import { PATH_DASHBOARD, PATH_PAGE } from '../../../../routes/paths';
 // _mock_
 import { _ecommerceNewProducts } from '../../../../_mock';
 // components
@@ -24,7 +26,7 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceNewProducts() {
+export default function EcommerceNewProducts({tour}) {
   const theme = useTheme();
 
   const settings = {
@@ -38,25 +40,13 @@ export default function EcommerceNewProducts() {
     ...CarouselDots({ position: 'absolute', right: 24, bottom: 24 }),
   };
 
-  const tour = [{
-    image: "https://images.unsplash.com/photo-1619120238346-978e07731e77?ixlib=rb-1.2.1&raw_url=true&q=60&fm=jpg&crop=entropy&cs=tinysrgb&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=600",
-    name: "Islamabad Three days tour",
-  },
-    {
-      image: "https://images.unsplash.com/photo-1597637245724-beb1e10cb79a?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332",
-      name: "Hunza Three days tour",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1597637245724-beb1e10cb79a?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332",
-      name: "Chitral one week tour",
-    },
-]
+  
 
   return (
     <Card>
       <Slider {...settings}>
         {tour.map((tour) => (
-          <CarouselItem key={tour.name} item={tour} />
+          <CarouselItem key={tour.name} tour={tour} />
         ))}
       </Slider>
     </Card>
@@ -72,8 +62,9 @@ CarouselItem.propTypes = {
   }),
 };
 
-function CarouselItem({ item }) {
-  const { image, name } = item;
+function CarouselItem({ tour }) {
+  // const { image, name } = item;
+  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/checkout`;
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -91,14 +82,15 @@ function CarouselItem({ item }) {
           New
         </Typography>
         <Typography noWrap variant="h5" sx={{ mt: 1, mb: 3 }}>
-          {name}
+          {tour?.name}
         </Typography>
-        <Button to="#" variant="contained" component={RouterLink}>
+        <Link to={localStorage.getItem('accessToken') ? linkTo : PATH_PAGE.details} color="inherit" onClick={() => localStorage.setItem('tourId', tour._id)} component={RouterLink}> <Button to="#" variant="contained" >
           Book Now
-        </Button>
+        </Button></Link>
+       
       </CardContent>
-      <OverlayStyle />
-      <Image alt={name} src={image} sx={{ height: { xs: 280, xl: 320 } }} />
+      {/* <OverlayStyle /> */}
+      <Image alt={tour?.name} src={tour.tourpics[0]} sx={{ height: { xs: 280, xl: 320 } }} />
     </Box>
   );
 }

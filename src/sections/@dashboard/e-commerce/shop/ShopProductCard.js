@@ -36,7 +36,7 @@ export default function ShopProductCard({ tour }) {
   return (
     <Card sx={{ borderRadius: 2, bgcolor: 'background.neutral'}}>
       <Box sx={{ position: 'relative', px: 1, pt: 1  }}>
-        <Image alt={"img"} src={tour.tourpics[1]} ratio="1/1" />
+        <Image alt={"img"} src={tour.tourpics[0]} ratio="1/1" />
       </Box>
 
       <Stack spacing={2.5} sx={{ p: 3, pb: 2.5 }}>
@@ -46,13 +46,11 @@ export default function ShopProductCard({ tour }) {
               <Typography variant="subtitle2">{tour.name}</Typography>
             </Link>
             <Typography variant="caption" sx={{ color: 'text.disabled', mt: 0.5, display: 'block' }}>
-              {/* Starting from {fDateTime(tour.addedOn)} */}
-              {/* {`Startin from ${Date(tour.addedOn)}`} */}
-              
-              {`Starting From: ${Date(tour.startDate)}`}
-{/* `${Date(tour.startDate).getDay()}  ${Date(tour.startDate).getDate()} - ${Date(tour.startDate).getMonth()} - ${Date(tour.startDate).getYear()}` */}
+              Starting from : 
+             { `${new Date(tour?.startDate).getDay()} - ${new Date(tour?.startDate).getMonth() + 1} - ${new Date(
+                tour?.startDate
+              ).getFullYear()}`}
 
-              {/* Starting from {`${ Date(tour.addedOn).getDay()}  ${ Date(tour.addedOn).getDate()} - ${ Date(tour.addedOn).getMonth()} - ${new Date(tour.addedOn).getYear()}`} */}
             </Typography>
           </div>
         </Stack>

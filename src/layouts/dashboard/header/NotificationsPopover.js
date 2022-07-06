@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import { noCase } from 'change-case';
 import { useState,useEffect } from 'react';
+import PusherJs from 'pusher-js';
+
+import { useSnackbar } from 'notistack';
 // @mui
 import {
   Box,
@@ -18,8 +21,10 @@ import {
 } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
+
 // _mock_
 import { _notifications } from '../../../_mock';
+
 // components
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
@@ -36,6 +41,7 @@ export default function NotificationsPopover() {
   const [unReadnotifications, setUnReadNotifications] = useState();
 
   const [totalUnRead,setTotalUnRead] = useState();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
 
@@ -46,6 +52,24 @@ export default function NotificationsPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+
+      const pusher = new PusherJs('8446967bdc196e48bfbc', {
+        cluster: 'ap2',
+        encrypted: true,
+      });
+
+    const channel = pusher.subscribe(localStorage.getItem("NetworkID"));
+    channel.bind("notifications", (data) => {
+      console.log(data, "pusher server");
+      enqueueSnackbar(data.text);
+        console.log('pusher', data);
+      });
+      return () => {
+        pusher.unsubscribe(localStorage.getItem("NetworkID"));
+      };
+  }, []);
 
   const handleMarkAllAsRead = () => {
     const token = localStorage.getItem("accessToken");
@@ -190,7 +214,7 @@ function NotificationItem({ notification, handleRead }) {
           bgcolor: 'action.selected',
         }),
       }}
-      onClick={!notification.isRead ? () => handleRead(notification._id) : () => console.log("hello")}
+      onClick={!notification.isRead ? () => {handleRead(notification._id);} : () => console.log("hello")}
     >
       <ListItemAvatar>
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
@@ -233,40 +257,51 @@ function renderContent(notification) {
       avatar: (
         <img
           alt={notification?.type}
+          src="https://res.cloudinary.com/snakecloud/image/upload/v1657143064/icons8-transaction-64_dperkz.png"
+        />
+      ),
+      title,
+    };
+  }
+  if (notification.type === 'order') {
+    return {
+      avatar: (
+        <img
+          alt={notification?.type}
           src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_package.svg"
         />
       ),
       title,
     };
   }
-  if (notification.type === 'order_shipped') {
+  if (notification.type === 'security') {
     return {
       avatar: (
         <img
           alt={notification?.type}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
+          src="https://res.cloudinary.com/snakecloud/image/upload/v1657143232/icons8-key-2-48_e1ficr.png"
         />
       ),
       title,
     };
   }
-  if (notification.type === 'mail') {
+  if (notification.type === 'customtour') {
     return {
       avatar: (
         <img
           alt={notification?.type}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_mail.svg"
+          src="https://res.cloudinary.com/snakecloud/image/upload/v1657143064/icons8-offer-64_y3pdqn.png"
         />
       ),
       title,
     };
   }
-  if (notification.type === 'chat_message') {
+  if (notification.type === 'feedback') {
     return {
       avatar: (
         <img
           alt={notification?.type}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_chat.svg"
+          src="https://res.cloudinary.com/snakecloud/image/upload/v1657143064/icons8-request-64_vq2qkx.png"
         />
       ),
       title,

@@ -130,7 +130,7 @@ export default function UserProfile() {
             email: values.email,
             city: values.city,
             phoneNumber: values.phoneNumber,
-            country: values.country,
+            
           },
           { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
         )

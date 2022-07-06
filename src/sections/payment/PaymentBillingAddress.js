@@ -1,5 +1,5 @@
 // @mui
-import { Typography, TextField, Stack } from '@mui/material';
+import { Typography, TextField, Stack,Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
@@ -24,6 +24,8 @@ export default function PaymentBillingAddress({ onGetSuccess }) {
   const [myemail, setEmail] = useState('');
   const [amount, setAmount] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [msg, setMsg] = useState();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -31,10 +33,10 @@ export default function PaymentBillingAddress({ onGetSuccess }) {
     console.log(expiry, 'arr', arr);
     const month = arr[0];
     const year = arr[1];
-    const balance = Number(amount);
+    const balance = amount;
 
     const cardno = cardNo.replace(/\s+/g, '');
-    const cn = Number(cardno);
+    const cn = cardno;
     console.log(myemail, myname, cn, cvc, Number(amount));
 
     try {
@@ -64,6 +66,8 @@ export default function PaymentBillingAddress({ onGetSuccess }) {
         });
     } catch (error) {
       console.error(error);
+      setError(true);
+      setMsg(error.message);
       setLoading(false);
       // window.localStorage.getItem("accessToken")
     }
@@ -71,6 +75,7 @@ export default function PaymentBillingAddress({ onGetSuccess }) {
   return (
     <div>
       <Typography variant="subtitle1">Add Details</Typography>
+      { error ? <Alert onClose={() => setError(false)} sx={{mt:2}} severity="error">{msg}</Alert>:<></>}
       <Stack spacing={3} mt={5}>
         <TextField
           fullWidth

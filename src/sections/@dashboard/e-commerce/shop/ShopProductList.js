@@ -24,8 +24,30 @@ export default function ShopProductList(props) {
   
 
   useEffect(() => {
-    console.log("all tours", props.tours);
-    // setAllTours(tours);
+    if (props.sortBy === 'newest') {
+      console.log(props.sortBy);
+      allTours.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setAllTours(allTours);
+      console.log(allTours);
+      return allTours;
+    }
+    if (props.sortBy === 'priceAsc') {
+      console.log(props.sortBy);
+      allTours?.sort((a, b) => (a.price > b.price ? 1 : -1));
+      setAllTours(allTours);
+      console.log(allTours);
+      console.log("price low to high")
+      return allTours;
+
+    }
+    if (props.sortBy === 'priceDesc') {
+      console.log(props.sortBy);
+      allTours?.sort((a, b) => (a.price > b.price ? -1 : 1))
+      setAllTours(allTours);
+      console.log(allTours);
+      return allTours;
+
+    }
   }, [allTours]);
 
   

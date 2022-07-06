@@ -22,19 +22,19 @@ export default function AboutTeam() {
     id: '030',
     name: 'SAYYAM ALI',
     role: 'Student',
-    avatar: ``,
+    avatar: `https://res.cloudinary.com/snakecloud/image/upload/v1657140382/IMG_3248_rw00oi.jpg`,
   },
   {
       id: '188',
       name: 'ZAIN HAROOn',
       role: 'Student',
-      avatar: ``,
+    avatar: `https://res.cloudinary.com/snakecloud/image/upload/v1657140384/Zain_gkx0pw.png`,
     },
     {
       id: '199',
       name: 'SYED KOMAIL',
       role: 'Student',
-      avatar: ``,
+      avatar: `https://res.cloudinary.com/snakecloud/image/upload/v1657140383/WhatsApp_Image_2022-07-06_at_8.36.34_PM_1_ljkieo.jpg`,
     }
   ];
   const settings = {

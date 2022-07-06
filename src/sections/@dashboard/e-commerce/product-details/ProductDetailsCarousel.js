@@ -28,10 +28,7 @@ ProductDetailsCarousel.propTypes = {
 
 export default function ProductDetailsCarousel({ images }) {
 
-  const otherImages = ["https://images.unsplash.com/photo-1454496522488-7a8e488e8606?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600", " https://images.unsplash.com/photo-1454496522488-7a8e488e8606?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600", "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8bW91bnRhaW58ZW58MHx8MHx8&auto=format&fit=crop&w=600"];
-  if(!images){
-    images = otherImages;
-  }
+ 
   console.log("images",images);
   const [openLightbox, setOpenLightbox] = useState(false);
 
@@ -101,7 +98,7 @@ export default function ProductDetailsCarousel({ images }) {
       <Box sx={{ p: 1 }}>
         <Box sx={{ zIndex: 0, borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
           {images ?<Slider {...settings1} asNavFor={nav2} ref={slider1}>
-            {images.map((img) => (
+            {images?.map((img) => (
               <Image
                 key={img}
                 alt="large image"
@@ -112,16 +109,8 @@ export default function ProductDetailsCarousel({ images }) {
               />
             ))}
           </Slider>:<Slider {...settings1} asNavFor={nav2} ref={slider1}>
-            {otherImages.map((img) => (
-              <Image
-                key={img}
-                alt="large image"
-                src={img}
-                ratio="1/1"
-                onClick={() => handleOpenLightbox(img)}
-                sx={{ cursor: 'zoom-in' }}
-              />
-            ))}
+            <></>
+            
           </Slider>}
           <CarouselArrowIndex
             index={currentIndex}
@@ -161,7 +150,7 @@ export default function ProductDetailsCarousel({ images }) {
         }}
       >
         {images ?<Slider {...settings2} asNavFor={nav1} ref={slider2}>
-          {images.map((img, index) => (
+          {images?.map((img, index) => (
             <Box key={img} sx={{ px: 0.75 }}>
               <Image
                 disabledEffect
@@ -180,35 +169,18 @@ export default function ProductDetailsCarousel({ images }) {
             </Box>
           ))}
         </Slider> : <Slider {...settings2} asNavFor={nav1} ref={slider2}>
-          {otherImages.map((img, index) => (
-            <Box key={img} sx={{ px: 0.75 }}>
-              <Image
-                disabledEffect
-                alt="thumb image"
-                src={img}
-                sx={{
-                  width: THUMB_SIZE,
-                  height: THUMB_SIZE,
-                  borderRadius: 1.5,
-                  cursor: 'pointer',
-                  ...(currentIndex === index && {
-                    border: (theme) => `solid 3px ${theme.palette.primary.main}`,
-                  }),
-                }}
-              />
-            </Box>
-          ))}
+          <></>
         </Slider>}
       </Box>
 
-      <LightboxModal
+     {images ?<LightboxModal
         images={imagesLightbox}
         mainSrc={imagesLightbox[selectedImage]}
         photoIndex={selectedImage}
         setPhotoIndex={setSelectedImage}
         isOpen={openLightbox}
         onCloseRequest={() => setOpenLightbox(false)}
-      />
+      />:<></>}
     </RootStyle>
   );
 }
