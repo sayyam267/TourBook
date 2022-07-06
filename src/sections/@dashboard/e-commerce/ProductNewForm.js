@@ -5,11 +5,11 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // form
-import * as nsfwjs from "nsfwjs";
+// import * as nsfwjs from "nsfwjs";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isBefore } from 'date-fns';
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 // @mui
 
@@ -212,13 +212,13 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [hotel, setHotel] = useState(currentProduct?.hasHotel || false);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [verify,setVerify] = useState(false);
+  const [verify, setVerify] = useState(false);
   // const [isNsfw,setIsNsfw] = useState(false);
   // const image = document.getElementById("output");
-  const reCaptchaOnChange = (val) =>{
-    console.log("val change",val);
+  const reCaptchaOnChange = (val) => {
+    console.log('val change', val);
     setVerify(!verify);
-  }
+  };
 
   // const classifyImage = async () => {
   //   const fileslist = files[0];
@@ -236,9 +236,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   // };
 
   const handleSubmit1 = (e) => {
-
-
-
     console.log(
       description,
       guide,
@@ -260,7 +257,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     e.preventDefault();
     const data = new FormData();
 
-
     console.log(files[0]);
     const fi = files[0];
 
@@ -271,7 +267,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       });
     } else data.append('multiImages', files[0]);
 
-    
     console.log('sT', startdate);
     console.log('end', enddate);
     data.append('description', description);
@@ -334,7 +329,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     </InputLabel>
                     <label htmlFor="multiImages">
                       <input
-                      
                         accept="image/*"
                         id="multiImages"
                         multiple
@@ -530,13 +524,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </Stack>
               </Card>
 
-             <div style={{paddingLeft:30}}> <ReCAPTCHA
-                sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                onChange={reCaptchaOnChange}
-              />
+              <div style={{ paddingLeft: 30 }}>
+                {' '}
+                <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={reCaptchaOnChange} />
               </div>
 
-              <LoadingButton variant="contained" size="large" disabled={!verify} onClick={handleSubmit1} loading={loading}>
+              <LoadingButton
+                variant="contained"
+                size="large"
+                disabled={!verify}
+                onClick={handleSubmit1}
+                loading={loading}
+              >
                 {!isEdit ? 'Create Tour' : 'Save Changes'}
               </LoadingButton>
               {/* <button onClick={classifyImage} >Classify Image</button> */}
@@ -548,9 +547,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       </form>
       <img
         id="output"
-        src={""}
+        src={''}
         // style={{display:'none'}}
-        alt={"output"}
+        alt={'output'}
         width={299}
         height={299}
       />

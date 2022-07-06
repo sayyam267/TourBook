@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { sentenceCase } from 'change-case';
 // @mui
@@ -52,7 +52,7 @@ export default function BankingRecentTransitions() {
   const [open, setOpen] = useState(false);
   const [offerAmount, setOfferAmount] = useState();
   const [description, setDescription] = useState();
-  const [approvedTour,setApprovedTour] = useState();
+  const [approvedTour, setApprovedTour] = useState();
   const [requestID, setreqID] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const handleDialogOpen = (id) => {
@@ -71,8 +71,8 @@ export default function BankingRecentTransitions() {
         process.env.REACT_APP_CUSTOMTOUR_GIVEOFFER,
         {
           requestID,
-          amount:offerAmount,
-          description
+          amount: offerAmount,
+          description,
         },
         // { requestID, amount: offerAmount, description },
         { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
@@ -94,7 +94,9 @@ export default function BankingRecentTransitions() {
         setCustomTour(response.data.data);
       });
     axios
-      .get(process.env.REACT_APP_GETVENDORDASHBOARD, { headers: { 'x-auth-token': localStorage.getItem('accessToken') } })
+      .get(process.env.REACT_APP_GETVENDORDASHBOARD, {
+        headers: { 'x-auth-token': localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         console.log(response.data.data?.myApprovedCustomTours);
         setApprovedTour(response.data.data?.myApprovedCustomTours);
@@ -130,7 +132,6 @@ export default function BankingRecentTransitions() {
                           <Box sx={{ ml: 2 }}>
                             <Typography variant="subtitle2">{ct?.by.fname}</Typography>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                              {' '}
                               {ct?.by.email}
                             </Typography>
                           </Box>
@@ -154,15 +155,17 @@ export default function BankingRecentTransitions() {
                       </TableCell>
                       <TableCell>{ct?.requirements?.destination?.name}</TableCell>
 
-                      
-
                       <TableCell align="right">
                         <MoreMenuButton handleDialog={handleDialogOpen} tour={ct} id={ct._id} />
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
-                  <></>
+                  <TableRow>
+                    <TableCell colSpan={8} sx={{ textAlign: 'center' }}>
+                      Nothing to Show
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
@@ -177,8 +180,7 @@ export default function BankingRecentTransitions() {
         </Box>
       </Card>
 
-
-      <Card>
+      <Card sx={{ mt: 6 }}>
         <CardHeader title="Approved Custom Tour" sx={{ mb: 3 }} />
         <Scrollbar>
           <TableContainer>
@@ -229,14 +231,18 @@ export default function BankingRecentTransitions() {
                       <TableCell style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                         {ct?.requirements.places}
                       </TableCell>
-                     
+
                       <TableCell align="right">
-                        <MoreMenuButton1  tour={ct} />
+                        <MoreMenuButton1 tour={ct} />
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
-                  <></>
+                  <TableRow>
+                    <TableCell colSpan={8} sx={{ textAlign: 'center' }}>
+                      Nothing to Show
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
@@ -250,17 +256,6 @@ export default function BankingRecentTransitions() {
           </Button>
         </Box>
       </Card>
-
-
-
-
-
-
-
-
-
-
-
 
       <div>
         <Dialog open={open} onClose={handleDialogClose}>
@@ -404,20 +399,19 @@ function MoreMenuButton1(props) {
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
-    console.log(props.tour)
+    console.log(props.tour);
   };
 
   const handleClose = () => {
     setOpen(null);
   };
 
-  
   const ICON = {
     mr: 2,
     width: 20,
     height: 20,
   };
-  
+
   return (
     <>
       <IconButton size="large" onClick={handleOpen}>
@@ -438,14 +432,12 @@ function MoreMenuButton1(props) {
         }}
       >
         <MenuItem onClick={() => navigate(PATH_DASHBOARD.details.vcustomtour, { state: { tour: props.tour } })}>
-          <Iconify icon={'clarity:details-line'}  sx={{ ...ICON }} />
+          <Iconify icon={'clarity:details-line'} sx={{ ...ICON }} />
           Details
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
       </MenuPopover>
     </>
   );
 }
-

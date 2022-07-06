@@ -1,8 +1,24 @@
 // @mui
-import { styled,useTheme } from '@mui/material/styles';
-import {useState} from 'react';
+import { styled, useTheme } from '@mui/material/styles';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Typography, Stack,CardHeader,TableHead,TableBody,Table,Box,IconButton,TableContainer,Divider,TableRow,TableCell,MenuItem} from '@mui/material';
+import {
+  Button,
+  Card,
+  Typography,
+  Stack,
+  CardHeader,
+  TableHead,
+  TableBody,
+  Table,
+  Box,
+  IconButton,
+  TableContainer,
+  Divider,
+  TableRow,
+  TableCell,
+  MenuItem,
+} from '@mui/material';
 // utils
 import { useSnackbar } from 'notistack';
 
@@ -16,8 +32,6 @@ import Iconify from '../../../../components/Iconify';
 
 import { PATH_DASHBOARD, PATH_AUTH } from '../../../../routes/paths';
 
-
-
 // ----------------------------------------------------------------------
 
 const RowStyle = styled('div')({
@@ -27,7 +41,7 @@ const RowStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-export default function VendorRequestCard({tour, name, email, seats, tourid, amount, _id, date, fetchRequest}) {
+export default function VendorRequestCard({ tour, name, email, seats, tourid, amount, _id, date, fetchRequest }) {
   // const RequestTitle = title;
 
   console.log(tour);
@@ -63,32 +77,30 @@ export default function VendorRequestCard({tour, name, email, seats, tourid, amo
   };
   return (
     <>
-                  <TableRow key={_id}>
-                    <TableCell>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">
-                          {name}
-                        </Typography>
-                      </Stack>
-                    </TableCell>
+      <TableRow key={_id}>
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="subtitle2">{name}</Typography>
+          </Stack>
+        </TableCell>
 
-                    <TableCell>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">{email}</Typography>
-                      </Stack>
-                    </TableCell>
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="subtitle2">{email}</Typography>
+          </Stack>
+        </TableCell>
 
-                    <TableCell>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">{seats}</Typography>
-                      </Stack>
-                    </TableCell>
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="subtitle2">{seats}</Typography>
+          </Stack>
+        </TableCell>
 
-                    <TableCell>
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Typography variant="subtitle2">{amount}</Typography>
-                      </Stack>
-                    </TableCell>
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="subtitle2">{amount}</Typography>
+          </Stack>
+        </TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -96,14 +108,12 @@ export default function VendorRequestCard({tour, name, email, seats, tourid, amo
           </Stack>
         </TableCell>
 
-                    <TableCell align="right">
-                      <MoreMenuButton tour={tour} id={_id} fetch={fetchRequest} />
-                    </TableCell>
-                  </TableRow>
+        <TableCell align="right">
+          <MoreMenuButton tour={tour} id={_id} fetch={fetchRequest} />
+        </TableCell>
+      </TableRow>
 
-        <Divider />
-
-        
+      <Divider />
     </>
   );
 }
@@ -115,7 +125,6 @@ function MoreMenuButton(props) {
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
-  
   };
 
   const handleAccept = () => {
@@ -129,7 +138,6 @@ function MoreMenuButton(props) {
         props.fetch();
         console.log(res.data);
         enqueueSnackbar('Request Accepted!');
-        
       })
       .catch((e) => {
         console.log(e);
@@ -186,33 +194,16 @@ function MoreMenuButton(props) {
           <Iconify icon={'charm:circle-tick'} sx={{ ...ICON }} />
           Accept Request
         </MenuItem>
-        
 
         <MenuItem onClick={handleReject}>
           <Iconify icon={'charm:circle-cross'} sx={{ ...ICON }} />
           Reject Request
         </MenuItem>
-        <MenuItem onClick={() => navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: props } })} >
+        <MenuItem onClick={() => navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: props } })}>
           <Iconify icon={'bi:chat-fill'} sx={{ ...ICON }} />
           Chat with {props?.tour?.name}
         </MenuItem>
       </MenuPopover>
-      
-   
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

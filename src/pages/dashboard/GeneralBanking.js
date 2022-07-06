@@ -18,10 +18,7 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 // sections
-import {
-  
-  ProfileCover,
-} from '../../sections/@dashboard/user/profile';
+import { ProfileCover } from '../../sections/@dashboard/user/profile';
 
 import { fData } from '../../utils/formatNumber';
 import axios from '../../utils/axios';
@@ -93,7 +90,6 @@ export default function UserProfile() {
   const values = watch();
 
   useEffect(() => {
-
     axios
       .get(process.env.REACT_APP_GETCITIES)
       .then((res) => {
@@ -108,7 +104,7 @@ export default function UserProfile() {
         console.log(response.data.data);
         const user = response.data.data;
         setUser(response.data.data);
-        
+
         reset({
           fname: user?.fname,
           photoURL: user?.profilePicture,
@@ -124,20 +120,25 @@ export default function UserProfile() {
   const onSubmit = async () => {
     try {
       console.log(values.fname, values.lname, values.country, values.city, values.phoneNumber, values.email);
-     
-      axios.put(process.env.REACT_APP_UPDATEPROFILE, {
-        fname: values.fname,
-        lname: values.lname,
-        email: values.email,
-        city:values.city,
-        phoneNumber:values.phoneNumber,
-        country:values.country,
-      }, { headers: { "x-auth-token": localStorage.getItem('accessToken') } }).then(res => {
-        console.log(res);
-        enqueueSnackbar('Update success!');
-        
-      }).catch(error => console.log(error));
-      
+
+      axios
+        .put(
+          process.env.REACT_APP_UPDATEPROFILE,
+          {
+            fname: values.fname,
+            lname: values.lname,
+            email: values.email,
+            city: values.city,
+            phoneNumber: values.phoneNumber,
+            country: values.country,
+          },
+          { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
+        )
+        .then((res) => {
+          console.log(res);
+          enqueueSnackbar('Update success!');
+        })
+        .catch((error) => console.log(error));
     } catch (error) {
       console.error(error);
     }
@@ -146,6 +147,14 @@ export default function UserProfile() {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
+      const token = localStorage.getItem('accessToken');
+      const fdata = new FormData();
+      fdata.append('picture', file);
+      axios
+        .put(`http://localhost:4000/api/users/update/picture`, fdata, {
+          headers: { 'x-auth-token': token },
+        })
+        .then((res) => console.log(res));
 
       if (file) {
         setValue(
@@ -217,7 +226,6 @@ export default function UserProfile() {
 
                     <RHFSelect name="country" label="Country" placeholder="Country">
                       <option value="Pakistan">Pakistan</option>
-                      
                     </RHFSelect>
 
                     <RHFSelect name="city" label="City" placeholder="City">
@@ -229,15 +237,10 @@ export default function UserProfile() {
                           </option>
                         );
                       })}
-
                     </RHFSelect>
-
-                   
                   </Box>
 
                   <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                   
-
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                       Save Changes
                     </LoadingButton>
