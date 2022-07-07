@@ -135,7 +135,6 @@ export default function UserProfile() {
         .then((res) => {
           console.log(res);
           localStorage.setItem('name', `${values.fname}  ${values.lname}`);
-
           enqueueSnackbar('Update success!');
         })
         .catch((error) => console.log(error));
@@ -154,7 +153,7 @@ export default function UserProfile() {
         .put(`http://localhost:4000/api/users/update/picture`, fdata, {
           headers: { 'x-auth-token': token },
         })
-        .then((res) => console.log(res));
+        .then((res) => { console.log("profile update", res); enqueueSnackbar('Update success!'); });
 
       if (file) {
         setValue(

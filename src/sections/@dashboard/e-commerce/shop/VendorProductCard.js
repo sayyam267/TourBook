@@ -118,7 +118,7 @@ export default function VendorProductCard({ tour }) {
                 variant="contained"
                 color="primary"
                 size="small"
-                startIcon={<Iconify icon={'icomoon-free:price-tags'} width={16} height={16} />}
+                startIcon={<Iconify icon={'subway:tick'} width={16} height={16} />}
               >
                 Completed
               </Button>
