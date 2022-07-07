@@ -36,18 +36,19 @@ export default function ProfileFriends() {
   const [refund, setRefundRequest] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(process.env.REACT_APP_GETVENDORDASHBOARD, {
-        headers: {
-          'x-auth-token': localStorage.getItem('accessToken'),
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setOrder(res.data.data.reservationRequests);
-        setRefundRequest(res.data.data.refundRequests);
-      })
-      .catch((err) => console.log(err));
+    // axios
+    //   .get(process.env.REACT_APP_GETVENDORDASHBOARD, {
+    //     headers: {
+    //       'x-auth-token': localStorage.getItem('accessToken'),
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     setOrder(res.data.data.reservationRequests);
+    //     setRefundRequest(res.data.data.refundRequests);
+    //   })
+    //   .catch((err) => console.log(err));
+    fetchRequest();
   }, []);
 
   const fetchRequest = () => {
@@ -89,22 +90,21 @@ export default function ProfileFriends() {
                 </TableHead>
                 <TableBody>
                   {order ? (
-                    <>
-                      {order?.map((order) => {
-                        return (
-                          <VendorRequestCard
-                            tour={order}
-                            name={order.name}
-                            email={order.email}
-                            amount={order.amount}
-                            seats={order.seats}
-                            _id={order._id}
-                            date={order.date}
-                            fetchRequest={fetchRequest}
-                          />
-                        );
-                      })}
-                    </>
+                    order?.map((order) => {
+                      return (
+                        <VendorRequestCard
+                          tour={order}
+                          name={order.name}
+                          email={order.email}
+                          amount={order.amount}
+                          seats={order.seats}
+                          receiverID={order.touristID}
+                          _id={order._id}
+                          date={order.date}
+                          fetchRequest={fetchRequest}
+                        />
+                      );
+                    })
                   ) : (
                     <TableRow>
                       <TableCell colSpan={5} sx={{ textAlign: 'center' }}>

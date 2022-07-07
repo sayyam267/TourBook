@@ -41,7 +41,18 @@ const RowStyle = styled('div')({
 
 // ----------------------------------------------------------------------
 
-export default function VendorRequestCard({ tour, name, email, seats, tourid, amount, _id, date, fetchRequest }) {
+export default function VendorRequestCard({
+  tour,
+  name,
+  email,
+  seats,
+  tourid,
+  amount,
+  _id,
+  date,
+  fetchRequest,
+  receiverID,
+}) {
   // const RequestTitle = title;
 
   console.log(tour);
@@ -104,14 +115,14 @@ export default function VendorRequestCard({ tour, name, email, seats, tourid, am
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography variant="subtitle2">{`${new Date(date).getDay()} - ${new Date(date).getMonth() + 1} - ${new Date(
-              tour?.date
-            ).getFullYear()}`}</Typography>
+            <Typography variant="subtitle2">{`${new Date(date).getDay()} - ${
+              new Date(date).getMonth() + 1
+            } - ${new Date(tour?.date).getFullYear()}`}</Typography>
           </Stack>
         </TableCell>
 
         <TableCell align="right">
-          <MoreMenuButton tour={tour} id={_id} fetch={fetchRequest} />
+          <MoreMenuButton tour={tour} id={_id} fetch={fetchRequest} receiverID={receiverID} />
         </TableCell>
       </TableRow>
 
