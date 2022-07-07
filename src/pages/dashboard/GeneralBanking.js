@@ -104,7 +104,6 @@ export default function UserProfile() {
         console.log(response.data.data);
         const user = response.data.data;
         setUser(response.data.data);
-
         reset({
           fname: user?.fname,
           photoURL: user?.profilePicture,
@@ -130,12 +129,13 @@ export default function UserProfile() {
             email: values.email,
             city: values.city,
             phoneNumber: values.phoneNumber,
-            
           },
           { headers: { 'x-auth-token': localStorage.getItem('accessToken') } }
         )
         .then((res) => {
           console.log(res);
+          localStorage.setItem('name', `${values.fname}  ${values.lname}`);
+
           enqueueSnackbar('Update success!');
         })
         .catch((error) => console.log(error));
