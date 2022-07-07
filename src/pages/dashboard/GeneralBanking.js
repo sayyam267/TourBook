@@ -150,10 +150,10 @@ export default function UserProfile() {
       const fdata = new FormData();
       fdata.append('picture', file);
       axios
-        .put(`http://localhost:4000/api/users/update/picture`, fdata, {
+        .put(`${process.env.REACT_APP_HOST_API_KEY}users/update/picture`, fdata, {
           headers: { 'x-auth-token': token },
         })
-        .then((res) => { console.log("profile update", res); enqueueSnackbar('Update success!'); });
+        .then((res) => { console.log("profile update", res); localStorage.setItem('pic',res?.data?.data?.src); enqueueSnackbar('Update success!'); });
 
       if (file) {
         setValue(
