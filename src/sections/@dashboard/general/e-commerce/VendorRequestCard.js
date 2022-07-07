@@ -212,7 +212,7 @@ function MoreMenuButton(props) {
           <Iconify icon={'charm:circle-cross'} sx={{ ...ICON }} />
           Reject Request
         </MenuItem>
-        <MenuItem onClick={() => navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: props } })}>
+        <MenuItem onClick={() => navigate(`${PATH_DASHBOARD.chat.root}/`, { state: { id: props?.receiverID } })}>
           <Iconify icon={'bi:chat-fill'} sx={{ ...ICON }} />
           Chat with {props?.tour?.name}
         </MenuItem>
