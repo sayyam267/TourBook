@@ -113,10 +113,10 @@ export default function EcommerceInvoice() {
                                 Dates
                             </Typography>
                             <Typography variant="body2">Start Date:
-                                {`${new Date(data?.createdAt).getDay()} - ${new Date(data?.createdAt).getMonth() + 1} - ${new Date(
+                                {`${new Date(data?.createdAt).getDate()} - ${new Date(data?.createdAt).getMonth() + 1} - ${new Date(
                                     data?.createdAt
                                 ).getFullYear()}`}</Typography>
-                            <Typography variant="body2">End Date: {`${new Date(data?.date).getDay()} - ${new Date(data?.date).getMonth() + 1} - ${new Date(
+                            <Typography variant="body2">End Date: {`${new Date(data?.date).getDate()} - ${new Date(data?.date).getMonth() + 1} - ${new Date(
                                 data?.date
                             ).getFullYear()}`}</Typography>
                             

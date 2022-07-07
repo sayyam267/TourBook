@@ -162,10 +162,10 @@ export default function ToursitCustomTourDetails() {
                             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
                                Expected Dates
                             </Typography>
-                            <Typography variant="body2">Start Date: {`${new Date(data?.createdAt).getDay()} - ${new Date(data?.createdAt).getMonth() + 1} - ${new Date(
+                            <Typography variant="body2">Start Date: {`${new Date(data?.createdAt).getDate()} - ${new Date(data?.createdAt).getMonth() + 1} - ${new Date(
                                 data?.createdAt
                             ).getFullYear()}`}</Typography>
-                            <Typography variant="body2">End Date: {`${new Date(data?.requirements?.endDate).getDay()} - ${new Date(data?.requirements?.endDate).getMonth() + 1} - ${new Date(
+                            <Typography variant="body2">End Date: {`${new Date(data?.requirements?.endDate).getDate()} - ${new Date(data?.requirements?.endDate).getMonth() + 1} - ${new Date(
                                 data?.requirements?.endDate
                             ).getFullYear()}`}</Typography>
 

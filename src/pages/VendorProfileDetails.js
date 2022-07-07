@@ -385,9 +385,9 @@ function ShopProductCard({ tour }) {
               {/* {`Startin from ${Date(tour.addedOn)}`} */}
 
               {`Starting From: ${Date(tour?.startDate)}`}
-              {/* `${Date(tour.startDate).getDay()}  ${Date(tour.startDate).getDate()} - ${Date(tour.startDate).getMonth()} - ${Date(tour.startDate).getYear()}` */}
+              {/* `${Date(tour.startDate).getDate()}  ${Date(tour.startDate).getDate()} - ${Date(tour.startDate).getMonth()} - ${Date(tour.startDate).getYear()}` */}
 
-              {/* Starting from {`${ Date(tour.addedOn).getDay()}  ${ Date(tour.addedOn).getDate()} - ${ Date(tour.addedOn).getMonth()} - ${new Date(tour.addedOn).getYear()}`} */}
+              {/* Starting from {`${ Date(tour.addedOn).getDate()}  ${ Date(tour.addedOn).getDate()} - ${ Date(tour.addedOn).getMonth()} - ${new Date(tour.addedOn).getYear()}`} */}
             </Typography>
           </div>
         </Stack>

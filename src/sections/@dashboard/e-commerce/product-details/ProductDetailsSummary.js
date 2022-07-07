@@ -192,7 +192,7 @@ export default function ProductDetailsSummary({ tour, booked }) {
           <div>
             {tour ? (
               <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-                {`${new Date(tour.startDate).getDay()} - ${new Date(tour.startDate).getMonth() + 1} - ${new Date(
+                {`${new Date(tour.startDate).getDate()} - ${new Date(tour.startDate).getMonth() + 1} - ${new Date(
                   tour.startDate
                 ).getFullYear()}`}
               </Typography>
@@ -210,7 +210,7 @@ export default function ProductDetailsSummary({ tour, booked }) {
           <div>
             {tour ? (
               <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-                {`${new Date(tour.validTill).getDay()} - ${new Date(tour.validTill).getMonth() + 1} - ${new Date(
+                {`${new Date(tour.validTill).getDate()} - ${new Date(tour.validTill).getMonth() + 1} - ${new Date(
                   tour.validTill
                 ).getFullYear()}`}
               </Typography>

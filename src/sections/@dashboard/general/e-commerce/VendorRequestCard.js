@@ -115,7 +115,7 @@ export default function VendorRequestCard({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography variant="subtitle2">{`${new Date(date).getDay()} - ${
+            <Typography variant="subtitle2">{`${new Date(date).getDate()} - ${
               new Date(date).getMonth() + 1
             } - ${new Date(tour?.date).getFullYear()}`}</Typography>
           </Stack>
