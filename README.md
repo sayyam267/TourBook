@@ -43,9 +43,7 @@ https://tour-book.netlify.app/
 ```
 
 ## A Project by COMSATS University Students of FA18 Batch
-```
 - Syed Komail
 - Sayyam Ali
 - Zain Haroon
-```
 
