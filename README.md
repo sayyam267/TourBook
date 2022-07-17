@@ -25,7 +25,7 @@ yarn start
 ```
 
 ## TourBook provides:
-```
+
 - Secure Payments (Refund Options).
 - Secure Authentication.
 - Powerful Admin Rights.
@@ -35,7 +35,6 @@ yarn start
 - Notifications Facility with live Notifications.
 - Vendor Check by Admin.
 - Email Send / Receive using NodeMailer.
-```
 
 
 ## Project deployed on Netlify.
